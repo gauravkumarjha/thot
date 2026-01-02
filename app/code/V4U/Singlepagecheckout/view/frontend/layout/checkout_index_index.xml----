@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="checkout" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+  <body>
+
+    <!-- Remove Progress Bar -->
+    <referenceBlock name="checkout.progress.wrapper" remove="true"/>
+
+    <!-- Remove Magento Steps -->
+    <referenceBlock name="checkout.steps" remove="true"/>
+    <referenceBlock name="shipping-step" remove="true"/>
+    <referenceBlock name="billing-step" remove="true"/>
+
+    <!-- Load our custom onepage checkout -->
+    <referenceContainer name="content">
+      <block class="Magento\Framework\View\Element\Template" name="v4u.onepage.checkout" template="V4U_Singlepagecheckout::onepage.phtml" cacheable="false"/>
+    </referenceContainer>
+
+  </body>
+</page>

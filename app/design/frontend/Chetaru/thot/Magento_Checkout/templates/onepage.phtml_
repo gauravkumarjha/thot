@@ -1,0 +1,84 @@
+<div id="checkout" data-bind="scope:'checkout'">
+
+    <div class="accordion-checkout">
+
+        <div class="checkout-step" data-bind="css: {open: isShippingOpen}">
+            <h2 class="accordion-header" data-bind="click: toggleShipping">
+                Shipping Information
+            </h2>
+            <div class="accordion-content" data-bind="visible: isShippingOpen">
+                <!-- ko template: getRegion('shippingAddress') --><!-- /ko -->
+                <!-- ko template: getRegion('shippingMethod') --><!-- /ko -->
+            </div>
+        </div>
+
+        <div class="checkout-step" data-bind="css: {open: isPaymentOpen}">
+            <h2 class="accordion-header" data-bind="click: togglePayment">
+                Payment Method
+            </h2>
+            <div class="accordion-content" data-bind="visible: isPaymentOpen">
+                <!-- ko template: getRegion('payment') --><!-- /ko -->
+            </div>
+        </div>
+
+        <div class="checkout-step-summary">
+            <!-- ko template: getRegion('sidebar') --><!-- /ko -->
+        </div>
+
+    </div>
+
+    <script type="text/x-magento-init">
+        {
+        "#checkout": {
+            "Magento_Ui/js/core/app": <?= $block->getJsLayout(); ?>
+        }
+    }
+    </script>
+
+</div>
+
+<script>
+    require([
+        'uiComponent',
+        'ko'
+    ], function(Component, ko) {
+        return Component.extend({
+            isShippingOpen: ko.observable(true),
+            isPaymentOpen: ko.observable(false),
+
+            toggleSection: function(section) {
+                if (section === 'shipping') {
+                    this.isShippingOpen(true);
+                    this.isPaymentOpen(false);
+                } else {
+                    this.isShippingOpen(false);
+                    this.isPaymentOpen(true);
+                }
+            }
+        });
+    });
+</script>
+<style>
+    .accordion-header {
+        cursor: pointer;
+        padding: 15px;
+        background: #eee;
+    }
+
+    .accordion-content {
+        padding: 15px;
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+    }
+
+    .checkout-step-summary {
+        float: right;
+        width: 30%;
+    }
+
+    .checkout-step {
+        width: 65%;
+        float: left;
+        margin-right: 5%;
+    }
+</style>

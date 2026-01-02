@@ -1,0 +1,8 @@
+<?php
+$_brand = $block->getCurrentBrand();
+$_img = '';
+if($_img = $_brand->getBrandLogo()){ ?>
+<div class="brand-logo">
+	<img src="/media/<?php echo $_img ?>" alt="<?php echo $_brand->getName(); ?>" class="logo"/>
+</div>
+<?php }

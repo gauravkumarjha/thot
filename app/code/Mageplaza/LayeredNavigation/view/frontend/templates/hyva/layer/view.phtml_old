@@ -1,0 +1,365 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_LayeredNavigation
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var \Magento\LayeredNavigation\Block\Navigation $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Hyva\Theme\Model\ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<?php if ($block->canShowBlock()): ?>
+    <?php
+    $filters     = $block->getFilters();
+    $helperData  = $this->helper(\Mageplaza\LayeredNavigation\Helper\Data::class);
+    $layerConfig = $helperData->getLayerConfiguration($filters);
+    $filtered    = count($block->getLayer()->getState()->getFilters());
+    $helperImage = $this->helper(\Mageplaza\LayeredNavigation\Helper\Image::class);
+    $category = $block->getLayer()->getCurrentCategory();
+    $hideAttributes = $category->getData('mp_ln_hide_attribute_ids');
+
+    ?>
+    <div
+        x-data="initLayeredNavigation()"
+        x-init="checkIsMobileResolution(); initClickPage()"
+        @resize.window.debounce="checkIsMobileResolution()"
+        @visibilitychange.window.debounce="checkIsMobileResolution()"
+        class="block border border-container bg-container-darker p-4 md:border-0 md:bg-transparent md:py-0 md:px-0 my-6"
+        role="region"
+        aria-label="<?= $escaper->escapeHtmlAttr(__('Product filters')) ?>"
+        id="layered-navigation-hyva"
+    >
+        <?= $block->getBlockHtml('mplayer_loader') ?>
+        <h2
+            id="filters-heading"
+            class="block-title"
+        >
+            <button
+                type="button"
+                @click="blockOpen = !blockOpen"
+                class="block-title flex items-center justify-between w-full text-start"
+                aria-controls="filters-content"
+                :aria-expanded="blockOpen"
+                :aria-disabled="!isMobile"
+                :disabled="!isMobile ? '' : null"
+            >
+                <span class="text-primary text-md md:text-3xl font-medium uppercase">
+                    <?= $escaper->escapeHtml(__('Shop By')) ?>
+                </span>
+                <span
+                    class="py-1 px-1 bg-container-lighter rounded border border-container-darker md:hidden"
+                    x-ref="LayeredNavigationMobileToggleIcon"
+                >
+                    <?= $heroicons->chevronDownHtml(
+                        'transition-transform transform duration-300 ease-in-out',
+                        24,
+                        24,
+                        [
+                            ":class" => "{ 'rotate-180': blockOpen }",
+                            "aria-hidden" => "true",
+                            "focusable" => "false"
+                        ]
+                    ); ?>
+                </span>
+            </button>
+        </h2>
+        <div
+            id="filters-content"
+            class="block-content filter-content hidden md:block pt-4"
+            :class="{ 'hidden': !blockOpen }"
+        >
+            <?= $block->getChildHtml('state') ?>
+            <a
+                href="#product-list"
+                class="sr-only focus:not-sr-only bg-blue-600 text-white px-12 py-4 text-center block rounded-sm"
+            >
+                <?= $escaper->escapeHtml(__('Skip to product list')) ?>
+            </a>
+            <?php foreach ($block->getFilters() as $filter): ?>
+                <?php if ($filter->getItemsCount()): ?>
+                    <?php if ($hideAttributes && is_array($hideAttributes) && in_array($filter->getRequestVar(), $hideAttributes, true)) {continue;} ?>
+                    <div
+                        x-data="{
+                            open: false,
+                            id: $id('filter-option')
+                        }"
+                        class="filter-option card my-4"
+                    >
+                        <h3 :id="`${id}-title`">
+                            <button
+                                type="button"
+                                @click="open = !open"
+                                class="filter-options-title flex justify-between items-center cursor-pointer text-start hover:text-secondary-darker border-container w-full"
+                                :class="{ 'border-b pb-4': open }"
+                                :aria-controls="`${id}-content`"
+                                :aria-expanded="open"
+                            >
+                                <span class="title text-md md:text-lg font-semibold">
+                                    <?= $escaper->escapeHtml(__($filter->getName())) ?>
+                                    <span class="sr-only"> <?= $escaper->escapeHtml(__('filter')) ?></span>
+                                </span>
+                                    <span class="py-1 px-1 rounded border border-container">
+                                    <?= $heroicons->chevronDownHtml(
+                                        'transition-transform transform duration-300 ease-in-out',
+                                        24,
+                                        24,
+                                        [
+                                            ":class" => "{ 'rotate-180': open }",
+                                            "aria-hidden" => "true",
+                                            "focusable" => "false"
+                                        ]
+                                    ); ?>
+                                </span>
+                            </button>
+                        </h3>
+                            <div
+                                :id="`${id}-content`"
+                                class="filter-options-content pt-3"
+                                x-init="initOpenFilter($el)"
+                                x-show="open"
+                            >
+                                <?php if ($filter instanceof \Mageplaza\LayeredNavigation\Model\Layer\Filter\Category && $filter->isRenderCategoryTree()): ?>
+                                    <?= /** @noEscape */ $block->getChildBlock('mplayer-renderer.hyva')->setFilter($filter)->render($filter) ?>
+                                <?php else: ?>
+                                <?= /* @noEscape */ $block->getChildBlock('renderer')->setFilterTitle($filter->getName())->setFilter($filter)->render($filter); ?>
+                                <?php endif; ?>
+                            </div>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <?= /** @noEscape */ $block->getChildHtml('layer_additional_info') ?>
+        </div>
+    </div>
+    <script>
+        function initLayeredNavigation() {
+            return {
+                isMobile: false,
+                blockOpen: false,
+                isLoading: false,
+                layerConfig: <?= /** @noEscape */ $layerConfig ?>,
+                checkIsMobileResolution () {
+                    const mobileElement = this.$refs.LayeredNavigationMobileToggleIcon;
+                    this.isMobile       = mobileElement
+                        ? getComputedStyle(mobileElement).display !== "none"
+                        : window.matchMedia('(max-width: 767px)').matches; // Fallback to `md` breakpoint
+                },
+                addTimestampToURL: function (originalURL) {
+                    var timestamp = new Date().getTime();
+                    var separator = originalURL.includes('?') ? '&' : '?';
+                    var modifiedURL = originalURL + separator + '_=' + timestamp;
+                    return modifiedURL;
+                },
+                ajaxSubmit: function (submitUrl) {
+                    var isAjax = this.layerConfig?.isAjax,
+                        self = this;
+                    if (isAjax) {
+                        this.isLoading = true;
+                        let newLink = this.addTimestampToURL(submitUrl);
+                        window.history.pushState({url: submitUrl}, '', submitUrl);
+                        fetch(newLink, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                },
+                            }
+                        ).then(response => {
+                                return response.json();
+                            }
+                        ).then(data => {
+                            let productContainer = document.querySelector('#layer-product-list');
+                            let layerContainer   = document.querySelector('#layered-filter-block-container');
+                            if (productContainer) {
+                                productContainer.innerHTML = data.products;
+                                hyva.activateScripts(productContainer);
+                            }
+                            if (layerContainer) {
+                                layerContainer.innerHTML = data.navigation;
+                                hyva.activateScripts(layerContainer);
+                                let slider = document.querySelector('.ln_slider_container');
+                                slider.setAttribute('value1', parseFloat(self.layerConfig?.slider[slider.getAttribute('dataAttr')].selectedFrom));
+                                slider.setAttribute('value2', parseFloat(self.layerConfig?.slider[slider.getAttribute('dataAttr')].selectedTo));
+                            }
+                        }).catch(error => {
+                        }).finally(()=> {
+                            this.isLoading = false;
+                        });
+                    } else {
+                        window.location.href = submitUrl;
+
+                    }
+                },
+                clickCheckBox (e) {
+                    let linkEl = e.target.parentNode.querySelector('a');
+                    if (linkEl) {
+                        this.ajaxSubmit(linkEl.href);
+                    }
+                },
+
+                initClickPage() {
+                    const pageElements = document.querySelectorAll('.toolbar-products .pages a'), self = this;
+                    pageElements.forEach(function (el) {
+                        el.addEventListener('click', function (e) {
+                            const linkEl = el.getAttribute('href');
+                            if (linkEl) {
+                                e.preventDefault();
+                                self.ajaxSubmit(linkEl);
+                            }
+                        });
+                    })
+                },
+
+                selectSwatch(e,link) {
+                    e.preventDefault();
+                    let classNameEl = e.currentTarget.getAttribute('class');
+                    let newClassEl = '';
+                    if (classNameEl.includes('ring ring-primary/50')) {
+                        newClassEl = classNameEl.replace('ring ring-primary/50', '');
+                    } else {
+                        newClassEl = classNameEl + ' ring ring-primary/50'
+                    }
+                    e.currentTarget.setAttribute('class', newClassEl);
+                    if (link) {
+                        this.ajaxSubmit(link);
+                    }
+                },
+                getSliderUrl: function (url, from, to) {
+                    if (url.includes('from-to')) {
+                        return url.replace('from-to', from + '-' + to);
+                    } else {
+                        let currentUrl = new URL(window.location.href);
+                        currentUrl.searchParams.set(url, from + '-' + to);
+
+                        return currentUrl.toString();
+                    }
+
+                },
+                clickLink(e, link, attrCode) {
+                    e.preventDefault();
+                    let inputCheckEl = e.currentTarget.parentNode.querySelector('input');
+                    if(inputCheckEl) {
+                        inputCheckEl.checked = !inputCheckEl.checked
+                    }
+                    if(attrCode === 'rating') {
+                        if(!e.currentTarget.classList.contains('ring')) {
+                            e.currentTarget.classList.add('ring')
+                        } else {
+                            e.currentTarget.classList.remove('ring')
+                        }
+                    }
+                    if (link) {
+                        this.ajaxSubmit(link);
+                    }
+                },
+                initOpenFilter (e) {
+                    let self = this;
+                    function initSlider () {
+                        let slider = e.querySelector('.ln_slider_container');
+                        if (slider) {
+                            let code = slider.getAttribute('dataAttr');
+                            let text = e.querySelector('#ln_slider_text_price');
+                            let queryParams = new URLSearchParams(window.location.search);
+                            let price = queryParams.get(code);
+                            if (price) {
+                                var range = price.split('-');
+                                self.layerConfig.slider[code].selectedFrom = range[0];
+                                self.layerConfig.slider[code].selectedTo = range[1];
+                            }
+                            text.innerHTML = hyva.formatPrice(self.layerConfig.slider[code].selectedFrom) + ' - ' + hyva.formatPrice(self.layerConfig.slider[code].selectedTo);
+
+                            // Gán giá trị min/max và value cho slider
+                            slider.min = self.layerConfig?.slider[code].minValue;
+                            slider.max = self.layerConfig?.slider[code].maxValue;
+                            slider.setAttribute('value1', parseFloat(self.layerConfig?.slider[code].selectedFrom));
+                            slider.setAttribute('value2', parseFloat(self.layerConfig?.slider[code].selectedTo));
+
+                            let isDragging = false;
+                            slider.addEventListener('mousedown', () => {
+                                isDragging = true;
+
+                                const handleMouseUp = () => {
+                                    if (isDragging) {
+                                        self.ajaxSubmit(self.getSliderUrl(code, slider.value1, slider.value2));
+                                        isDragging = false;
+                                    }
+                                    document.removeEventListener('mouseup', handleMouseUp);
+                                };
+
+                                document.addEventListener('mouseup', handleMouseUp);
+                            });
+
+                            // Mobile: touchend
+                            slider.addEventListener('touchstart', () => {
+                                isDragging = true;
+                            });
+                            slider.addEventListener('touchend', () => {
+                                if (isDragging) {
+                                    self.ajaxSubmit(self.getSliderUrl(code, slider.value1, slider.value2));
+                                    isDragging = false;
+                                }
+                            });
+                        }
+                    }
+                    initSlider();
+
+                    function renderCategoryTree() {
+                        var iconExpandList = e.querySelectorAll('.icon-expand');
+                        iconExpandList.forEach(function (iconExpand) {
+                            iconExpand.addEventListener('click', function (e) {
+                                let olEl = iconExpand.parentNode.querySelector('ol');
+                                if (iconExpand.classList.contains('active')) {
+                                    iconExpand.classList.remove('active');
+                                    olEl.style.display = 'none';
+                                } else {
+                                    iconExpand.classList.add('active');
+                                    olEl.style.display = 'block';
+                                }
+
+                            });
+                        });
+
+                    }
+                    renderCategoryTree();
+                },
+
+                appendLoading: function () {
+                    var block = document.querySelector(".ln_overlay");
+                    if (block) {
+                        block.style.display = 'block';
+                    }
+                },
+
+                removeLoading: function () {
+                    var block = document.querySelector(".ln_overlay");
+                    if (block) {
+                        block.style.display = 'none';
+                    }
+                }
+            }
+
+        }
+    </script>
+
+<?php endif; ?>

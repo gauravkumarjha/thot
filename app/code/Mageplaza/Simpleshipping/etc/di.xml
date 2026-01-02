@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  <type name="Magento\Checkout\Model\DefaultConfigProvider">
+    <plugin name="show-extra-attribute-checkout-summary-product" type="Mageplaza\Simpleshipping\Plugin\Checkout\Model\Defaultconfigprovider" />
+</type>
+ <type name="Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer">
+        <plugin name="Mageplaza_Simpleshipping_default_renderer_plugin" type="Mageplaza\Simpleshipping\Plugin\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRendererPlugin" />
+    </type>
+     <type name="Magento\Sales\Block\Order\Email\Items\Order">
+        <plugin name="custom_order_email_items_plugin" type="Mageplaza\Simpleshipping\Plugin\Sales\Block\Order\Email\Items\AddCustomAttribute" />
+    </type>
+
+    <type name="Magento\Checkout\Model\TotalsInformationManagement">
+        <plugin name="add_currency_symbol_to_totals" type="Mageplaza\Simpleshipping\Plugin\Checkout\AddCurrencySymbolToTotals" />
+    </type>
+
+   
+</config>

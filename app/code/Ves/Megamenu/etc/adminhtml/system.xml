@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Venustheme
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Venustheme.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.venustheme.com/license-agreement.html
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category   Venustheme
+ * @package    Ves_Megamenu
+ * @copyright  Copyright (c) 2017 Venustheme (http://www.venustheme.com/)
+ * @license    http://www.venustheme.com/LICENSE-1.0.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<tab id="vesalltab" translate="label" sortOrder="400">
+			<label>Venustheme.com</label>
+		</tab>
+		<section id="vesmegamenu" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+			<class>separator-top</class>
+			<label>Mega Menu</label>
+			<tab>vesalltab</tab>
+			<resource>Ves_Megamenu::config_megamenu</resource>
+			<group id="general_settings" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>General Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Enable Menu on Frontend</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment>Enabled/Disable Menu on frontend</comment>
+				</field>
+                <field id="show_menu_block_title" translate="label comment" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Show Menu Block Title</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment>Enable/Disable menu block title (if the menu block have title or widget megamenu has title).</comment>
+				</field>
+                <field id="default_alias" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Default Menu Profile on Frontend</label>
+					<comment>Select menu profile for default. Default value: top-menu</comment>
+				</field>
+                <field id="pwa_menu_alias" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>PWA Megamenu Profile Alias</label>
+					<depends><field id="enabled">1</field></depends>
+					<comment>Input Megamenu Profile Alias to use as default for PWA Studio (require setup Megamenu GraphQl).</comment>
+				</field>
+				<field id="enable_backup" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Enable Auto Backup Tool</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment><![CDATA[Allow backup a menu version after save menu]]></comment>
+				</field>
+				<field id="backup_version" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Number Backup Version</label>
+					<depends><field id="enable_backup">1</field></depends>
+					<validate>validate-number</validate>
+				</field>
+                <field id="drilldown_speed" translate="label comment" type="text" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Drilldown Speed (number)</label>
+                    <comment>Input number or speed. Default: 300</comment>
+				</field>
+				<field id="enable_check_mobile" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Enable Check Mobile Device When Generate Menu On Frontend</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment><![CDATA[Enable/Disable To Check Mobile Device When Generate Menu HTML On Frontend.]]></comment>
+				</field>
+				<field id="enable_mobile_menu" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Use Different Mobile Menu Structure</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment><![CDATA[Enable/Disable mobile menu code hidden on desktop, and desktop menu will hidden on mobile view. Disable the option to reduce DOM tags.]]></comment>
+				</field>
+                <field id="enable_admin_ajax" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable Admin Ajax Load Catalog Categories</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Allow load list catalog categories via ajax when edit menu on backend. If the site have larger catalog categories, you should enable the option.]]></comment>
+                </field>
+                <field id="number_of_category_search" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Number of Categories when searching</label>
+                    <depends><field id="enable_admin_ajax">1</field></depends>
+                    <comment><![CDATA[Number of Categories will be shown when you search.]]></comment>
+                    <validate>validate-number</validate>
+                </field>
+                <field id="disable_menu_title" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Disable Menu Title Attribute</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment>Disable Menu title attribute on frontend</comment>
+				</field>
+                <field id="custom_css" translate="label comment" type="textarea" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Custom CSS on Frontend</label>
+				</field>
+			</group>
+		</section>
+	</system>
+</config>

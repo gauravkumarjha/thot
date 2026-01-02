@@ -1,0 +1,39 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * @var $block \Magento\Theme\Block\Html\Title
+ */
+ $title = '';
+if (trim($block->getPageHeading())) {
+    $title = '<span class="base" data-ui-id="page-title-wrapper" ' .  $block->getAddBaseAttribute() . '>'
+        . $block->escapeHtml($block->getPageHeading()) . '</span>';
+}
+$myBlock = \Magento\Framework\App\ObjectManager::getInstance()->get('Chetaru\Hot\Block\ProductTitle');
+ 
+if ($currentProduct = $myBlock->getCurrentProduct()) {
+    // echo $currentProduct->getName() . '<br />';
+    // echo $currentProduct->getSku() . '<br />';
+    // echo $currentProduct->getFinalPrice() . '<br />';
+    // echo $currentProduct->getProductUrl() . '<br />';
+    // print_r ($currentProduct->getCategoryIds()) . '<br />';  
+?>
+<h3 class="test-if"><?php echo $currentProduct->getName() ?></h3>
+<?php   
+}else {
+?>
+<?php if ($title): ?>
+    <h3 class="test-else"><?php echo $block->getName() ?></h3>
+<?php endif; ?>
+<?php
+}
+
+?>
+
+
+    

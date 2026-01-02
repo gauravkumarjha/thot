@@ -1,0 +1,197 @@
+<?php
+
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\App\Action\Action;
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ */
+?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$_productCollection = $block->getLoadedProductCollection();
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+$webpImageDataHelper = $this->helper('DiMedia\WebpImage\Helper\Data');
+/// wishlist check 
+$wishlist = $objectManager->get('\Magento\Wishlist\Model\Wishlist');
+$customerSession = $objectManager->get('Magento\Customer\Model\Session');
+$customerData = $customerSession->getCustomer()->getData(); //get all data of customerData
+$customerId = $customerSession->getCustomerId(); //get id of customer
+$isAdded = $wishlist->loadByCustomerId($customerId, true)->getItemCollection();
+$customer_wishlist_solution = array();
+if ($isAdded->count() > 0) {
+	foreach ($isAdded as $item) {
+		$customer_wishlist_solution[] = $item->getProduct()->getID();
+	}
+}
+
+?>
+<?php if (!$_productCollection->count()): ?>
+	<div class="message info empty">
+		<div><?php /* @escapeNotVerified */ echo __('We can\'t find products matching the selection.') ?></div>
+	</div>
+<?php else: ?>
+	<?php //echo $block->getToolbarHtml() 
+	?>
+	<?php //echo $block->getAdditionalHtml() 
+	?>
+	<?php
+	if ($block->getMode() == 'grid') {
+		$viewMode = 'grid';
+		$image = 'hot_product_page_image_medium';
+		$showDescription = false;
+		$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+	} else {
+		$viewMode = 'list';
+		$image = 'category_page_list';
+		$showDescription = true;
+		$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+	}
+	/**
+	 * Position for actions regarding image size changing in vde if needed
+	 */
+	$pos = $block->getPositioned();
+	?>
+
+	<div class="products wrapper  <?php /* @escapeNotVerified */ echo $viewMode; ?> products-<?php /* @escapeNotVerified */ echo $viewMode; ?> products-gkproductbrand">
+		<?php $iterator = 1; ?>
+
+		<?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+		<!-- Similar Products -->
+
+		<div class="row">
+			<?php $i = 1; ?>
+			<?php foreach ($_productCollection as $_product):
+				$product = $objectManager->create('Magento\Catalog\Model\Product')->load($_product->getId());
+			?>
+				<?php
+				$productImage = $block->getImage($_product, $image);
+				$webpproductImage = $webpImageDataHelper->getWebpUrl($productImage->getImageUrl());
+				?>
+
+				<div class="col-md-4 col-sm-6 col-xs-12 gkjah-brand-product-1">
+					<div class="thumbnail">
+						<div class="whishlist">
+							<h4 class="pull-right">
+								<?php if (!empty($customer_wishlist_solution) &&  (in_array($_product->getID(), $customer_wishlist_solution))) { ?>
+									<a href="/wishlist/" class="action towishlist already_added"><i class="fa fa-heart-o"></i></a>
+								<?php } else { ?>
+									<a href="javascript:void(0);" data-post='<?php echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($_product) ?>'
+										class="action towishlist" data-action="add-to-wishlist"><i class="fa fa-heart-o"></i></a>
+								<?php } ?>
+							</h4>
+						</div>
+						<a href="<?php echo $product->getProductUrl() ?>" class="">
+							<img src="<?php echo $webpproductImage; ?>" alt="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" title="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" class="img-responsive">
+						</a>
+						<?php
+						$productName = $_helper->productAttribute($_product, $_product->getName(), 'name');
+						$your_desired_width = 30;
+						if (strlen($productName) > $your_desired_width) {
+							$productName = wordwrap($productName, $your_desired_width);
+							$productName = substr($productName, 0, strpos($productName, "\n")) . "...";
+						}
+						?>
+						<div class="caption">
+							<div class="row">
+								<div class="col-md-6 col-xs-6">
+									<div class="custom-row">
+										<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" title="<?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>">
+											<h3 class="productName"><?php /* @escapeNotVerified */ echo $productName; ?></h3>
+										</a>
+									</div>
+								</div>
+								<div class="col-md-6 col-xs-6 price">
+									<div class="custom-row">
+										<?php
+										if ($_product->getAttributeText('price_on_request') == 'Yes') {
+										?>
+											<h3 class="price_request"><?php /* @escapeNotVerified */ echo __('Price on request') ?></h3>
+										<?php
+										} else {
+										?>
+											<div class="productPrice"><?php echo $block->getProductPrice($_product) ?></div>
+										<?php } ?>
+									</div>
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col-md-7 col-xs-7">
+									<div class="custom-row">
+										&nbsp;
+									</div>
+								</div>
+								<div class="col-md-5 col-xs-5 price">
+									<div class="custom-row">
+										<?php if (!$_product->isSaleable()): ?>
+											<p class="sold-out red"><?php /* @escapeNotVerified */ echo __('Sold Out') ?></p>
+										<?php endif; ?>
+									</div>
+								</div>
+							</div>
+							<div class="custom-row">
+								<?php
+								// if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+								// echo '<span class="btnGrey">'.__('Options Available').'</span> ';
+								// } 
+								if ($_product->getAttributeText('options_available') == 'Yes') {
+									echo '<span class="btnGrey">' . __('Options Available') . '</span>';
+								}
+
+								if ($_product->getAttributeText('is_customizable') == 'Yes') {
+									echo '<span class="btnBlack">' . __('Customizable') . '</span>';
+								}
+								?>
+							</div>
+							<!--<div class="custom-row">
+								   <p class="productDetail">by Ira Studio</p>
+								</div>-->
+						</div>
+					</div>
+				</div>
+
+				<?php if ($i == 3) { ?>
+					<div class="clearfix"></div>
+				<?php $i = 0;
+				} ?>
+				<?php $i++; ?>
+			<?php endforeach; ?>
+		</div>
+
+	</div>
+	<?php echo $block->getToolbarHtml() ?>
+	<?php if (!$block->isRedirectToCartEnabled()) : ?>
+		<script type="text/x-magento-init">
+			{
+            "[data-role=tocart-form], .form.map.checkout": {
+                "catalogAddToCart": {}
+            }
+        }
+		
+        </script>
+	<?php endif; ?>
+	<script type="text/x-magento-init">
+		{
+			"*": {
+				"Magento_Ui/js/core/app": {
+					"components": {
+						"wishlist": {
+							"component": "Magento_Wishlist/js/view/wishlist"
+						}
+					}
+				}
+			}
+		}
+		 </script>
+<?php endif; ?>

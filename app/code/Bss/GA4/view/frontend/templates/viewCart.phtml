@@ -1,0 +1,38 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var \Bss\GA4\Block\ViewCart $block
+ */
+$escaper = $block->escaper();
+$collection = $block->getCollection();
+$crossell = $block->getCrossellProduct();
+?>
+<?php if ($block->isEnableModule() && $collection): ?>
+    <script class="bss_view_cart">
+        gtag("event", "view_cart", {
+            currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+            value: "<?=$escaper->escapeHtml($block->getValue())?>",
+            items: <?= /** @noEscape  */ $block->serializeItem($collection)?>
+        });
+    </script>
+<?php endif; ?>
+<?php if ($block->isEnableModule() && $crossell): ?>
+    <script>
+        gtag("event", "view_item_list", {
+            item_list_id: "<?= $escaper->escapeHtml($block->getQuoteId()) ?>",
+            item_list_name: "<?=$escaper->escapeHtml(__('More Choices'))?>",
+            items: <?= /* @noEscape */ $block->serializeItem($crossell)?>
+        });
+    </script>
+<?php endif; ?>
+

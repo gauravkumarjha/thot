@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="bss_add_to_cart" type="Bss\GA4\Plugin\Checkout\CustomerData\Cart"/>
+    </type>
+    <type name="Magento\Wishlist\Controller\Index\Remove">
+        <plugin name="bss_ga_set_remove_from_wishlist_session" type="Bss\GA4\Plugin\Wishlist\Remove"/>
+    </type>
+</config>

@@ -1,0 +1,72 @@
+/* 
+.checkout-index-index .page-title-wrapper h1.page-title span{
+  font-size: 16px;
+}
+
+
+    
+
+.opc-progress-bar-item>span:after{
+  font-size: 14px;
+}
+.opc-progress-bar-item._active>span{
+      font-weight: 400;
+    text-transform: uppercase;
+        font-size: 14px;
+}
+
+
+#shipping .step-title {
+    display: none;
+}
+
+.opc-sidebar{
+      position: sticky;
+    top: 135px;
+}
+.form-shipping-address .fieldset .field .label{
+  font-weight: 400 !important;
+}
+.checkout-shipping-address input[type=datetime], input[type=email], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], select{
+      height: 48px;
+      font-size: 11px;
+}
+.checkout-index-index .opc-block-shipping-information, .checkout-index-index .opc-block-summary{
+  background: none !important;
+}
+
+
+
+
+.opc-block-summary span.title {
+    background: #eee;
+        padding: 14px 10px;
+            font-size: 13px !important;
+                letter-spacing: 1px;
+}
+
+
+.opc-block-summary .items-in-cart>.title strong{
+  
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+
+
+.opc-block-summary .items-in-cart>.title{
+  font-size: 12px;
+}
+
+
+.checkout-index-index .form-login label span, .checkout-index-index .form-shipping-address fieldset legend span, .wordpress-search-view .btnClose i, .wordpress-term-view .btnClose i{
+      font-weight: 400;
+}
+.opc-wrapper{
+              width: 60%;
+}
+
+.opc-sidebar{
+  width: 40%;
+  border-left: 1px solid #969695;
+} */

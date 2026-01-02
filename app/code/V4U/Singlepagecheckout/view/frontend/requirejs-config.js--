@@ -1,0 +1,7 @@
+var config = {
+    map: {
+        '*': {
+            v4uAccordion: 'V4U_Singlepagecheckout/js/view/accordion'
+        }
+    }
+};

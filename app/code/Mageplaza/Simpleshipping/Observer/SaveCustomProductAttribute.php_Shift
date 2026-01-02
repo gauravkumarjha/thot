@@ -1,0 +1,147 @@
+<?php
+
+namespace Mageplaza\Simpleshipping\Observer;
+
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Model\Order;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Zend_Log;
+use Zend_Log_Writer_Stream;
+
+class SaveCustomProductAttribute implements ObserverInterface
+{
+    protected ProductRepositoryInterface $productRepository;
+    protected StoreManagerInterface $storeManager;
+
+    public function __construct(
+        StoreManagerInterface $storeManager,
+        ProductRepositoryInterface $productRepository
+    ) {
+        $this->productRepository = $productRepository;
+        $this->storeManager = $storeManager;
+    }
+
+    public function execute(Observer $observer)
+    {
+        // Initialize logger
+        $writer = new Zend_Log_Writer_Stream(BP . '/var/log/SaveCustomProductAttribute.log');
+        $logger = new Zend_Log();
+        $logger->addWriter($writer);
+
+        /** @var Order $order */
+        $order = $observer->getEvent()->getOrder();
+        if (!$order) {
+            $logger->err("Order not found in observer.");
+            return;
+        }
+
+        $storeId = $order->getStoreId();
+        $storeCode = $this->storeManager->getStore($storeId)->getCode();
+        $orderDate = $order->getCreatedAt();
+
+        $shippingAddress = $order->getShippingAddress();
+        $countryId = $shippingAddress ? $shippingAddress->getCountryId() : null;
+
+        //$logger->info("Processing order ID: {$order->getId()}, Store Code: {$storeCode}, Country: {$countryId}");
+
+        $sla = 0; // Default SLA
+        $fulfillmentDates = [];
+
+        foreach ($order->getAllItems() as $item) {
+            $productId = $item->getProductId();
+            $qtyOrdered = (int) $item->getQtyOrdered();
+
+            try {
+                $product = $this->productRepository->getById($productId, false, $storeId);
+            } catch (\Exception $e) {
+                $logger->err("Failed to load product ID {$productId}: " . $e->getMessage());
+                continue;
+            }
+
+          //  $product->setStoreId($storeId);
+
+            $inventoryFields = ['inventory_1', 'inventory_2', 'inventory_3'];
+            $timelineFields = ['timeline_1', 'timeline_2', 'timeline_3'];
+            $updated = false;
+
+            foreach ($inventoryFields as $index => $inventoryField) {
+                $inventory = (int) $product->getData($inventoryField);
+                $timeline = (int) $product->getData($timelineFields[$index]);
+                $logger->info("{$timelineFields[$index]}: " . $timeline);
+                if ($inventory > 0 && $qtyOrdered > 0) {
+                    $ss  = $product->getStoreId();
+                    if ($inventory >= $qtyOrdered) {
+                        if ($product->getStoreId() == 1) {
+                           
+                            $globalProduct = $this->productRepository->getById($product->getId(), false, 0);
+                            $globalProduct->setData($inventoryField, $inventory - $qtyOrdered);
+                            $logger->info("defaultstore- {$ss} storeid - 0 - {$inventoryField}: " . $inventory - $qtyOrdered);
+                            
+                        }
+                        $product->setData($inventoryField, $inventory - $qtyOrdered);
+                        $logger->info("{$inventoryField}: " . $inventory - $qtyOrdered);
+                        $sla = $timeline;
+                        $updated = true;
+                        break;
+                    } else {
+                        $qtyOrdered -= $inventory;
+                        if ($product->getStoreId() == 1) {
+                          
+                            $globalProduct = $this->productRepository->getById($product->getId(), false, 0);
+                            $globalProduct->setData($inventoryField, 0);
+                            $logger->info("defaultstore- {$ss} storeid - 0 - {$inventoryField}: " . $inventory - $qtyOrdered);
+                        }
+                        $product->setData($inventoryField, 0);
+                        $logger->info("{$inventoryField}: 0");
+                    }
+                }
+            }
+
+            if ($updated) {
+                try {
+                    if($storeId == 1) {
+                     $this->productRepository->save($globalProduct);
+                    }
+                    $this->productRepository->save($product);
+                } catch (\Exception $e) {
+                    $logger->err("Failed to save product ID {$productId}: " . $e->getMessage());
+                }
+            }
+
+            // Fulfillment date calculation
+            $extraDays = ($storeCode == 'usd') ? 12 : 6;
+            if($sla == "0" ) {
+                $fulfillmentDate = "0000-00-00";
+            } else {
+                $fulfillmentDate = date('Y-m-d', strtotime($orderDate . " + " . ($sla + $extraDays) . " days"));
+            }
+             $fulfillmentDates[] = $fulfillmentDate;
+
+            // Calculate custom shipping price
+            $shippingChargesFeatureEnabled = (int) $product->getData('shipping_charges_feature_enabl');
+            $weightPrice = (float) $product->getData('weight_price');
+
+            if ($shippingChargesFeatureEnabled === 1 && $weightPrice > 0 && $countryId === 'IN') {
+                $customShippingPrice = $weightPrice * $qtyOrdered;
+            } elseif ($shippingChargesFeatureEnabled === 0 && $countryId === 'IN') {
+                $customShippingPrice = "free";
+            } else {
+                $customShippingPrice = "To Be Quoted";
+            }
+
+            $item->setData('custom_shipping_price', $customShippingPrice);
+            $logger->info("Item ID {$item->getItemId()} - Custom Shipping Price: {$customShippingPrice}");
+        }
+
+        $logger->info("Fulfillment Dates: " . print_r($fulfillmentDates, true));
+        $maxDate = max($fulfillmentDates);
+
+        $order->setData('fulfillment_date', $maxDate);
+        $order->setData('store_code', $storeCode);
+        $logger->info("fulfillment_date: ". $maxDate);
+        $logger->info("store_code: " . $storeCode);
+        $order->save();
+    }
+}

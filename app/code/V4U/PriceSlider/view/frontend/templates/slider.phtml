@@ -1,0 +1,12 @@
+<div id="price-slider-range" style="margin: 20px;"></div>
+<p>
+    Price: ₹<span id="amount-min">100</span> - ₹<span id="amount-max">1000</span>
+</p>
+<input type="hidden" id="min_price" name="min_price" value="100">
+<input type="hidden" id="max_price" name="max_price" value="1000">
+
+<script type="text/javascript">
+    require(['jquery', 'priceSlider'], function($, priceSlider) {
+        priceSlider();
+    });
+</script>

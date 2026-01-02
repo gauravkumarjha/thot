@@ -1,0 +1,13 @@
+var config = {
+    map: {
+        '*': {
+            'add-cod-fee': 'DiMedia_CustomStatus/js/add-cod-fee'
+        }
+    },
+    shim: {
+        'DiMedia_CustomStatus/js/add-cod-fee': ['Magento_Checkout/js/view/payment']
+    },
+    deps: [
+        'Magento_Checkout/js/view/payment'
+    ]
+};

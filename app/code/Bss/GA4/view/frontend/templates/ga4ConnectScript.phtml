@@ -1,0 +1,49 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+?>
+<?php
+/**
+ * @var $block Bss\GA4\Block\ScriptAnalytics
+ */
+?>
+
+<?php if ($block->isEnable()): ?>
+    <?php $escaper = $block->escaper(); ?>
+    <script>
+        window.addEventListener("load", (event) => {
+            <!-- Google tag (gtag.js) -->
+            const scriptLibrary = document.createElement('script');
+            scriptLibrary.setAttribute(
+                'src',
+                'https://www.googletagmanager.com/gtag/js?id=<?= $escaper->escapeHtml($block->getMeasurementId()) ?>',
+            );
+            document.head.appendChild(scriptLibrary);
+        }, false);
+    </script>
+    <script defer>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config','<?= $escaper->escapeHtml($block->getMeasurementId()) ?>');
+    </script>
+    <div class="bss-script"></div>
+    <script type="text/x-magento-init">
+    {
+      "*": {
+        "tracking": {
+        }
+      }
+    }
+    </script>
+<?php endif;?>
+

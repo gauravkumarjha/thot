@@ -1,0 +1,528 @@
+<?php
+
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Checkout\Block\Cart\Item\Renderer */
+
+$_item = $block->getItem();
+$product = $_item->getProduct();
+$isVisibleProduct = $product->isVisibleInSiteVisibility();
+/** @var \Magento\Msrp\Helper\Data $helper */
+$helper = $this->helper('Magento\Msrp\Helper\Data');
+$shippingHelper = $this->helper('\DiMedia\ShippingDayUnicomerce\Helper\Data');
+
+$canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinimalPriceLessMsrp($product);
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$wishlist = $objectManager->get('\Magento\Wishlist\Model\Wishlist');
+$customerSession = $objectManager->get('Magento\Customer\Model\Session');
+$customerData = $customerSession->getCustomer()->getData(); //get all data of customerData
+$customerId = $customerSession->getCustomerId(); //get id of customer
+$isAdded = $wishlist->loadByCustomerId($customerId, true)->getItemCollection();
+$customer_wishlist_solution = array();
+if ($isAdded->count() > 0) {
+	foreach ($isAdded as $item) {
+		$customer_wishlist_solution[] = $item->getProduct()->getID();
+	}
+}
+
+?>
+
+<div class="col-sm-12">
+	<div class="cart-item-block cart-item-block-gk">
+		<div class="col-md-5">
+			<div class="row">
+				<?php
+				//echo $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml();
+				//$productImage = $block->getImage($product, 'hot_product_page_image_medium'); 
+				//$productImage = $block->getImage($product, 'cart_page_product_thumbnail');
+
+				$thumbnailUrl = $block->getUrl() . "pub/media/catalog/product/" . $product->getThumbnail();
+
+				?>
+
+				<img src="<?php /* @escapeNotVerified */ echo $thumbnailUrl; //echo $productImage->getImageUrl(); 
+							?>" class="img-responsive img-responsive-gk">
+			</div>
+		</div>
+
+		<div class="col-md-7 cart-item-info">
+			<div class="">
+				<div class="wishlist_wrapper">
+					<h3>
+						<?php if ($block->hasProductUrl()) : ?>
+							<a href="<?php /* @escapeNotVerified */ echo $block->getProductUrl() ?>">
+								<?php echo $block->escapeHtml($block->getProductName()) ?>
+							</a>
+						<?php else : ?>
+							<?php echo $block->escapeHtml($block->getProductName()) ?>
+						<?php endif; ?>
+					</h3>
+
+					<div class="btnGiftOptions btnGiftOptionswrap">
+						<!-- Wishlist Icon -->
+						<?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow()): ?>
+							<?php if (!empty($customer_wishlist_solution) && (in_array($_product->getID(), $customer_wishlist_solution))) { ?>
+								<a href="/wishlist/" class="action towishlist already_added"><i class="fa fa-heart-o"></i></a>
+							<?php } else { ?>
+								<a href="javascript:void(0);" data-post='<?php echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($product) ?>'
+									class="action towishlist gk2" data-action="add-to-wishlist"><i class="fa fa-heart-o"></i></a>
+							<?php } ?>
+						<?php endif; ?>
+
+						<!-- Delete / Other Actions -->
+						<?php /* @escapeNotVerified */ echo $block->getActions($_item) ?>
+					</div>
+				</div>
+
+				<?php
+				$product_id = $product->getId();
+
+				$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+				$storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+				$currentStore = $storeManager->getStore();
+				$store_url = $currentStore->getBaseUrl();
+				$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+				$connection = $resource->getConnection();
+				$tableName = $resource->getTableName('ves_brand_product');
+				$sql = "SELECT brand_id FROM " . $tableName . " WHERE product_id=" . $product_id;
+				$results = $connection->fetchAll($sql);
+
+				if (!empty($results)) {
+					$brand_ids = array();
+					foreach ($results as $result) {
+						array_push($brand_ids, $result['brand_id']);
+					}
+					$tableName = $resource->getTableName('ves_brand');
+					$sql = "SELECT * FROM " . $tableName . " WHERE brand_id IN (" . implode(",", $brand_ids) . ")";
+					$brands = $connection->fetchAll($sql);
+
+					$tableName = $resource->getTableName('core_config_data');
+					$sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_prefix'";
+					$url_prefix = $connection->fetchAll($sql);
+
+					$sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_suffix'";
+					$url_suffix = $connection->fetchAll($sql);
+
+				?>
+					<h4>
+						By
+					<?php
+					foreach ($brands as $i => $brand) {
+						echo '<a href=' . $store_url . $url_prefix[0]['value'] . "/" . $brand['url_key'] . $url_suffix[0]['value'] . '><span>' . $brand['name'] . '</span></a>';
+						if (count($brands) > 1 && $i < count($brands) && $i < count($brands) - 1) echo ', ';
+					}
+				}
+					?>
+			</div>
+			<div class="btn-group col-md-4">
+				<div class="row qnty_wrap ">
+					<div class="price_add_new">
+						<!-- <h4 class="btn-head2" data-th="<?php echo $block->escapeHtml(__('Qty')); ?>">Qty:</h4> -->
+						<div class="qty-wrapper">
+							<button class="decrement" onclick="changeQty(-1, '<?php echo $_item->getId(); ?>')">-</button>
+							<input id="cart-<?php echo $_item->getId(); ?>-qty" name="cart[<?php echo $_item->getId(); ?>][qty]" data-cart-item-id="<?php echo $_item->getSku(); ?>" value="<?php echo $block->getQty(); ?>" type="number" size="4" title="<?php echo $block->escapeHtml(__('Qty')); ?>" class="input-text qty" maxlength="12" data-validate="{required:true,'validate-greater-than-zero':true}" id="fdsfd" data-role="cart-item-qty" />
+							<button class="increment" onclick="changeQty(1, '<?php echo $_item->getId(); ?>')">+</button>
+						</div>
+						<div class="product-price" data-th="<?php echo $block->escapeHtml(__('Price')); ?>">
+							<?php echo $block->getUnitPriceHtml($_item); ?>
+						</div>
+						<div class="shipping_cont">
+							<?php
+							$inventory_1 = $product->getData('inventory_1');
+							$inventory_2 = $product->getData('inventory_2');
+							$inventory_3 = $product->getData('inventory_3');
+							$timeline = "";
+							$requestedQty =  $block->getQty();
+
+							if ($inventory_1 != "0" && !empty($inventory_1) && $inventory_1 >= $requestedQty) {
+
+								$requestedQty = $inventory_1 - $requestedQty;
+
+								$timeline = $product->getData('timeline_1');
+								$requestedQty = 0;
+							} elseif ($requestedQty != 0 && $inventory_1 < $requestedQty && $inventory_1 > 0) {
+								$requestedQty -= $inventory_1;
+								$timeline = $product->getData('timeline_1');
+							}
+							if (
+								$requestedQty != 0 && $inventory_2 != "0" && !empty($inventory_2) && $inventory_2 >= $requestedQty
+							) {
+								$timeline = $product->getData('timeline_2');
+								$requestedQty = $inventory_2 - $requestedQty;
+								$requestedQty = 0;
+							} elseif ($requestedQty != 0 && $inventory_2 < $requestedQty && $inventory_2 > 0) {
+								$requestedQty -= $inventory_2;
+								$timeline = $product->getData('timeline_2');
+							}
+
+							if (
+								$requestedQty != 0 && $inventory_3 != "0" && !empty($inventory_3) && $inventory_3 >= $requestedQty
+							) {
+								$timeline = $product->getData('timeline_3');
+								$requestedQty = $inventory_3 - $requestedQty;
+								$requestedQty = 0;
+							} elseif ($requestedQty != 0 && $inventory_3 < $requestedQty && $inventory_3 > 0) {
+								$timeline = $product->getData('timeline_3');
+							}
+							//echo $timeline;
+							if ($timeline != "") {
+								//$days = $shippingHelper->getShippingDays();
+								$timeline = $timeline + 2;
+								$orderDate = date("Y-m-d");
+								$fulfillmentDate = date('d M Y', strtotime($orderDate . " + " . ($timeline) . " days"));
+								$weeks = ceil($timeline / 7); 
+								echo '<p class="v4u-shipping-time" data-day="'.$timeline.'">Shipped By ' . $fulfillmentDate . '</p>';
+							}
+							?>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="color-options">
+				<?php if ($_options = $block->getOptionList()) : ?>
+					<ul class="item-options">
+						<?php foreach ($_options as $_option) : ?>
+							<?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+							<li>
+								<div class="color-label"><?php echo $block->escapeHtml($_option['label']) ?>:</div>
+								<div class="detAtt">
+									<?php if (isset($_formatedOptionValue['full_view'])) : ?>
+										<?php /* @escapeNotVerified */ echo $_formatedOptionValue['full_view'] ?>
+									<?php else : ?>
+										<?php /* @escapeNotVerified */ echo $_formatedOptionValue['value'] ?>
+									<?php endif; ?>
+								</div>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+
+
+				<div class="clearfix"></div>
+				<?php if ($messages = $block->getMessages()) : ?>
+					<?php foreach ($messages as $message) : ?>
+						<div class="cart item message <?= $block->escapeHtmlAttr($message['type']) ?>">
+							<div><?= $block->escapeHtml($message['text']) ?></div>
+						</div>
+					<?php endforeach; ?>
+				<?php endif; ?>
+				<?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+				<?php if ($addInfoBlock) : ?>
+					<?= $addInfoBlock->setItem($_item)->toHtml() ?>
+				<?php endif; ?>
+			</div>
+
+			<div class="clearfix"></div>
+
+		</div>
+
+
+	</div>
+</div>
+<script>
+	function changeQty(value, itemId) {
+		var inputElement = document.getElementById('cart-' + itemId + '-qty');
+		var currentValue = parseInt(inputElement.value) || 0;
+		var newValue = currentValue + value;
+
+		if (newValue >= 1) {
+			inputElement.value = newValue;
+		}
+	}
+</script>
+<style>
+	.color-label {
+		margin: 3px 0 0 0 !important;
+		font-weight: 500;
+		font-size: 13px !important;
+		text-transform: uppercase;
+		color: #000;
+		margin-right: 10px !important;
+	}
+
+	.color-options {
+		clear: both;
+	}
+
+	.color-options ul li {
+		display: flex;
+	}
+
+	form.form.form-cart .col-md-7.cart-item-info .btnGiftOptions {
+		position: static;
+		justify-content: end;
+	}
+
+	.cart-item-info .btnGiftOptions a.action-delete {
+		position: absolute !important;
+		top: 30px;
+		right: 30px;
+		z-index: 9;
+	}
+	.cart-item-info h4 a {
+		color: #676767 !important;
+	}
+
+	#shopping-cart-table .cart-item-info {
+		padding-right: 30px !important;
+	}
+
+	#shopping-cart-table .cart-item-info .product-price {
+		width: 100%;
+	}
+
+	#shopping-cart-table .cart-item-info h4 {
+		margin-bottom: 0px !important;
+		color: #676767;
+	}
+
+	#shopping-cart-table .cart-item-info .product-price .price-including-tax {
+		margin-top: 0px;
+		border-bottom: 1px dotted #eee;
+		padding-bottom: 12px;
+	}
+
+	#shopping-cart-table .cart-item-info h3 {
+		margin-bottom: 10px !important;
+		font-size: 14px !important;
+	}
+
+	/* new css start */
+
+	.price_add_new {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		justify-content: space-between;
+		align-items: center;
+		text-align: center;
+		padding-top: 20px !important;
+	}
+
+	#shopping-cart-table .cart-item-block .col-md-7.cart-item-info .btn-group.col-md-4 .qty-wrapper {
+		margin: 0 !important;
+	}
+
+	.cart-item-block .btn-group.col-md-4 {
+		width: 100% !important;
+		padding: 0;
+	}
+
+	.qty-wrapper {
+		flex-wrap: nowrap !important;
+	}
+
+	.input-text.qty {
+		height: 25px !important;
+	}
+
+	#shopping-cart-table .cart-item-block .col-md-7.cart-item-info .btn-group.col-md-4 .qty-wrapper button {
+		width: 20px !important;
+		background: transparent;
+		color: #000;
+		border-color: transparent;
+		font-weight: 700;
+	}
+	#shopping-cart-table .cart-item-block .col-md-7.cart-item-info .btn-group.col-md-4 .qty-wrapper button:nth-child(1) {
+		text-align: left;
+	}
+	#shopping-cart-table .cart-item-block .col-md-7.cart-item-info .btn-group.col-md-4 .qty-wrapper button:nth-child(3) {
+		text-align: right;
+	}
+
+	.shipping_cont p {
+		font-weight: 400;
+		font-size: 14px;
+		text-align: right;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+		white-space: pre-line !important;
+		color: #676767;
+	}
+
+	.row.qnty_wrap {
+		margin: 0;
+	}
+
+	.cart-item-info .product-price .price-including-tax {
+		margin: 0 !important;
+		text-align: end;
+	}
+
+	.cart-item-info .product-price {
+		margin-top: 0 !important;
+	}
+
+	#shopping-cart-table .cart-item-info .product-price .price-including-tax {
+		border-bottom: transparent !important;
+		padding-bottom: 0 !important;
+	}
+
+	#shopping-cart-table .cart-item-block .col-md-7.cart-item-info .btn-group.col-md-4 .qty-wrapper button:hover {
+		background-color: transparent !important;
+		color: #000 !important;
+		border: 0;
+	}
+
+	form.form.form-cart .cart-item-block {
+		display: grid;
+		grid-template-columns: 80px calc(100% - 80px - 30px);
+		padding-left: 30px;
+		column-gap: 30px;
+		align-items: center;
+	}
+
+	.img-responsive {
+		aspect-ratio: 1;
+	}
+
+	.cart-item-info {
+		min-height: auto !important;
+		padding: 0 !important;
+		text-align: left;
+	}
+
+	.col-md-5,
+	.col-md-7 {
+		width: auto;
+	}
+
+	.cart-item-block {
+		border: none !important;
+		border-bottom: 1px solid #ccc !important;
+		padding-bottom: 20px;
+		margin-bottom: 35px !important;
+	}
+
+	.cart-item-info .btnGiftOptions a.action-delete {
+		position: static !important;
+	}
+	.cart-item-info .btnGiftOptions a {
+		margin-bottom: 0px !important;
+	}
+
+	.wishlist_wrapper {
+		display: grid;
+		grid-template-columns: calc(85% - 30px) 15%;
+		column-gap: 30px;
+	}
+
+	.btnGiftOptions.btnGiftOptionswrap {
+		display: flex;
+		align-items: flex-start;
+	}
+
+	/* gift options ko hide karne ke liye */
+	[id^="gift-options-cart-item-"] {
+		display: none !important;
+	}
+
+	/* edit action button hide karne ke liye */
+	.action.action-edit {
+		display: none !important;
+	}
+
+	.heading_shoping_main {
+		display: flex;
+		justify-content: space-between;
+		padding: 0 30px;
+		align-items: baseline;
+		padding-bottom: 0px;
+		border-bottom: 1px solid #ccc;
+		margin-bottom: 30px !important;
+	}
+
+	.remove_list a {
+		font-size: 14px;
+		color: #000;
+		text-decoration: underline;
+	}
+
+	.heading_title_new h4 {
+		font-size: 2.4rem;
+		font-weight: 400;
+		text-transform: uppercase;
+		color: #000;
+	}
+
+	.form.form-cart span.price {
+		color: #676767;
+	}
+	div #shopping-cart-table .col-sm-12 .cart-item-block-gk .cart-item-info .wishlist_wrapper h3 {
+		margin-bottom: 0 !important;
+	}
+
+	.cart-discount {
+		display: none;
+	}
+
+	@media screen and (max-width: 767px) {
+		form.form.form-cart .cart-item-block .row img {
+			height: auto;
+		}
+
+		form.form.form-cart [class].cart-item-block {
+			column-gap: 15px !important;
+			padding: 0 15px 20px !important;
+			grid-template-columns: 100px calc(100% - 100px - 15px) !important;
+		}
+
+		#shopping-cart-table [class].cart-item-info h3 {
+			font-size: 11px !important;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+			margin-bottom: 0 !important;
+		}
+
+		#shopping-cart-table .cart-item-info {
+			padding-right: 0 !important;
+		}
+
+		.wishlist_wrapper,
+		[class].price_add_new {
+			align-items: center;
+		}
+
+		[class].wishlist_wrapper [class].btnGiftOptions>*,
+		[class].cart-item-info .product-price {
+			margin-bottom: 0 !important;
+		}
+
+		[class].cart-item-info h4 a,
+		[class].cart-item-info h4,
+		[class].shipping_cont p,
+		[class].form.form-cart span.price {
+			font-size: 11px !important;
+		}
+
+		[id]#shopping-cart-table .cart-item-block .col-md-7.cart-item-info .btn-group.col-md-4 input {
+			width: 40px;
+			height: 20px !important;
+		}
+
+		[id]#shopping-cart-table .cart-item-block .col-md-7.cart-item-info .btn-group.col-md-4 .qty-wrapper button {
+			width: 20px;
+		}
+
+		.cart-item-info .product-price .price-including-tax {
+			text-align: center !important;
+			line-height: 11px !important;
+		}
+		.cart-items-container .cart-container .cart-summary {
+			position: fixed;
+			bottom: -30px !important;
+			top: unset !important;
+	        z-index: 9;
+		}
+	}
+</style>

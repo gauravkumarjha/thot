@@ -1,0 +1,151 @@
+<style>
+    #readyToShipToggle {
+        width: 31px;
+        height: 17px;
+        background-color: #ccc;
+        border-radius: 50px;
+        position: relative;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.3s;
+    }
+
+    #readyToShipToggle::before {
+        content: "";
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        left: 1px;
+        top: 1px;
+        background-color: #fff;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+    }
+
+    #readyToShipToggle.on {
+        background-color: green;
+    }
+
+    #readyToShipToggle.on::before {
+        transform: translateX(14px);
+    }
+
+    .toggle-label {
+        margin-left: 2px;
+        font-size: 14px;
+        font-weight: 500;
+        vertical-align: middle;
+    }
+
+    .filter_btn_wrap {
+        display: flex;
+        gap: 15px;
+    }
+
+    @media screen and (max-width: 767px) {
+        .sorter-options {
+            width: 112px;
+        }
+
+        .page-products .sorter {
+            width: 172px;
+        }
+    }
+</style>
+
+<div class="filter_sotring">
+    <div class="col-md-6 filter_btn_wrap">
+        <div><button class="filter_btn">Filter</button></div>
+        <div class="readyToShipWrapper-1">
+            <div class="flex items-center cursor-pointer" id="readyToShipWrapper">
+                <button type="button"
+                    id="readyToShipToggle"
+                    role="switch"
+                    aria-checked="false"
+                    aria-label="Ready to ship">
+                </button>
+                <label for="readyToShipToggle" class="toggle-label">Ready to ship</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 custom_sorting">
+        <?php include($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
+    </div>
+</div>
+<script>
+    require(['jquery'], function($) {
+        $(document).ready(function() {
+            const $toggle = $('#readyToShipToggle');
+
+            $toggle.on('click', function() {
+                const isChecked = $toggle.attr('aria-checked') === 'true';
+
+                const listItems = Array.from(document.querySelectorAll('.filter-options-content ol.items li.item'));
+
+                const index = listItems.findIndex(li => {
+                    const anchor = li.querySelector('a');
+                    return anchor && anchor.textContent.trim().includes('Ready To Ship');
+                });
+                const readyToShipLi = listItems[index];
+                const anchor = readyToShipLi.querySelector('a');
+
+
+                if (index !== -1 && !isChecked) {
+                    $toggle.attr('aria-checked', 'true').addClass('on');
+
+                    if (anchor) {
+                        console.log(`✅ Clicking on "Ready To Ship" filter at index ${index}`);
+                        anchor.click(); // ✅ Trigger Mageplaza filter AJAX
+                    }
+                } else {
+
+                    anchor.click();
+                    $toggle.attr('aria-checked', 'false').removeClass('on');
+                    console.log('❌ "Ready To Ship" filter not found.');
+                }
+                readyToShipLi.style.display = "none";
+
+            });
+        });
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const listItems = Array.from(document.querySelectorAll('.filter-options-content ol.items li.item'));
+
+        const index = listItems.findIndex(li => {
+            const anchor = li.querySelector('a');
+            return anchor && anchor.textContent.trim().includes('Ready To Ship');
+        });
+
+        if (index !== -1) {
+            const toggle = document.getElementById('readyToShipToggle');
+            const readyToShipLi = listItems[index];
+
+            console.log(`✅ Found "Ready To Ship" at index ${index}:`, readyToShipLi);
+
+            // Hide the item
+            readyToShipLi.style.display = "none";
+
+            // Check the checkbox status
+            const checkbox = readyToShipLi.querySelector('input[type="checkbox"]');
+
+            if (checkbox && checkbox.checked) {
+                console.log("✅ Ready To Ship is checked");
+
+                toggle.setAttribute('aria-checked', 'true');
+                toggle.classList.add('on');
+            } else {
+                console.log("❌ Ready To Ship is not checked");
+
+                toggle.setAttribute('aria-checked', 'false');
+                toggle.classList.remove('on');
+            }
+        } else {
+            const wrapper = document.querySelector('.readyToShipWrapper-1');
+            wrapper.style.display = 'none';
+            console.log('❌ "Ready To Ship" <li> not found.');
+        }
+    });
+</script>

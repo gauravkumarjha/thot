@@ -1,0 +1,24 @@
+<?php
+
+/** @var \Magento\Quote\Model\Quote\Item $item */
+?>
+<tr class="item-info">
+    <td class="col name" data-th="<?= __('Product Name') ?>">
+        <strong class="product-item-name"><?= $block->escapeHtml($item->getName()) ?></strong>
+    </td>
+    <td class="col price" data-th="<?= __('Price') ?>">
+        <?= $block->escapeHtml($block->getProductPriceHtml($item)) ?>
+    </td>
+    <td class="col quantity" data-th="<?= __('Qty') ?>">
+        <?= $block->escapeHtml($item->getQty()) ?>
+    </td>
+    <td class="col subtotal" data-th="<?= __('Subtotal') ?>">
+        <?= $block->escapeHtml($block->getPriceInclTax($item)) ?>
+    </td>
+    <td class="col shipping" data-th="<?= __('Shipping Charge') ?>">
+        <?php
+        $shippingCharge = $customShippingChargePerItem * $item->getQty();
+        ?>
+        <span class="price"><?= $block->escapeHtml($block->formatPrice($shippingCharge)) ?></span>
+    </td>
+</tr>

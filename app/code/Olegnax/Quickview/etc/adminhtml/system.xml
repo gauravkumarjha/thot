@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="olegnax" translate="label" sortOrder="15">
+            <label>Olegnax</label>
+        </tab>
+        <section id="olegnax_quickview" translate="label" type="text" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Quick View</label>
+            <tab>olegnax</tab>
+            <resource>Olegnax_Quickview::quickview</resource>
+            <group id="info" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="0" translate="label">
+                <frontend_model>Olegnax\Quickview\Block\Adminhtml\System\Config\Form\Info</frontend_model>
+            </group>
+            <group id="general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+                    <label>General</label>
+                    <field id="enable" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+                    <field id="link_title" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Product Title as Link</label>
+                            <comment>Add link to a product page on product name</comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+                   <field id="hide_desc" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Hide Short Description</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+                    <field id="hide_tabs" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Hide Tabs</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+                    <field id="move_tabs" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Move Tabs in Right Column (Main Info)</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                            <depends>
+                                    <field id="hide_tabs">0</field>
+                            </depends>
+                    </field>
+                    <field id="hide_reviews" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Hide Reviews Tab/Block</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+
+                    </field>
+                    <field id="hide_sku" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Hide sku</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+                    <field id="hide_related" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Hide related products</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+                    <field id="hide_upsell" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Hide upsell products</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+                    <field id="force_fotorama" translate="label comment" type="select" sortOrder="12" showInDefault="1"
+                               showInWebsite="1" showInStore="1">
+                            <label>Replace Gallery with Fotorama</label>
+                            <comment>Replace product images gallery with magento default Fotorama. Useful if you for example have grid layout for images on product page. It will work only if theme do not override default fotorama template.</comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <frontend_class>on-off-trigger</frontend_class>
+                    </field>
+            </group>
+            <group id="loaders" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label">
+                    <label>Modal Preloader</label>
+                    <field id="loader_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10"
+                               translate="label" type="select">
+                            <label>AJAX Progress Loader For Quickview Modal</label>
+                            <source_model>Olegnax\Quickview\Model\Config\Source\LoaderType</source_model>
+                    </field>
+                    <field id="loader_custom" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="11"
+                               translate="label comment" type="text">
+                            <label>Custom Loader Image</label>
+                            <comment>Set url to preloader image. E.g.: "images/preloader.svg" will link to web/images folder in your
+                                    current theme. E.g.: app/design/frontend/Olegnax/athlete2/web/images. 
+                                Or you can place preloader image in extension folder app/code/Olegnax/Quickview/view/frontend/web/images/your-preloader.svg, 
+                                then add following to this field: Olegnax_Quickview::images/your-preloader.svg
+                            </comment>
+                            <depends>
+                                    <field id="loader_type">-custom</field>
+                            </depends>
+                    </field>       
+                    <field id="loader_color" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Preloader (Spinner) Color</label>
+                        <frontend_class>ox-ss-colorpicker</frontend_class>
+                            <depends>
+                                    <field id="loader_type">-spinner</field>
+                            </depends>
+                    </field>           
+            </group>
+            <group id="modal" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Quick View Modal</label>
+                <field id="enable" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label comment"
+                           type="select">
+                        <label>Enable</label>
+                        <frontend_class>on-off-trigger</frontend_class>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Enable quickview modal appearance settings</comment>
+                </field>
+                <field id="width" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal max width</label>
+                    <comment>Number Only.</comment>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends> 
+                </field>
+                <field id="height" translate="label comment" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Height</label>
+                    <comment>Number Only.</comment>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends> 
+                </field>
+<!--                <field id="width_mobile" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Max width - Mobile</label>
+                    <comment>Add px or % to a number. E.g. 990px 50%</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends> 
+                </field>
+                <field id="height_mobile" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Height - Mobile</label>
+                    <comment>Add px or % to a number. E.g. 990px 50%</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends> 
+                </field>-->
+                <field id="bg_color" translate="label" type="text" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Background Color</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends> 
+                </field>
+                <field id="shadow_color" translate="label" type="text" sortOrder="23" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Shadow Color</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="border_radius" translate="label comment" type="text" sortOrder="24" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal edges roundness (Border Radius)</label>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <comment>Zero for square shape.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="modal_padding" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Padding</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 0.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="modal_padding_m" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Padding - Tablet</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 0.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="modal_padding_s" translate="label" type="text" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modal Padding - Mobile</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 0.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_info_padding" translate="label" type="text" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Info Block Padding</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 50px 40px 0 40px.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_info_padding_m" translate="label" type="text" sortOrder="29" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Info Block Padding - Tablet</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 50px 40px 0 40px.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_info_padding_s" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Info Block Padding - Mobile</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 20px 20px 0.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_media_padding" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Media Block Padding</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 0.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_media_padding_m" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Media Block Padding - Tablet</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 30px 30px 0.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_media_padding_s" translate="label" type="text" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Media Block Padding - Mobile</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 20px 20px 0.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_blocks_padding" translate="label comment" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Page Content Blocks Padding</label>
+                    <comment>Tabs on content, Related, Upsell, etc. Numbers and units. E.g.: 30px. Default is 0 30px</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_blocks_padding_m" translate="label comment" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Page Content Blocks Padding - Tablet</label>
+                    <comment>Tabs on content, Related, Upsell, etc. Numbers and units. E.g.: 30px. Default is 0 30px</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="product_blocks_padding_s" translate="label comment" type="text" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Page Content Blocks Padding - Mobile</label>
+                    <comment>Tabs on content, Related, Upsell, etc. Numbers and units. E.g.: 30px. Default is 0 20px</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="cms_padding" translate="label comment" type="text" sortOrder="37" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Padding for Modal with Static Block</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 30px. Padding for content of a cms block when you set static block as a source for quickview. Padding will be added to the body of a modal content and not to modal wrapper as in previous options.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="cms_padding_m" translate="label comment" type="text" sortOrder="38" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Padding for Modal with Static Block Padding - Tablet</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 30px. Padding for content of a cms block when you set static block as a source for quickview. Padding will be added to the body of a modal content and not to modal wrapper as in previous options.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="cms_padding_s" translate="label comment" type="text" sortOrder="39" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Padding for Modal with Static Block - Mobile</label>
+                    <comment>Numbers and units. E.g.: 30px. Default is 20px. Padding for content of a cms block when you set static block as a source for quickview. Padding will be added to the body of a modal content and not to modal wrapper as in previous options.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="spacer_1" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <frontend_model>Olegnax\Core\Model\Spacer</frontend_model>
+                        <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_btn_size" translate="label" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Size</label>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_icon_color" translate="label" type="text" sortOrder="52" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Color</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_icon_color_hover" translate="label" type="text" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Color on Hover</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_bg_color" translate="label" type="text" sortOrder="54" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Background Color</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_bg_color_hover" translate="label" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Background on Hover</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_border_size" translate="label" type="text" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Border Size</label>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_border_color" translate="label" type="text" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Border Color</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_border_color_hover" translate="label" type="text" sortOrder="58" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Border Color on Hover</label>
+                    <frontend_class>ox-ss-colorpicker</frontend_class>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_border_radius" translate="label comment" type="text" sortOrder="59" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button edges roundness (Border Radius)</label>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <comment>Zero for square shape.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_btn_top" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Top Position</label>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="close_btn_right" translate="label" type="text" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Close Button Right Position</label>
+                    <validate>validate-digits validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>        
+    </system>
+</config>

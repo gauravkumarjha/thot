@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+      layout="checkout">
+
+    <body>
+
+        <!-- DEFAULT CHECKOUT MUST BE IN content -->
+        
+        <referenceContainer name="content">
+            <block class="Magento\Checkout\Block\Onepage"
+                   name="checkout.root"
+                   template="Magento_Checkout::onepage.phtml"
+                   cacheable="false" />
+        </referenceContainer>
+
+        <!-- CUSTOM SINGLE CHECKOUT -->
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="single.checkout.page"
+                   template="DiMedia_SingleCheckout::onepage_single.phtml"
+                   cacheable="false" />
+        </referenceContainer>
+
+    </body>
+</page>

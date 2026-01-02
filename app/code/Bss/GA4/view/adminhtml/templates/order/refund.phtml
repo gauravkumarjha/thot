@@ -1,0 +1,45 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var \Bss\GA4\Block\Order\Refund $block
+ */
+$escaper = $block->escaper();
+$dataRefund = $block->getDataRefund();
+?>
+<?php if ($block->isEnable() && $block->getMeasurementId()): ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=
+    <?= $escaper->escapeHtml($block->getMeasurementId())?>">
+    </script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config','<?=$escaper->escapeHtml($block->getMeasurementId())?>');
+    </script>
+
+    <?php if ($dataRefund && $dataRefund['items']): ?>
+        <script>
+            gtag("event", "refund", {
+                transaction_id: "<?=$escaper->escapeHtml($dataRefund['transactionId'])?>",
+                affiliation: "<?=$escaper->escapeHtml($block->getAffiliation())?>",
+                value: "<?=$escaper->escapeHtml($dataRefund['value'])?>",
+                tax:"<?=$escaper->escapeHtml($dataRefund['taxAmount'])?>",
+                shipping: "<?=$escaper->escapeHtml($dataRefund['shippingAmount'])?>",
+                currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+                coupon: "<?=$escaper->escapeHtml($dataRefund['couponCode'])?>",
+                items: <?= /** @noEscape  */ $block->serializeItem($dataRefund['items'])?>
+            });
+        </script>
+    <?php endif;?>
+<?php endif;?>

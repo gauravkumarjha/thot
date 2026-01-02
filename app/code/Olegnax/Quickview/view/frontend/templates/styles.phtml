@@ -1,0 +1,172 @@
+<?php
+/**
+ * Olegnax Quickview Global Styles
+ *
+ * @author      Olegnax
+ * @package     Olegnax_Quickview
+ * @copyright   Copyright (c) 2022 Olegnax (http://olegnax.com/). All rights reserved.
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Olegnax\Quickview\Helper\Helper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+$settings = $this->helper(Helper::class)->getConfig('olegnax_quickview', $block->getData('dynamic_store_code'));
+
+$modal = $closeBtn = $styles = [];
+
+	if ($settings['modal']['height'] > 0 && (($settings['general']['hide_tabs'] || (!$settings['general']['hide_tabs'] && $settings['general']['move_tabs'])) && $settings['general']['hide_upsell']  && $settings['general']['hide_related'])){
+		$styles[] = 	'@media (min-width:' . ($escaper->escapeHtmlAttr($settings['modal']['width']) ?: '960' ) . 'px){
+		:is(.ox-quickview-catalog-product-view, .ox_quickview-catalog_product-view).catalog-product-view.ox-qv-content-maxheight .fotorama{
+			max-height: 100vh;
+			height:' . $escaper->escapeHtmlAttr($settings['modal']['height']) . 'px;
+		}
+		:is(.ox-quickview-catalog-product-view, .ox_quickview-catalog_product-view).catalog-product-view.ox-qv-content-maxheight .product.media .fotorama__stage{
+			height:' . $escaper->escapeHtmlAttr($settings['modal']['height']) . 'px!important;
+			max-height: 100vh!important;
+        }
+		:is(.ox-quickview-catalog-product-view, .ox_quickview-catalog_product-view).catalog-product-view.ox-qv-content-maxheight .product-info-main{
+			height: ' . $escaper->escapeHtmlAttr($settings['modal']['height']) . 'px;
+			max-height: 100vh;
+		}
+	}';
+	}
+
+	/* modal general */
+if($settings['modal']['enable']):
+	$modalSelector = '.ox-modal.ox-qv-modal > div, .ox-modal.ox-qv-modal .ox-modal-content';
+	$productInfoSelector = '.ox-quickview-catalog-product-view.catalog-product-view .product-info-main, .ox_quickview-catalog_product-view.catalog-product-view .product-info-main';
+	$productBlocksSelector = '.ox-quickview-catalog-product-view.catalog-product-view > .block, .ox_quickview-catalog_product-view.catalog-product-view > .block, .ox-quickview-catalog-product-view.catalog-product-view .column.main > .product.info.detailed, .ox_quickview-catalog_product-view.catalog-product-view .column.main > .product.info.detailed, .ox-quickview-catalog-product-view.catalog-product-view .column.main > .block.related, .ox_quickview-catalog_product-view.catalog-product-view .column.main > .block.related, .ox-quickview-catalog-product-view.catalog-product-view .column.main > .block.upsell, .ox_quickview-catalog_product-view.catalog-product-view .column.main > .block.upsell';
+	$productMediaSelector = 'body.ox-quickview-catalog-product-view.catalog-product-view .product.media, body.ox_quickview-catalog_product-view.catalog-product-view .product.media';
+	
+	if ($settings['modal']['bg_color']){
+		$modal[] = 'background: ' . $settings['modal']['bg_color'] . '; ';
+		$styles[] = 'body.ox-quickview-catalog-product-view.catalog-product-view, body.ox_quickview-catalog_product-view.catalog-product-view{background: ' . $settings['modal']['bg_color'] . '}';
+	}
+	if ($settings['modal']['shadow_color']){
+		$modal[] = 'box-shadow: 0px 5px 30px -5px ' . $settings['modal']['shadow_color'] . '; ';
+	}
+	if ('' != $settings['modal']['border_radius'] && $settings['modal']['border_radius'] >= 0){
+		$modal[] = 'border-radius: ' . $escaper->escapeHtmlAttr($settings['modal']['border_radius']) . 'px;';
+	}
+	if ($settings['modal']['width'] > 0){
+		$modal[] = 'max-width:' . $escaper->escapeHtmlAttr($settings['modal']['width']) . 'px;';
+	}
+	if ($settings['modal']['height'] >0){
+		$modal[] = 'height:' . $escaper->escapeHtmlAttr($settings['modal']['height']) . 'px;';
+	}
+	
+	if ($settings['modal']['modal_padding']){
+		$modal[] = 'padding:' . $escaper->escapeHtml($settings['modal']['modal_padding']) . ';';
+	}
+	if ($settings['modal']['modal_padding_m']){
+		$tablet[] = $modalSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['modal_padding_m']) . ';}';
+	}
+	if ($settings['modal']['modal_padding_s']){
+		$mobile[] = $modalSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['modal_padding_s']) . ';}';
+	}
+	
+	if ($settings['modal']['cms_padding']){
+		$styles[] = 'body.ox_hotspot-index-index {padding:' . $escaper->escapeHtml($settings['modal']['cms_padding']) . ';}';
+	}
+	if ($settings['modal']['cms_padding_m']){
+		$tablet[] = 'body.ox_hotspot-index-index {padding:' . $escaper->escapeHtml($settings['modal']['cms_padding_m']) . ';}';
+	}
+	if ($settings['modal']['cms_padding_s']){
+		$mobile[] = 'body.ox_hotspot-index-index {padding:' . $escaper->escapeHtml($settings['modal']['cms_padding_s']) . ';}';
+	}
+	
+	if ($settings['modal']['product_info_padding']){
+		$styles[] = $productInfoSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_info_padding']) . ';}';
+	}
+	if ($settings['modal']['product_info_padding_m']){
+		$tablet[] = $productInfoSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_info_padding_m']) . ';}';
+	}
+	if ($settings['modal']['product_info_padding_s']){
+		$mobile[] = $productInfoSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_info_padding_s']) . ';}';
+	}
+	
+	if ($settings['modal']['product_blocks_padding']){
+		$styles[] = $productBlocksSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_blocks_padding']) . ';}';
+	}
+	if ($settings['modal']['product_blocks_padding_m']){
+		$tablet[] = $productBlocksSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_blocks_padding_m']) . ';}';
+	}
+	if ($settings['modal']['product_blocks_padding_s']){
+		$mobile[] = $productBlocksSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_blocks_padding_s']) . ';}';
+	}
+	
+	if ($settings['modal']['product_media_padding']){
+		$styles[] = $productMediaSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_media_padding']) . ';}';
+	}
+	if ($settings['modal']['product_media_padding_m']){
+		$tablet[] = $productMediaSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_media_padding_m']) . ';}';
+	}
+	if ($settings['modal']['product_media_padding_s']){
+		$mobile[] = $productMediaSelector . '{padding:' . $escaper->escapeHtml($settings['modal']['product_media_padding_s']) . ';}';
+	}
+
+	if(!empty($modal)){
+		$styles[] = $modalSelector . '{' . implode('', $modal) . '}';
+	}
+	/* close btn */
+	if ($settings['modal']['close_icon_color']){
+		$styles[] = '#ox_quickview_wrapper .ox-overlay-close-btn span:before, #ox_quickview_wrapper .ox-overlay-close-btn span:after{background:' . $settings['modal']['close_icon_color'] . '}';
+	}
+	if ($settings['modal']['close_icon_color_hover']){
+		$styles[] = '#ox_quickview_wrapper .ox-overlay-close-btn:hover span:before, #ox_quickview_wrapper .ox-overlay-close-btn:hover span:after{ background:' . $settings['modal']['close_icon_color_hover'] . '}';
+	}
+	if ($settings['modal']['close_bg_color_hover']){
+		$styles[] = '#ox_quickview_wrapper .ox-overlay-close-btn:hover{ background:' . $settings['modal']['close_bg_color_hover'] . '}';
+	}
+	if ($settings['modal']['close_border_color_hover']){
+		$styles[] = '#ox_quickview_wrapper .ox-overlay-close-btn:hover{ border-color: ' . $settings['modal']['close_border_color_hover'] . '}';
+	}
+
+	if ('' != $settings['modal']['close_btn_top'] && $settings['modal']['close_btn_top'] >= 0){
+		$closeBtn[] = 'top: ' . $escaper->escapeHtmlAttr($settings['modal']['close_btn_top']) . 'px;';
+	}
+	if ('' != $settings['modal']['close_btn_right'] &&$settings['modal']['close_btn_right'] >= 0){
+		$closeBtn[] = 'right: ' . $escaper->escapeHtmlAttr($settings['modal']['close_btn_right']) . 'px;';
+	}
+	if ($settings['modal']['close_btn_size'] > 0){
+		$closeBtn[] = 'width: ' . $escaper->escapeHtmlAttr($settings['modal']['close_btn_size']) . 'px; height: ' . $escaper->escapeHtmlAttr($settings['modal']['close_btn_size']) . 'px;';
+	}
+	if ($settings['modal']['close_bg_color']){
+		$closeBtn[] = 'background: ' . $settings['modal']['close_bg_color'] . ';';
+	}
+	if ('' !=  $settings['modal']['close_border_size'] && $settings['modal']['close_border_size'] >= 0){
+		$closeBtn[] = 'border-width:' . $escaper->escapeHtmlAttr($settings['modal']['close_border_size']) . 'px;border-style: solid;';
+	}
+	if ($settings['modal']['close_border_color']){
+		$closeBtn[] = 'border-color: ' . $settings['modal']['close_border_color'] . ';';
+	}
+	if ('' != $settings['modal']['close_border_radius'] && $settings['modal']['close_border_radius'] >= 0){
+		$closeBtn[] = 'border-radius:' . $escaper->escapeHtmlAttr($settings['modal']['close_border_radius']) . 'px;';
+	}
+	if(!empty($closeBtn)){
+		$styles[] = '#ox_quickview_wrapper .ox-overlay-close-btn{' . implode('', $closeBtn) . '}';
+	}
+	if ($settings['loaders']['loader_type'] == '-spinner' && $settings['loaders']['loader_color']){
+		$styles[] = '.ox_quickview-preloader.-spinner{';
+		$styles[] = 'border-left-color: ' . $settings['loaders']['loader_color'] . ';';
+		$styles[] = 'border-right-color:' . $settings['loaders']['loader_color'] . ';';
+		$styles[] = 'border-top-color: ' . $settings['loaders']['loader_color'] . ';}';
+	}
+	
+	if(!empty($tablet)){
+		$styles[] = '@media (max-width: 960px){' . implode('', $tablet) . '}';
+	}
+	if(!empty($mobile)){
+		$styles[] = '@media (max-width: 480px){' . implode('', $mobile) . '}';
+	}
+endif;
+
+if(!empty($styles)){
+	echo '<style>' . implode('', $styles) . '</style>';
+}
+
+unset($modal,$closeBtn, $styles);

@@ -1,0 +1,42 @@
+<?php $baseUrl = $block->escapeHtml($block->getBaseUrl());
+$pageUrl = $block->escapeHtml($block->getPageUrl());
+$pageRefrer = $block->escapeHtml($block->getPageReferrer());
+$userIp = $block->escapeHtml($block->getUserIp());
+$userAgent = $block->escapeHtml($block->getUserAgent());
+?>
+
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        
+            // Prepare the query string parameters
+            var params = new URLSearchParams({
+                'pageUrl': '<?php echo urlencode($pageUrl); ?>',
+                'pageRefrer': '<?php echo urlencode($pageRefrer); ?>',
+                'userIp': '<?php echo urlencode($userIp); ?>',
+                'userAgent': '<?php echo urlencode($userAgent); ?>'
+            }).toString();
+
+            var url = '<?php echo $baseUrl . 'etm/tracking/tracking' ?>' + '?' + params;
+
+            fetch(url, {
+                    method: 'GET',
+                    redirect: 'error' // Prevent following redirects
+                })
+                .then(response => {
+                    console.log('Response URL:', response.url);
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error('Request failed with status: ' + response.status);
+                    }
+                })
+                .then(jsonResponse => {
+                    console.log('Response success:', jsonResponse);
+                })
+                .catch(error => {
+                    console.error('There was an error with the fetch operation:', error);
+                });
+      
+    });
+</script>

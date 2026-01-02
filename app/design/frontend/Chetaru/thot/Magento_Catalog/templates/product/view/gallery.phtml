@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * Product media data template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+?>
+
+<?php $_product = $block->getProduct(); ?>
+
+<?php
+$new_layout = array(137);
+$categories = $_product->getCategoryIds();
+$result = array_intersect($new_layout, $categories);
+$social_medai_image = $_product->getData('social_media_image');
+if (empty($result)) { ?>
+    <?php
+    $gallery = json_decode($block->getGalleryImagesJson());
+    $newGalleryJson = array();
+    $counter = 0;
+    foreach ($gallery as $ga) {
+        if ($social_medai_image != null && strpos($ga->thumb, $social_medai_image)) {
+            continue;
+        }
+        if (strpos($ga->caption, 'support:') === false) {
+
+            $newGalleryJson[$counter]['thumb'] = $ga->thumb;
+            $newGalleryJson[$counter]['img'] = $ga->img;
+            $newGalleryJson[$counter]['full'] = $ga->full;
+            $newGalleryJson[$counter]['caption'] = $ga->caption ."test";
+            $newGalleryJson[$counter]['position'] = $ga->position;
+            $newGalleryJson[$counter]['isMain'] = $ga->isMain;
+        }
+        // echo $ga->mediaType;
+        // echo "GauravJha009";
+     
+        // if (isset($ga->mediaType) && $ga->mediaType === 'external-video') {
+        //     $newGalleryJson[$counter]['videoUrl']   = $ga->videoUrl ?? '';
+        //     $newGalleryJson[$counter]['videoTitle'] = $ga->videoTitle ?? '';
+        //     $newGalleryJson[$counter]['mediaType']  = 'external-video';
+        // }
+        $counter++;
+    }
+
+    $images = $block->getGalleryImages()->getItems();
+    $mainImage = current(array_filter($images, function ($img) use ($block) {
+        return $block->isMainImage($img);
+    }));
+
+    if (!empty($images) && empty($mainImage)) {
+        $mainImage = $block->getGalleryImages()->getFirstItem();
+    }
+
+    $helper = $block->getData('imageHelper');
+    $mainImageData = $mainImage ?
+        $mainImage->getData('medium_image_url') :
+        $helper->getDefaultPlaceholderUrl('image');
+
+    ?>
+
+    <div class="gallery-placeholder _block-content-loading gallery-placeholder-gk-1" data-gallery-role="gallery-placeholder">
+        <img
+            alt="main product photo"
+            class="gallery-placeholder__image"
+            src="<?= /* @noEscape */ $mainImageData ?>" />
+    </div>
+    <?php
+
+    $option_object = json_decode($block->getGalleryOptions()->getOptionsJson());
+    $option_object->swipe = 'false';
+    $option_magnifier = json_decode($block->getMagnifier());
+    $option_magnifier->eventType = 'click';
+    ///print_r( $option_object);
+    ?>
+    <script type="text/x-magento-init">
+        {
+        "[data-gallery-role=gallery-placeholder]": {
+            "mage/gallery/gallery": {
+                "mixins":["magnifier/magnify"],
+                "magnifierOpts": <?php /* @noEscape */ echo json_encode($option_magnifier); ?>,
+                "data": <?php /* @escapeNotVerified */ echo json_encode(array_values($newGalleryJson)); ?>,
+                "options": <?php /* @noEscape */ echo json_encode($option_object); ?>,
+                "fullscreen": <?= /* @noEscape */ $block->getGalleryOptions()->getFSOptionsJson() ?>,
+                "breakpoints": <?= /* @noEscape */ $block->getBreakpoints() ?>
+            }
+        }
+    }
+</script>
+<?php } ?>
+
+
+<style>
+    .fotorama__thumb__arr.fotorama__thumb__arr--left {
+        display: none;
+    }
+
+    .fotorama__thumb__arr.fotorama__thumb__arr--right {
+        display: none;
+    }
+</style>

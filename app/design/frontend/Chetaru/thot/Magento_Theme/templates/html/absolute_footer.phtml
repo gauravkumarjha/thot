@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<a href="javascript:void(0);" id="return-to-top"><i class="ion-ios-arrow-thin-up"></i></a>
+<?php /* @escapeNotVerified */ echo $block->getMiscellaneousHtml(); ?>
+
+
+<script type="text/javascript">
+    require(['jquery'], function($) {
+        $(window).scroll(function() {
+            if ($(this).scrollTop() >= 50) { // If page is scrolled more than 50px
+                $('#return-to-top').fadeIn(200); // Fade in the arrow
+            } else {
+                $('#return-to-top').fadeOut(200); // Else fade out the arrow
+            }
+        });
+        $('#return-to-top').click(function() { // When arrow is clicked
+            $('body,html').animate({
+                scrollTop: 0 // Scroll to top of body
+            }, 500);
+        });
+    });
+</script>

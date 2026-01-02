@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="reports_report_grid"/>
+    <body>
+        <referenceBlock name="adminhtml.report.grid">
+            <arguments>
+                <argument name="id" xsi:type="string">gstProductsSold</argument>
+                <argument name="dataSource" xsi:type="object">Magecomp\Gstcharge\Model\ResourceModel\Gstreport\Collection\Initial</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="adminhtml.report.grid.export">
+            <arguments>
+                <argument name="exportTypes" xsi:type="array">
+                    <item name="csv" xsi:type="array">
+                        <item name="urlPath" xsi:type="string">*/*/exportCsv</item>
+                    </item>
+                    <item name="excel" xsi:type="array">
+                        <item name="urlPath" xsi:type="string">*/*/exportExcel</item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="adminhtml.report.grid.columnSet">
+            <arguments>
+                <argument name="id" xsi:type="string">gst_report</argument>
+                <argument name="count_totals" xsi:type="string">1</argument>
+				<argument name="filter_visibility" xsi:type="string">0</argument>
+                <argument name="empty_text" xsi:type="string" translate="true">We can't find records for this period.</argument>
+                <argument name="empty_cell_label" xsi:type="string" translate="true">We can't find records for this period.</argument>
+            </arguments>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="increment_id">
+				<arguments>
+					<argument name="header" xsi:type="string" translate="true">Bill Number</argument>
+					<argument name="type" xsi:type="string">text</argument>
+					<argument name="index" xsi:type="string">increment_id</argument>
+					<argument name="id" xsi:type="string">increment_id</argument>
+					<argument name="renderer" xsi:type="string">Magecomp\Gstcharge\Block\Adminhtml\Grid\Renderer\Incrementid</argument>
+					<argument name="column_css_class" xsi:type="string">col-incrementid</argument>
+					<argument name="header_css_class" xsi:type="string">col-incrementid</argument>
+				</arguments>
+			</block>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="firstname">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">First Name</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">customer_firstname</argument>
+                    <argument name="id" xsi:type="string">customer_firstname</argument>
+                    <argument name="column_css_class" xsi:type="string">col-firstname</argument>
+                    <argument name="header_css_class" xsi:type="string">col-firstname</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="lastname">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Last Name</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">customer_lastname</argument>
+                    <argument name="id" xsi:type="string">customer_lastname</argument>
+                    <argument name="column_css_class" xsi:type="string">col-lastname</argument>
+                    <argument name="header_css_class" xsi:type="string">col-lastname</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="status">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Status</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">status</argument>
+                    <argument name="id" xsi:type="string">status</argument>
+                    <argument name="column_css_class" xsi:type="string">col-status</argument>
+                    <argument name="header_css_class" xsi:type="string">col-status</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="hsncode">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">HSN</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">order_id</argument>
+                    <argument name="id" xsi:type="string">order_id</argument>
+					<argument name="renderer" xsi:type="string">Magecomp\Gstcharge\Block\Adminhtml\Grid\Renderer\Hsncode</argument>
+                    <argument name="column_css_class" xsi:type="string">col-hsncode</argument>
+                    <argument name="header_css_class" xsi:type="string">col-hsncode</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="gstno">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">GST No.</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">buyer_gst_number</argument>
+                    <argument name="id" xsi:type="string">buyer_gst_number</argument>
+                    <argument name="column_css_class" xsi:type="string">col-gstno</argument>
+                    <argument name="header_css_class" xsi:type="string">col-gstno</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Backend\Block\Widget\Grid\Column" as="ordered_qty">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Qty</argument>
+                    <argument name="type" xsi:type="string">number</argument>
+					<argument name="total" xsi:type="string">sum</argument>
+                    <argument name="index" xsi:type="string">total_qty_ordered</argument>
+                    <argument name="id" xsi:type="string">total_qty_ordered</argument>
+                    <argument name="column_css_class" xsi:type="string">col-qty</argument>
+                    <argument name="header_css_class" xsi:type="string">col-qty</argument>
+                </arguments>
+            </block>
+
+
+
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="netamount">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Net Amt W/O Tax</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">order_id</argument>
+                    <argument name="id" xsi:type="string">order_id</argument>
+					<argument name="renderer" xsi:type="string">Magecomp\Gstcharge\Block\Adminhtml\Grid\Renderer\Netamt</argument>
+                    <argument name="column_css_class" xsi:type="string">col-netamount</argument>
+                    <argument name="header_css_class" xsi:type="string">col-netamount</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Backend\Block\Widget\Grid\Column" as="shippingamount">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Shipping Amount</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="total" xsi:type="string">sum</argument>
+                    <argument name="index" xsi:type="string">shipping_amount</argument>
+                    <argument name="id" xsi:type="string">shipping_amount</argument>
+                    <argument name="column_css_class" xsi:type="string">col-shippingamount</argument>
+                    <argument name="header_css_class" xsi:type="string">col-shippingamount</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="igst">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Igst</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+					<argument name="total" xsi:type="string">sum</argument>
+                    <argument name="index" xsi:type="string">igst_charge</argument>
+                    <argument name="id" xsi:type="string">igst_charge</argument>
+                    <argument name="column_css_class" xsi:type="string">col-igst</argument>
+                    <argument name="header_css_class" xsi:type="string">col-igst</argument>
+                </arguments>
+            </block>
+
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="cgst">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Cgst</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+					<argument name="total" xsi:type="string">sum</argument>
+                    <argument name="index" xsi:type="string">sgst_charge</argument>
+                    <argument name="id" xsi:type="string">cgst_charge</argument>
+                    <argument name="column_css_class" xsi:type="string">col-cgst</argument>
+                    <argument name="header_css_class" xsi:type="string">col-cgst</argument>
+                </arguments>
+            </block>
+
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="sgst">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Sgst</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+					<argument name="total" xsi:type="string">sum</argument>
+                    <argument name="index" xsi:type="string">sgst_charge</argument>
+                    <argument name="id" xsi:type="string">sgst_charge</argument>
+                    <argument name="column_css_class" xsi:type="string">col-sgst</argument>
+                    <argument name="header_css_class" xsi:type="string">col-sgst</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Backend\Block\Widget\Grid\Column" as="grassvalue">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Gross Value</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">order_id</argument>
+                    <argument name="id" xsi:type="string">order_id</argument>
+                    <argument name="renderer" xsi:type="string">Magecomp\Gstcharge\Block\Adminhtml\Grid\Renderer\Grossvalue</argument>
+                    <argument name="column_css_class" xsi:type="string">col-grassvalue</argument>
+                    <argument name="header_css_class" xsi:type="string">col-grassvalue</argument>
+                </arguments>
+            </block>
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="place">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Place Of Supply</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">region</argument>
+                    <argument name="id" xsi:type="string">region</argument>
+                    <argument name="column_css_class" xsi:type="string">col-place</argument>
+                    <argument name="header_css_class" xsi:type="string">col-place</argument>
+                </arguments>
+            </block>
+			
+			<block class="Magento\Backend\Block\Widget\Grid\Column" as="gstrate">
+                <arguments>
+                    <argument name="header" xsi:type="string" translate="true">Gst Rate</argument>
+                    <argument name="type" xsi:type="string">text</argument>
+                    <argument name="index" xsi:type="string">item_id</argument>
+                    <argument name="id" xsi:type="string">item_id</argument>
+					<argument name="renderer" xsi:type="string">Magecomp\Gstcharge\Block\Adminhtml\Grid\Renderer\Gstrate</argument>
+                    <argument name="column_css_class" xsi:type="string">col-gstrate</argument>
+                    <argument name="header_css_class" xsi:type="string">col-gstrate</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

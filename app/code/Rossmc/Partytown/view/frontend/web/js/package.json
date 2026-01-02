@@ -1,0 +1,14 @@
+{
+  "name": "rossmc-partytown",
+  "main": "webpack.mix.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copylib": "npx mix"
+  },
+  "author": "",
+  "description": "",
+  "dependencies": {
+    "@builder.io/partytown": "^0.10.2",
+    "laravel-mix": "^6.0.49"
+  }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+   <preference for="Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer" type="Magecomp\Gstcharge\Block\Adminhtml\Sales\Order\View\Items\Renderer\DefaultRenderer"/>
+   <preference for="Magento\Sales\Model\Order\Pdf\Items\Invoice\DefaultInvoice" type="Magecomp\Gstcharge\Model\Order\Pdf\Items\Invoice\DefaultInvoice" />
+   <preference for="Magento\Sales\Model\Order\Pdf\Invoice" type="Magecomp\Gstcharge\Model\Order\Pdf\Invoice" />
+   <preference for="Magento\Bundle\Model\Sales\Order\Pdf\Items\Invoice" type="Magecomp\Gstcharge\Model\Sales\Order\Pdf\Items\Invoice" />
+   <preference for="Magento\Bundle\Model\Sales\Order\Pdf\Items\Creditmemo" type="Magecomp\Gstcharge\Model\Sales\Order\Pdf\Items\Creditmemo" />
+   <preference for="Magento\Sales\Model\Order\Pdf\Items\Creditmemo\DefaultCreditmemo" type="Magecomp\Gstcharge\Model\Order\Pdf\Items\Creditmemo\DefaultCreditmemo" />
+   <preference for="Magento\Sales\Model\Order\Pdf\Creditmemo" type="Magecomp\Gstcharge\Model\Order\Pdf\Creditmemo" />
+</config>

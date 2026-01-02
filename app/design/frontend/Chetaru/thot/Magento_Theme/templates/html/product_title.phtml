@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * @var $block \Magento\Theme\Block\Html\Title
+ */
+
+if ($block->getCurrentPage() == 'cms_page_view') { //Product page.
+    $title = '';
+    if (trim($block->getPageHeading())) {
+        $title = '<span class="base" data-ui-id="page-title-wrapper" ' .  $block->getAddBaseAttribute() . '>'
+            . $block->escapeHtml($block->getPageHeading()) . '</span>';
+    }
+    $myBlock = \Magento\Framework\App\ObjectManager::getInstance()->get('Chetaru\Hot\Block\ProductTitle');
+
+    if ($currentProduct = $myBlock->getCurrentProduct()) {
+        // echo $currentProduct->getName() . '<br />';
+        // echo $currentProduct->getSku() . '<br />';
+        // echo $currentProduct->getFinalPrice() . '<br />';
+        // echo $currentProduct->getProductUrl() . '<br />';
+        // print_r ($currentProduct->getCategoryIds()) . '<br />';  
+?>
+        <a href="<?php echo $currentProduct->getProductUrl() ?>" target="_blank">
+            <h3><?php echo $currentProduct->getName() ?></h3>
+        </a>
+    <?php
+    } else {
+    ?>
+        <?php if ($title): ?>
+            <a href="<?php echo $currentProduct->getProductUrl() ?>" target="_blank">
+                <h3><?php echo $block->getName() ?></h3>
+            </a>
+        <?php endif; ?>
+    <?php
+    }
+} else {
+
+    $title = '';
+    if (trim($block->getPageHeading())) {
+        $title = '<span class="base" data-ui-id="page-title-wrapper" ' .  $block->getAddBaseAttribute() . '>'
+            . $block->escapeHtml($block->getPageHeading()) . '</span>';
+    }
+    $myBlock = \Magento\Framework\App\ObjectManager::getInstance()->get('Chetaru\Hot\Block\ProductTitle');
+
+    if ($currentProduct = $myBlock->getCurrentProduct()) {
+        // echo $currentProduct->getName() . '<br />';
+        // echo $currentProduct->getSku() . '<br />';
+        // echo $currentProduct->getFinalPrice() . '<br />';
+        // echo $currentProduct->getProductUrl() . '<br />';
+        // print_r ($currentProduct->getCategoryIds()) . '<br />';  
+    ?>
+        <h1 class="pgktitle"><?php echo $currentProduct->getName() ?>
+            <meta itemprop="name" content="<?= $block->escapeHtml($currentProduct->getName()) ?>" />
+        </h1>
+    <?php
+    } else {
+    ?>
+        <?php if ($title): ?>
+            <h1 class="pgktitle"><?php echo $block->getName() ?></h1>
+
+        <?php endif; ?>
+<?php
+    }
+}
+
+?>

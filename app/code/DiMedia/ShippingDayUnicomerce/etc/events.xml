@@ -1,0 +1,12 @@
+<!-- app/code/YourVendor/YourModule/etc/frontend/events.xml -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/events.xsd">
+ <!-- <event name="checkout_onepage_controller_success_action"> -->
+     <event name="sales_order_place_after">
+        <observer name="save_custom_product_attribute_on_order" instance="DiMedia\ShippingDayUnicomerce\Observer\SaveCustomProductAttribute" />
+    </event>
+ 
+   <!-- <event name="payment_method_is_active">
+      <observer name="restrict_cod_payment" instance="Mageplaza\Simpleshipping\Observer\RestrictCod" />
+    </event> -->
+
+</config>

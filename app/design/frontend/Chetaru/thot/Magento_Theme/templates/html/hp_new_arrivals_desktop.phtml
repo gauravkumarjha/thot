@@ -1,0 +1,155 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\App\Action\Action;
+
+//$_product = $this->getProduct();
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$blockObj= $block->getLayout()->createBlock('Magento\Catalog\Block\Product\View');
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+$_helper  = $this->helper(Magento\Catalog\Helper\Output::class);
+$sku = $block->getData('sku');
+$sku_arr = explode(',', (string)$sku);
+?>
+
+    <?php
+    $type = 'widget-product-grid';
+
+    $mode = 'grid';
+
+    $image = 'product_page_related_images';
+    
+
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    $description = false;
+    ?>
+
+<?php 
+    // foreach ($sku_arr as $key => $product_sku) {
+    //     $product_id = $objectManager->get('Magento\Catalog\Model\Product')->getIdBySku($product_sku);
+    //     $_item = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+    //     $link = $_item->getProductUrl();
+    //       $additional_image = $_item->getData('additional_image');
+    //       if (trim((string)$additional_image)) {
+    //         $html = $_helper->productAttribute($_item, $additional_image, 'additional_image');
+    //         preg_match_all('/<img[^>]+src=([\'"])(?<src>.+?)\1[^>]*>/i', $html, $result1);
+    //        // preg_match_all('/<img[^>]+alt=([\'"])(?<alt>.+?)\1[^>]*>/i', $html, $result2);
+    //         $resizedImageUrl =  $result1['src'][0];
+    //      }else{
+    //         $resizedImageUrl = $_imageHelper->init($_item, 'hot_product_page_image_medium')->getUrl();
+    //      }
+    //      } ?>
+
+
+
+    <div class="block widget block-products-list <?= /* @noEscape */ $mode ?>">
+        <?php if ($block->getTitle()): ?>
+            <div class="block-title">
+                <strong><?= $block->escapeHtml(__($block->getTitle())) ?></strong>
+            </div>
+        <?php endif ?>
+        <div class="block-content">
+            <?= /* @noEscape */ '<!-- ' . $image . '-->' ?>
+            <div class="products-<?= /* @noEscape */ $mode ?> <?= /* @noEscape */ $mode ?>">
+                <ol class="product-items <?= /* @noEscape */ $type ?>">
+                    <?php $iterator = 1; ?>
+                    <?php foreach ($sku_arr as $key => $product_sku):  ?>
+                        <?php
+                            $product_id = $objectManager->get('Magento\Catalog\Model\Product')->getIdBySku($product_sku);
+                                $_item = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+                                $link = $_item->getProductUrl();
+                                  $additional_image = $_item->getData('additional_image');
+                                   // print_r("this is".$additional_image);
+                                   // die();
+                                  if (trim((string)$additional_image)) {
+                                    $html = $_helper->productAttribute($_item, $additional_image, 'additional_image');
+                                    preg_match_all('/<img[^>]+src=([\'"])(?<src>.+?)\1[^>]*>/i', $html, $result1);
+                                   // preg_match_all('/<img[^>]+alt=([\'"])(?<alt>.+?)\1[^>]*>/i', $html, $result2);
+                                    $resizedImageUrl =  $result1['src'][0];
+                                 }else{
+                                    $resizedImageUrl = $_imageHelper->init($_item, 'hot_product_page_image_medium')->getUrl();
+                                 } 
+                         ?>
+                        <?= /* @noEscape */ ($iterator++ == 1) ? '<li class="product-item">' : '</li><li class="product-item">' ?>
+                       
+                        <div class="product-item-info">
+                        <?php  //$cattrValue = $_item->getProduct()->getCustomAttribute('product_brand'); 
+                        // echo $cattrValue. " tests";
+                        
+                        ?>
+                            <a href="<?= $block->escapeUrl($_item->getProductUrl()) ?>" class="product-item-photo">
+                                <img class="lazy" src="<?php echo $resizedImageUrl;?>" alt="<?php echo $block->escapeHtml($_item->getName());?>"/>
+                            </a>
+                            <div class="product-item-details">
+                                <?php if($_item->getAttributeText('exclusive') == 'Yes') { ?>
+                                    <div class="brandLogo"><img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('Magento_Theme::images/hot-exclusive.png') ?>" alt="" /></div>
+                                <?php }?>
+                                <div class="brandName">
+                                <?php
+                                $brands = $_item->getData("product_brand");
+                                if( $brands ){
+                                    $sql = "SELECT name, url_key FROM ves_brand WHERE brand_id IN (".$brands.")";
+                                    $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+                                    $connection = $resource->getConnection();
+                                    $results = $connection->fetchAll($sql);
+                                     
+                                    if( !empty($results) ){?>
+
+                                        <a href="/makers/<?php echo $results[0]['url_key']; ?>"><?php echo $results[0]['name']; ?></a><?php
+                                     } 
+                                }?>
+                                
+                                </div>
+
+                                <strong class="product-item-name">
+                                    <a title="<?= $block->escapeHtml($_item->getName()) ?>"
+                                       href="<?= $block->escapeUrl($_item->getProductUrl()) ?>"
+                                       class="product-item-link">
+                                        <?= $block->escapeHtml($_item->getName()) ?>
+                                    </a>
+                                </strong>
+                                <?php if ($templateType): ?>
+                                    <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
+                                <?php endif; ?>
+
+                                <?php 
+                                        if($_item->getAttributeText('price_on_request')=='Yes'){
+                                            ?>
+                                            <h3 class="price_request grid_section_price"><?php /* @escapeNotVerified */ echo __('Price on request') ?></h3>
+                                            <?php
+                                        }else{
+                                            ?>
+                                        <h3 class="productPrice grid_section_price"><?php echo $blockObj->getProductPrice($_item) ?></h3>
+                                        <?php } ?>
+
+                                
+
+                                
+                            </div>
+                        </div>
+                        
+                    <?php endforeach ?>
+                </ol>
+            </div>
+            <?= $block->getPagerHtml() ?>
+        </div>
+    </div>
+    <?php if($block->getBlockHtml('formkey')): ?>
+    <script type="text/x-magento-init">
+    {
+        ".block.widget [data-role=tocart-form]": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+    </script>
+    <?php endif;?>

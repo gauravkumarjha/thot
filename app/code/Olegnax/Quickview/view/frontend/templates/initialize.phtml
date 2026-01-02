@@ -1,0 +1,23 @@
+<?php
+/**
+ * @author      Olegnax
+ * @package     Olegnax_Quickview
+ * @copyright   Copyright (c) 2022 Olegnax (http://olegnax.com/). All rights reserved.
+ * @license     Proprietary License https://olegnax.com/license/
+ */
+
+use Olegnax\Quickview\Helper\Helper;
+use Olegnax\Quickview\Model\Config\Source\LoaderType;
+
+$config = $this->helper(Helper::class)->getConfig('olegnax_quickview/general');
+$configLoaders = $this->helper(Helper::class)->getConfig('olegnax_quickview/loaders');
+?>
+<div id="ox_quickview_wrapper" style="display:none">
+	<div class="ox_quickview-preloader <?php echo $configLoaders['loader_type'] ?>" data-role="loader">
+		<?php if (LoaderType::TYPE_CUSTOM == $configLoaders['loader_type']): ?>
+			<img src="<?= $this->getViewFileUrl($configLoaders['loader_custom']) ?>" />
+		<?php endif; ?>
+	</div>
+	<div class="ox-overlay-close-btn ox-overlay-close-btn-js" aria-label="Close"><span></span></div>
+</div>
+<script type="text/x-magento-init">{".ox-quickview-button":{"OxQuickviewInit":{}}}</script>

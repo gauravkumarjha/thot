@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category   Webkul
+ * @package    Webkul_PaymentShippingRestriction
+ * @author     Webkul Software Private Limited
+ * @copyright  Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license    https://store.webkul.com/license.html
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+     <fieldset name="shipping_restriction">
+          <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Webkul Shipping and Payment Restriction </label>
+        </settings>
+        <field name="category_shipping_attribute">
+             <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Webkul\PaymentShippingRestriction\Model\Config\Source\ShippingOptions</item>
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">60</item>
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="label" xsi:type="string" translate="true">Select Shipping Method</item>
+                </item>
+            </argument>
+        </field>
+          <field name="category_payment_attribute">
+             <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Webkul\PaymentShippingRestriction\Model\Config\Source\PaymentOptions</item>
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">61</item>
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="label" xsi:type="string" translate="true">Select Payment Method</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

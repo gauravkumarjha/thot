@@ -1,0 +1,23 @@
+<?php
+$brandCollection = $this->getBrandCollection();
+$data = $this->helper('Ves\Brand\Helper\Data');
+$brand_layout_listing = $data->getConfig("product_view_page/brand_layout_listing");
+$show_brand_text = $data->getConfig("product_view_page/show_brand_text");
+$brand_text = $data->getConfig("product_view_page/brand_text");
+$brand_text = $brand_text?$brand_text:__('Brands: ');
+$show_brand_image = $data->getConfig("product_view_page/show_brand_image");
+$show_brand_name = $data->getConfig("product_view_page/show_brand_name");
+?>
+
+<?php if($brandCollection && $brandCollection->count() > 0){ ?>
+<h4>By
+	<?php 
+	$spt = 1;
+		foreach ($brandCollection as $_brand) {?>
+		<span dd><a href="<?php echo $_brand->getUrl(); ?>" title="<?php echo $_brand->getName(); ?>"><?php echo $_brand->getName(); ?></a></span>
+		<?php $spt != $brandCollection->count() ? "," : ""; ?>
+		<?php $spt++ ?>
+		<?php }
+	?>
+</h4>
+<?php } ?>

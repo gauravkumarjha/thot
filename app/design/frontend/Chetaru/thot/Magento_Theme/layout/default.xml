@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceContainer name="header.container">
+		<block class="DiMedia\OgTag\Block\SocialMeta" name="page.social.meta" template="DiMedia_OgTag::social_meta.phtml"/>
+
+			<container name="mobile.nav" htmlTag="div" htmlClass="mobile navbar-fixed-top">
+				<container name="mobile.nav.col" htmlTag="div" htmlClass="col-sm-12 col-xs-12">
+					<block class="Magento\Checkout\Block\Cart\Sidebar" name="minicart.mobile" as="minicartmobile" template="cart/minicart_mobile.phtml">
+						<arguments>
+							<argument name="jsLayout" xsi:type="array">
+								<item name="types" xsi:type="array" />
+								<item name="components" xsi:type="array">
+									<item name="minicart_content" xsi:type="array">
+										<item name="component" xsi:type="string">
+											Magento_Checkout/js/view/minicart
+										</item>
+										<item name="config" xsi:type="array">
+											<item name="template" xsi:type="string">
+												Magento_Checkout/minicart/content
+											</item>
+										</item>
+										<item name="children" xsi:type="array">
+											<item name="subtotal.container" xsi:type="array">
+												<item name="component" xsi:type="string">
+													uiComponent
+												</item>
+												<item name="config" xsi:type="array">
+													<item name="displayArea" xsi:type="string">
+														subtotalContainer
+													</item>
+												</item>
+												<item name="children" xsi:type="array">
+													<item name="subtotal" xsi:type="array">
+														<item name="component" xsi:type="string">
+															uiComponent
+														</item>
+														<item name="config" xsi:type="array">
+															<item name="template" xsi:type="string">
+																Magento_Checkout/minicart/subtotal
+															</item>
+														</item>
+													</item>
+												</item>
+											</item>
+											<item name="extra_info" xsi:type="array">
+												<item name="component" xsi:type="string">
+													uiComponent
+												</item>
+												<item name="config" xsi:type="array">
+													<item name="displayArea" xsi:type="string">
+														extraInfo
+													</item>
+												</item>
+											</item>
+											<item name="promotion" xsi:type="array">
+												<item name="component" xsi:type="string">
+													uiComponent
+												</item>
+												<item name="config" xsi:type="array">
+													<item name="displayArea" xsi:type="string">
+														promotion
+													</item>
+												</item>
+											</item>
+										</item>
+									</item>
+								</item>
+							</argument>
+						</arguments>
+						<container name="minicart.addons" label="Mini-cart promotion block" />
+					</block>
+				</container>
+			</container>
+			<container name="header-custom-wrapper" label="Page Header" as="header-custom-wrapper" htmlTag="div" htmlClass="header content custom">
+				<container name="header-left-wrapper" label="Header Left" as="header-left-wrapper" htmlTag="div" htmlClass="head-left">
+					<block class="Magento\Framework\View\Element\Template" name="custom-toggle-mobile-nav" template="Magento_Theme::html/toggle_nav_mobile.phtml" />
+					<container name="desktop-slide-menu-wrapper" label="Header Slide Menu Wrapper" as="desktop-slide-menu-wrapper" htmlTag="div" htmlClass="desktop">
+				        <block class="Magento\Framework\View\Element\Template" name="custom-toggle-desktop-nav" template="Magento_Theme::html/toggle_nav_desktop.phtml" />
+							<container name="desktop-slide-menu" htmlId="desktopMenuToggleContainer" label="Header Search" as="desktop-slide-menu" htmlTag="div" htmlClass="desktop-slide-menu-wrapper toggle-container">
+								<container name="desktop-inner-slide-container" htmlClass="desktop-inner-slide" htmlTag="div">
+									<block class="Magento\Cms\Block\Block" name="header.top.menu">
+										<arguments>
+											<argument name="block_id" xsi:type="string">
+												header-top-menu
+											</argument>
+										</arguments>
+									</block>
+								</container>
+							</container>
+					</container>
+					<block class="Magento\Framework\View\Element\Template" name="custom-toggle-desktop-hover-nav" template="Magento_Theme::html/toggle_nav_desktop_hover.phtml" />
+				</container> 
+				
+				<container name="header-center-wrapper" label="Header Center" as="header-center-wrapper" htmlTag="div" htmlClass="header-center-section logo-box"> 
+				</container> 
+
+				<container name="header-right-wrapper" label="Header Right" as="header-right-wrapper" htmlTag="div" htmlClass="header-right-section" after="logo">
+					<block class="Magento\Cms\Block\Block" name="header.top.mobile.icons">
+						<arguments>
+							<argument name="block_id" xsi:type="string">
+								mobile-header-top-right-icons
+							</argument>
+						</arguments>
+					</block>
+				</container>
+				<container name="header-mobile-search" label="Header Search" as="header-mobile-search" htmlTag="div" htmlClass="header-mobile-search" after="logo">
+					<block class="Magento\Cms\Block\Block" name="header.mobile.search">
+						<arguments>
+							<argument name="block_id" xsi:type="string">
+								header-mobile-search
+							</argument>
+						</arguments>
+					</block>
+				</container>
+			</container>
+			
+			<referenceBlock name="header.links">
+				<block class="Magento\Framework\View\Element\Template" name="customelinks" template="Magento_Theme::html/customlinks.phtml" />
+				<!-- you can easly Remove  links with following code -->
+				<referenceBlock name="register-link" remove="true" />
+				<!-- for Create Account Link -->
+			</referenceBlock>
+		</referenceContainer>
+		<referenceContainer name="footer">
+			<referenceBlock name="footer_links" remove="true" />
+			<container name="footer-row-first-wrapper" label="Footer First Row" as="footer-row-first-wrapper" htmlTag="div" htmlClass="footer-first-row">
+				<container name="footer-column-first-wrapper" label="Footer First Column" as="footer-column-first-wrapper" htmlTag="div" htmlClass="col-md-4 col-sm-4 col-xs-12">
+					<block class="Magento\Framework\View\Element\Template" name="custom.enquire.form" template="Magento_Theme::html/custom_postform.phtml" />
+					<block class="Magento\Cms\Block\Block" name="footer.primary.menu">
+						<arguments>
+							<argument name="block_id" xsi:type="string">
+								footer-primary-menu
+							</argument>
+						</arguments>
+					</block>
+				</container>
+				<container name="footer-column-second-wrapper" label="Footer Second Column" as="footer-column-second-wrapper" htmlTag="div" htmlClass="col-md-4 col-sm-4 col-xs-12">
+					<block class="Magento\Cms\Block\Block" name="footer.secondary.menu">
+						<arguments>
+							<argument name="block_id" xsi:type="string">
+								footer-secondary-menu
+							</argument>
+						</arguments>
+					</block>
+				</container>
+				<container name="footer-column-third-wrapper" label="Footer Third Column" as="footer-column-third-wrapper" htmlTag="div" htmlClass="col-md-4 col-sm-4 col-xs-12 footer-subscribe">
+					<block class="Magento\Cms\Block\Block" name="footer.concierge.block">
+						<arguments>
+							<argument name="block_id" xsi:type="string">
+								footer-concierge-block
+							</argument>
+						</arguments>
+					</block>
+				</container>
+			</container>
+			<container name="footer-row-second-wrapper" label="Footer Second Row" as="footer-row-second-wrapper" htmlTag="div" htmlClass="footer-second-row">
+				<container name="footer-row2-column-first-wrapper" label="Footer First Column" as="footer-row2-column-first-wrapper" htmlTag="div" htmlClass="col-md-4 col-sm-4 col-xs-12">
+					<block class="Magento\Cms\Block\Block" name="payment.methods.block">
+						<arguments>
+							<argument name="block_id" xsi:type="string">
+								payment-methods-block
+							</argument>
+						</arguments>
+					</block>
+				</container>
+				<container name="footer-row2-column-second-wrapper" label="Footer Second Column" as="footer-row2-column-second-wrapper" htmlTag="div" htmlClass="col-md-4 col-sm-4 col-xs-12">
+					<block class="Magento\Cms\Block\Block" name="social.links.block">
+						<arguments>
+							<argument name="block_id" xsi:type="string">
+								social-links-block
+							</argument>
+						</arguments>
+					</block>
+				</container>
+			</container>
+		</referenceContainer>
+		<referenceContainer name="before.body.end">
+			<block class="Magento\Framework\View\Element\Template" name="custom.page.scripts" template="Magento_Theme::html/page-scripts.phtml" cacheable="true" />
+		</referenceContainer>
+		<move element="logo" as="header.links" destination="header-center-wrapper" />
+		<move element="header.links" destination="header-right-wrapper" before="minicart" />
+		<move element="minicart" destination="header-right-wrapper" before="top.search" />
+		<move element="top.search" destination="catalog.topnav" after="-" />
+		<move element="currency" destination="desktop-inner-slide-container" after="header.top.menu"  />
+		<move element="form.subscribe" destination="footer-column-third-wrapper" before="-" />
+		<move element="authorization-link-login" destination="header.links" after="customelinks" />
+		<referenceBlock name="catalogsearch.leftnav" remove="true" />
+		<referenceContainer name="sidebar.additional" remove="true" />
+	</body>
+</page>
+ 

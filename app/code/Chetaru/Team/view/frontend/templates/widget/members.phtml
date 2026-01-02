@@ -1,0 +1,85 @@
+<?php
+$members = $block->getMembers(); ?>
+<?php if (!empty($members) && count($members) > 0): ?>
+<section class="team-section">
+	<div class="container">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="the-new-arrival section-header text-center">
+					<p class="sectionTitleSubHead"><?php echo __("the"); ?></p>
+					<p class="sectionTitle"><?php echo __("Team"); ?></p>
+					<hr class="hr--small" />
+				</div>
+				<div class="team-section-desktop">
+					<?php foreach ($members as $member): ?>
+					<div class="col-md-3 col-sm-6 col-xs-12 team-member">
+						<a data-target="#teamPopup-mobile-<?php echo $member["url_key"]; ?>" data-toggle="modal" class="popup_anchor">
+							<img class="img-responsive" src="<?php echo $member["featured_image"]; ?>" />
+						</a>
+						<h3 class="text-center maker-name"><?php echo $member["name"]; ?></h3>
+						<h3 class="text-center maker-brand-name"><?php echo $member["designation"]; ?></h3>
+					</div>
+					<?php endforeach; ?>
+					<div class="clearfix"></div>
+				</div>
+		</div>
+			</div>
+		</div>
+		<!---model boxes start--->
+		<div class="model_wrapper" style="display:none">
+		<?php foreach ($members as $i => $member): ?>
+		<div id="teamPopup-mobile-<?php echo $member["url_key"]; ?>" class="modal team-modal">
+			<div class="modal-dialog">
+				<div class="modal-content row">
+					<div class="modal-body">
+						<div class="col-md-4 col-xs-12 teamMemberImage">
+							<div class="row">
+								<img class="img-responsive" src="<?php echo $member["featured_image"]; ?>" />
+							</div>
+						</div>
+						<div class="col-md-8 col-xs-12 middle-text">
+							<h3><?php echo $member["name"]; ?></h3>
+							<h4 class="bd-name"><?php echo $member["designation"]; ?></h4>
+							<div class="member_bio_desc"><?php echo $member["member_content"]; ?></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	<?php endforeach; ?>
+	</div>
+	<!---model boxes end--->
+	</div>
+	<div class="clearfix"></div>
+
+</section>
+<?php endif; ?>
+
+<script type="text/javascript">
+    require([
+        "jquery",
+        "Magento_Ui/js/modal/modal"
+    ],function($, modal) {
+
+        var options = {
+            type: 'popup',
+            responsive: true,
+            modalClass: 'members-info',
+            //title: 'Main title',
+            buttons: [{
+                class: '',
+                click: function () {
+                    this.closeModal();
+                }
+            }]
+        };
+		$(".popup_anchor").click(function() {
+			var datatarget = $(this).attr('data-target');
+			var popup = modal(options, $(datatarget));
+            $(datatarget).modal('openModal');
+            $(".modal-footer").hide();
+			return false;
+        });
+    });
+</script>

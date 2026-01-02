@@ -1,0 +1,319 @@
+<?php
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Cart'); ?>
+<?php
+$stockItem = $_product->getExtensionAttributes()->getStockItem();
+$maxQty = (int)$stockItem->getQty();
+$maxQty = $maxQty == 0 ? 1 : $maxQty;
+?>
+<?php
+$out_class = '';
+if (!$_product->isSaleable()) {
+    $out_class = 'out-of-stock-row';
+} ?>
+<div class="row <?php echo $out_class; ?>">
+    <div class="col-md-12">
+        <div class="row marB15">
+            <?php if (!$_product->isSaleable()): ?>
+                <div class="col-md-12 out-of-stock">
+                    <h3 class="red"><?php /* @escapeNotVerified */ echo __('Back in Stock Soon') ?></h3>
+                </div>
+            <?php endif; ?>
+            <?php
+            //code to change button when showing price request 
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product'); //get current product
+
+            /// $product->getData('price_on_request');
+            ?>
+            <?php if ($_product->isSaleable() && !$product->getData('price_on_request')): ?>
+                <div class="btn-group col-md-3 col-sm-3 col-xs-3">
+
+                    <div class="outline-select-button quantity">
+                        <?php if ($block->shouldRenderQuantity()): ?>
+                            <div class="quantity-input">
+                                <span class="qty-minus">-</span>
+                                <input type="number"
+                                    name="qty"
+                                    id="qty"
+                                    maxlength="12"
+                                    value="<?php /* @escapeNotVerified */ echo $block->getProductDefaultQty() * 1 ?>"
+                                    title="<?php /* @escapeNotVerified */ echo __('Qty') ?>"
+                                    class="input-text qty"
+                                    max="<?= $maxQty ?>"
+                                    data-validate="<?php echo $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>" />
+                                <span class="qty-plus">+</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                </div>
+            <?php endif; ?>
+            <?php if ($product->getData('price_on_request')) { ?>
+                <span class="" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+
+                    <meta itemprop="price" content="<?= $product->getFinalPrice(); ?>" />
+                    <meta itemprop="priceCurrency" content="INR" />
+        </div>
+    <?php } ?>
+    <div class="col-md-9 col-sm-9 col-xs-9">
+        <div class="">
+
+            <?php if ($_product->isSaleable() && !$product->getData('price_on_request')): ?>
+                <button type="submit"
+                    title="<?php echo $buttonTitle ?>"
+                    class="btn btn-black btn100 pad10 add-to-cart action  tocart"
+                    id="product-addtocart-button">
+                    <span><?php echo $buttonTitle ?></span>
+                </button>
+            <?php else: ?>
+                <!--<button class="btn btn-black btn100 pad10 add-to-cart"><?php /* @escapeNotVerified */ echo __('Notify Me') ?></button>-->
+
+
+                <!---<select name="qty" id="qty" title="<?php /* @escapeNotVerified */ //echo __('Qty') 
+                                                        ?>" 
+                               class="selectpicker qty" data-validate="<?php //echo $block->escapeHtml(json_encode($block->getQuantityValidators())) 
+                                                                        ?>">
+                               <?php //$i = 1 ; 
+                                ?>
+                                <?php
+                                //while( $i < 12) { 
+                                ?>
+                                    <option value="<?php //echo $block->getProductDefaultQty() * $i; 
+                                                    ?>"><?php //echo $block->getProductDefaultQty() * $i; 
+                                                        ?></option>
+                                    <?php //$i++; 
+                                    ?>
+                                 <?php //} 
+                                    ?>
+                        </select> -->
+
+            <?php endif ?>
+            <?php echo $block->getChildHtml('', true) ?>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    </div>
+    <div id="qty-max-message" style="display:none;color:red;margin-top:10px;">
+        Maximum stock limit reached
+    </div>
+    <div class=" marB15">
+        <div class="col-md-12">
+            <div class="row">
+                <a class="btn btn-transparent-border btn100 more_info_btn"><?php /* @escapeNotVerified */ echo __('More Details') ?></a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+</div>
+<style>
+    .single-product-summery .swatch-option.disabled {
+        display: block !important;
+    }
+</style>
+
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/product/view/validation": {
+                "radioCheckboxClosest": ".nested"
+            }
+        }
+    }
+</script>
+<?php if (!$block->isRedirectToCartEnabled()) : ?>
+    <script type="text/x-magento-init">
+        {
+        "#product_addtocart_form": {
+            "catalogAddToCart": {
+                "bindSubmit": true
+            }
+        }
+    }
+</script>
+<?php endif; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const quantityInput = document.getElementById('qty');
+        const qtyMinus = document.querySelector('.qty-minus');
+        const qtyPlus = document.querySelector('.qty-plus');
+
+        qtyMinus.addEventListener('click', function() {
+            if (quantityInput.value > 1) {
+                quantityInput.value = parseInt(quantityInput.value) - 1;
+            }
+        });
+
+        qtyPlus.addEventListener('click', function() {
+            quantityInput.value = parseInt(quantityInput.value) + 1;
+        });
+
+        const addToCartButtons = document.querySelectorAll('button.tocart');
+
+
+        addToCartButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var selectedSwatch = document.querySelector('.swatch-attribute .swatch-option.selected');
+                var swatchLabel = selectedSwatch ? selectedSwatch.getAttribute('data-option-label') : '';
+
+                //  console.log("Selected Swatch Label:", swatchLabel);
+                // Optional: you can fetch dynamic product data via data attributes
+                fbq('track', 'AddToCart', {
+                    content_name: "<?= $_product->getName(); ?>",
+                    content_ids: ['<?= $_product->getId(); ?>'], // Replace or fetch dynamically
+                    content_type: 'product',
+                    value: <?= $_product->getFinalPrice(); ?>, // Replace with product price dynamically
+                    currency: 'INR',
+                    variant: swatchLabel
+
+                });
+            });
+        });
+    });
+</script>
+
+
+
+
+<?php
+/** @var \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable $block */
+if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+    $stockData = [];
+
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $viewBlock = $objectManager->get(\Magento\ConfigurableProduct\Block\Product\View\Type\Configurable::class);
+    $stockRegistry = $objectManager->get(\Magento\CatalogInventory\Api\StockRegistryInterface::class);
+    $viewBlock->setProduct($_product);
+
+    $childProducts = $viewBlock->getAllowProducts();
+    $attributes = $viewBlock->getAllowAttributes();
+
+    if (!empty($childProducts) && !empty($attributes)) {
+        foreach ($childProducts as $childProduct) {
+            $stockItem = $stockRegistry->getStockItem($childProduct->getId());
+
+            $stockQty = $stockItem ? (int)$stockItem->getQty() : 0;
+            //   $stockQty = $childProduct->getExtensionAttributes()->getStockItem()->getQty();
+            $combinationKey = [];
+
+            foreach ($attributes as $attribute) {
+                $code = $attribute->getProductAttribute()->getAttributeCode();
+                $optionId = $childProduct->getData($code);
+
+                if ($optionId) {
+                    $combinationKey[] = $optionId;
+                }
+            }
+
+            if (!empty($combinationKey)) {
+                // Join all option IDs to make unique key like "23-15"
+                $key = implode('-', $combinationKey);
+                $stockData[$key] = (int)$stockQty;
+            }
+        }
+    }
+
+?>
+
+
+
+    <script>
+        window.stockQty = <?= json_encode($stockData) ?>;
+    </script>
+
+<?php } ?>
+
+
+<script>
+    require(['jquery', 'Magento_Swatches/js/swatch-renderer'], function($) {
+        var spConfig = window.stockQty;
+
+        function showMaxMessage() {
+            $('#qty-max-message').fadeIn();
+            //  setTimeout(() => {
+            //$('#qty-max-message').fadeOut();
+            //}, 3000);
+        }
+
+        function hideMaxMessage() {
+            $('#qty-max-message').fadeOut();
+        }
+
+        setTimeout(function() {
+            if ($(document).find('.swatch-attribute').length > 0) {
+                $('.swatch-attribute').each(function() {
+                    var $firstOption = $(this).find('.swatch-option').first();
+
+                    if ($firstOption.length && !$firstOption.hasClass('selected')) {
+                        $firstOption.trigger('click');
+                    }
+                });
+            }
+        }, 500); // adjust delay if needed
+
+        $(document).on('click', '.swatch-option', function() {
+            hideMaxMessage();
+            var selectedOptions = {};
+            var selectedOptionId = $('.swatch-option.selected').attr('data-option-id')
+            //alert($('.swatch-option.selected').attr('data-option-id'));
+            console.log(spConfig);
+            console.log(spConfig[selectedOptionId]);
+            if (spConfig[selectedOptionId] != undefined) {
+                var maxQty = spConfig[selectedOptionId];
+                $('input.qty').attr('max', maxQty);
+            }
+
+        });
+
+
+        // Increase button logic
+        $('.qty-plus').on('click', function() {
+            var $input = $(this).siblings('input.qty');
+            var maxQty = parseInt($input.attr('max'), 10);
+            var currentVal = parseInt($input.val(), 10) || 1;
+            console.log(currentVal);
+            if (currentVal >= maxQty) {
+                $input.val(maxQty);
+                showMaxMessage();
+            } else {
+                //  $input.val(currentVal + 1);
+                hideMaxMessage();
+            }
+        });
+
+        // Decrease button logic
+        $('.qty-minus').on('click', function() {
+            var $input = $(this).siblings('input.qty');
+            var currentVal = parseInt($input.val(), 10) || 1;
+
+            if (currentVal > 1) {
+                //  $input.val(currentVal - 1);
+                hideMaxMessage();
+            }
+        });
+
+        // Direct input
+        $('input.qty').on('input', function() {
+            var $input = $(this);
+            var val = parseInt($input.val(), 10);
+            var maxQty = parseInt($input.attr('max'), 10);
+
+            if (isNaN(val) || val < 1) {
+                $input.val(1);
+            } else if (val > maxQty) {
+                $input.val(maxQty);
+                showMaxMessage();
+            } else {
+                hideMaxMessage();
+            }
+        });
+    });
+</script>

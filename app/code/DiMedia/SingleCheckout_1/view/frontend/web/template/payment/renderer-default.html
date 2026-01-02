@@ -1,0 +1,14 @@
+<div class="payment-method" data-bind="css: {disabled: isDisabledByAddress}">
+    <input type="radio"
+        data-bind="attr: { disabled: isDisabledByAddress }, checked: isChecked, value: getCode(), click: selectPaymentMethod" />
+
+    <label data-bind="text: getTitle()"></label>
+
+    <!-- method form (CVV, card fields etc) -->
+    <!-- ko template: getRegion('form-fields') --><!-- /ko -->
+
+    <!-- Locked message -->
+    <!-- ko if: isDisabledByAddress -->
+    <div class="method-disabled-msg">Please complete shipping address first.</div>
+    <!-- /ko -->
+</div>

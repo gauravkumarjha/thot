@@ -1,0 +1,124 @@
+<?php
+
+/** @var $block Template */
+/** @var $postsVideModel Posts */
+
+use Chetaru\Edit\ViewModel\Posts;
+use Magento\Framework\View\Element\Template;
+
+/** @var Posts $postsViewModel */
+$postsViewModel = $block->getData('posts_view_model');
+$collection = $postsViewModel->getPosts(8);
+$pagerBlock = $this->getChildBlock('edit_pager');
+$postBlock = $block->getChildBlock('post');
+?>
+<div class="breadcrumbs">
+    <ul class="items">
+        <li class="item home"><a href="/" title="Go to Home Page">Home</a></li>
+        <li class="item cms_page"> <strong>Edits</strong></li>
+    </ul>
+</div>
+<?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('edits-posts-banner')->toHtml();?>
+<div class="container bg-white">
+    <div class="row">
+        <div class="edits-landing-content-container">
+            <div class="products-container edits-grid">
+                <?php if (!$collection->count()): ?>
+                <p>There are no posts in this edit.</p>
+                <?php else: ?>
+                <div id="products_wrapper">
+                    <?php foreach ($collection as $post): ?>
+                    <?php echo $postsViewModel->getPostHtml($postBlock, $post);?>
+                    <?php endforeach; ?>
+                    <?php if ($pagerBlock): ?>
+                      <div class="pagination" style="display:none"><?php echo $postsViewModel->getPager($collection, $pagerBlock); ?></div>
+                    <?php endif; ?>
+                </div>
+                <div class="products_wrappers"><div id="products_wrapper_2"></div></div>
+                <div class="btnViewAll text-center">
+                    <a href="#" id="show_more" class="withoutloading btnStyle"><img src="<?php echo $this->getViewFileUrl('images/thot-loading.gif'); ?>" alt='' /></a>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php 
+// $displayed_inedits = array();
+// if(!empty($in_edits)){
+// 	$displayed_inedits=array_column($in_edits, 'post_id');
+// }
+?>
+<script>
+require(['jquery', 'jquery/ui'], function($) {
+    var limit = 8;
+    var count = 2;
+    var href = '';
+    var total_pages = $('#products_wrapper .pagination a.page.last span').last().text();
+    total_pages = parseInt(total_pages);
+    for(var i = 2; i <= total_pages; i++){
+        $('.products_wrappers').append('<div id="products_wrapper_' + i +'"></div>');
+    }
+    var trigger = true;
+    $(window).scroll(function() {
+        var win_scroll = $(this).scrollTop();
+        var offset = $('.btnViewAll').offset().top;
+        var btnHeight = $('.btnViewAll').outerHeight(true);
+        console.log(btnHeight);
+        offset = parseInt(offset);
+        var win_h = $(window).height();
+        ///var res = parseInt(win_scroll) + parseInt(win_h) - parseInt(btnHeight);
+        var res = parseInt(win_scroll) + parseInt(win_h);
+        if ( trigger && ( res > offset) ) {
+            console.log(res, offset);
+           // console.log("triggered");
+            var next_div_section = '#products_wrapper_' + count;
+            console.log(next_div_section);
+            //setTimeout(function(){
+              ///  trigger = false;
+                if( $(next_div_section).is(':empty') ) {
+                    //console.log("triggered 2");
+                    $( next_div_section ).load( "/inedit?p=" + count +' #products_wrapper', function() {
+                        //console.log("ajax completed");
+                        //setTimeout(function(){ trigger = true; }, 2000);
+                    });
+                }else{
+                    //console.log("triggered 3");
+                }
+                //console.log(total_pages);
+                // if( $('products_wrapper_' + total_pages).is(':empty') ) {
+                //     console.log("triggered 3");
+                //     $('.btnViewAll').css('visibility','visible');
+                // }else{
+                //    $('.btnViewAll').css('visibility','hidden');
+                //    trigger = false;
+                // }
+                if( count == total_pages ){
+                    $('.btnViewAll').css('visibility','hidden');
+                }
+            //}, 2000);
+            // var current_div_section = '#products_wrapper';
+            // var next_div_section = '#products_wrapper_' + count;
+            // if( count == 1 ){
+            //  href = $(current_div_section).find('a.action.next').attr('href');
+            // }
+            // console.log(count);
+            // console.log(href);
+            // $( next_div_section ).load( href + ' #products_wrapper', function() {
+            //     href = $(next_div_section).find('a.action.next').attr('href');
+            //     console.log(href);
+            //     ////alert( "Load was performed." );
+            //     count += 1;
+            //     console.log(count);
+            //     $('.products_wrappers').append('<div id="products_wrapper_' + count +' "></div>');
+            // });
+            // console.log( $(div_section).find('a.action.next').attr('href') );
+            // jQuery('#show_more.withoutloading img').trigger('click');
+            // $('#show_more').removeClass('withoutloading');
+            // $('#show_more').addClass('withloading');
+            //$('#show_more').show();
+            count += 1;
+        }
+    });
+});
+</script>

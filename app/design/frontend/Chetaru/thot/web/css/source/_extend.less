@@ -1,0 +1,294 @@
+@custom-color-blue1: #1639ac;
+@header__background-color: @custom-color-blue1;
+@header-icons-color: @color-white;
+@header-icons-color-hover: @color-white;
+
+& when (@media-common =true) {
+    .block-search {
+        .label:before {
+            .lib-css(color, @color-white);
+        }
+    }
+
+    .minicart-wrapper {
+        .action {
+            &.showcart {
+                &:before {
+                    .lib-css(color, @color-white);
+                }
+            }
+        }
+    }
+
+
+}
+
+
+
+
+//
+//  Mobile (styles-m.css)
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__s) {
+    // your code
+}
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__m) {
+    // your code
+}
+
+& when (@media-target ='mobile'),
+(@media-target ='all') {
+    @media only screen and (max-width: 375px) {
+        // styles for custom breakpoint below <= 375px mobile screen
+    }
+
+    .mobile-top-link {
+        display: block !important;
+    }
+
+    .mobile-slider {
+        display: block !important;
+    }
+}
+
+//
+//  Tablet
+//  _____________________________________________
+
+// This will add styles for tablet devices. When using native media-queries, we recommend wrapping your media-queries with media-width Magento mixins or media-target
+& when (@media-target ='desktop'),
+(@media-target ='all') {
+
+
+    @media only screen and (min-width: 1000px) {
+        .mobile-top-link {
+            display: none !important;
+        }
+    }
+
+    // @media only screen and (min-width: @screen__m) and (max-width: (@screen__xl - 1)) {
+
+    // }
+
+    .mobile-slider {
+        display: none !important;
+    }
+}
+
+//
+//  Desktop (style-l.css)
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum ='min') and (@break =@screen__m) {}
+
+.media-width(@extremum, @break) when (@extremum ='min') and (@break =@screen__l) {
+    // your code
+}
+
+.media-width(@extremum, @break) when (@extremum ='min') and (@break =@screen__xl) {
+    // your code
+}
+
+/**************************** Fonts *********************************/
+
+
+
+@font-face { 
+    font-family: 'icomoon';
+    src: url(../fonts/icomoon.eot?lbcrun);
+    src: url(../fonts/icomoon.eot?lbcrun#iefix) format("embedded-opentype"), url(../fonts/icomoon.ttf?lbcrun) format("truetype"), url(../fonts/icomoon.woff?lbcrun) format("woff"), url(../fonts/icomoon.svg?lbcrun#icomoon) format("svg");
+    font-weight: 400;
+    font-style: normal
+}
+  
+@font-face {
+    font-family: "Ionicons";
+    src: url("../fonts/ionicons.eot?v=2.0.0");
+    src: url("../fonts/ionicons.eot?v=2.0.0#iefix") format("embedded-opentype"),
+        url("../fonts/ionicons.ttf?v=2.0.0") format("truetype"),
+        url("../fonts/ionicons.woff?v=2.0.0") format("woff"),
+        url("../fonts/ionicons.svg?v=2.0.0#Ionicons") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-Bold.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-BoldItalic.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-Light.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-Italic.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-Regular.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-LightItalic.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-MediumItalic.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-Medium.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-SemiBold.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../fonts/CormorantGaramond-SemiBoldItalic.woff2') format('woff2'),
+        url('../fonts/CormorantGaramond-SemiBoldItalic.woff') format('woff');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura2-normal-lefty regular';
+    src: url('../fonts/FUT_2_LF.TTF') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura2-book-lefty regular';
+    src: url('../fonts/FUT_B_LT.TTF') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura-condensed-extreme-lefty regular';
+    src: url('../fonts/FUT_C_EX.TTF') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura-poster-light-lefty regular';
+    src: url('../fonts/FUT_P_LF.TTF') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura-bold-lefty regular';
+    src: url('../fonts/FUTB_LFT.TTF') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura-condensed-light-lefty regular';
+    src: url('../fonts/FUTCL_LT.TTF') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Futura-lt-bt light';
+    src: url('../fonts/futura light bt.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura-bk-bt-book';
+    src: url('../fonts/Futura Bk BT Book.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'botoni-bk-bt';
+    src: url('../fonts/Bodoni Bk BT Book.ttf');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'BODORCS';
+    src: url('../fonts/BODORCS.TTF');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sweet-Sans-Pro-regular';
+    src: url('../fonts/SweetSansProRegular.otf');
+    font-display: swap;
+} 
+
+@font-face {
+    font-family: 'Sweet-Sans-Pro-medium';
+    src: url('../fonts/SweetSansProMedium.otf');
+    font-display: swap; 
+}   

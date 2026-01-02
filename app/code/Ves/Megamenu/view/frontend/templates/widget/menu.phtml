@@ -1,0 +1,276 @@
+<?php
+/**
+ * Menu widget template
+ *
+ * @var \Ves\Megamenu\Block\Widget\Menu $block
+ */
+?>
+<?php
+$isDrillDown = 0;
+if ($menu = $this->getMenu()) :
+	$html           = $classes = '';
+	$data           = $this->helper("Ves\Megamenu\Helper\Data");
+	$mobileTemplate = $menu->getMobileTemplate();
+	$mobile_menu 	= false;
+	//If active mobile menu alias will replace current desktop menu to mobile menu
+	if ($mobileTemplate == 2 && $menu->getMobileMenuAlias() && $this->getMobileDetect()->isMobile()) {
+		$mobile_menu_alias = $menu->getMobileMenuAlias();
+		$old_menu = $menu;
+		$menu = $block->getMenuProfile(0, $mobile_menu_alias);
+		if($menu) {
+			$mobile_menu = true;
+		} else {
+			$menu = $old_menu;
+		}
+	}
+
+	$html = "";
+    $menuItems  = $menu->getData('menuItems');
+    $structure  = $block->decodeJson($menu->getStructure());
+    $categories = [];
+    foreach ($menuItems as $item) {
+        if (isset($item['link_type']) && $item['link_type'] == 'category_link' && isset($item['category']) && !in_array($item['category'], $categories)) {
+            $categories[] = $item['category'];
+        }
+    }
+    $data->setMenuCategories($categories);
+    if (is_array($structure)) {
+        $i = 1;
+        foreach ($structure as $k => $v) {
+            $itemData = $data->renderMenuItemData($v, [], $menuItems);
+            $html .= $data->drawItem($itemData, 0, 1, true, $i);
+            $i++;
+        }
+    }
+
+    $isDrillDown = 0;
+	$mobileTemplate = $menu->getMobileTemplate();
+	$mobileTemplateLabel = 'accordion';
+
+    switch ((int)$mobileTemplate) {
+        case 3:
+            $mobileTemplateLabel = 'drill';
+            $classes = 'ves-mdrilldown';
+            $isDrillDown = 1;
+            break;
+        case 1:
+            $classes = 'ves-maccordion';
+            break;
+        case 2:
+            $classes = 'ves-mcustommenu';
+            break;
+        case 0:
+            $mobileTemplateLabel = 'offcanvas';
+            $classes = 'ves-offcanvas';
+            break;
+        default:
+            $mobileTemplateLabel = 'accordion';
+            break;
+    }
+
+	$desktopTemplate = $menu->getDesktopTemplate();
+	if ($desktopTemplate == 'vertical-left' ||  $desktopTemplate == 'vertical-right') {
+		$classes .= ' ves-vertical';
+	}
+	$classes .= ' ves-d' . $desktopTemplate;
+
+	if ($disableItemBlocks = $menu->getData("disable_iblocks")) {
+		$classes .= ' hide-blocks';
+	}
+
+	if ($mobileTemplate == 0) {
+		$classes = 'ves-offcanvas offcanvas-left';
+	} else if ($mobileTemplate == 1) {
+		$classes = 'ves-maccordion';
+	} else if ($mobileTemplate == 2) {
+		$classes = 'ves-mcustommenu';
+	} else if ($mobileTemplate == 3) {
+		$classes = 'ves-mdrilldown';
+	}
+
+	$desktopTemplate = $menu->getDesktopTemplate();
+	if ($desktopTemplate == 'vertical-left' ||  $desktopTemplate == 'vertical-right') {
+		$classes .= ' ves-vertical';
+	}
+	$classes .= ' ves-d' . $desktopTemplate;
+
+	if ($disableItemBlocks = $menu->getData("disable_iblocks")) {
+		$classes .= ' hide-blocks';
+	}
+
+    if ($desktopTemplate == "drill") {
+        $isDrillDown = 1;
+    }
+
+    $drilldown_speed = $data->getConfig("general_settings/drilldown_speed");
+    $drilldown_speed = $drilldown_speed ? (int)$drilldown_speed : 300;
+	$checked = true;
+	$html2 = "";
+
+	try{
+		$html2          = $data->filter($html);
+	} catch (\Exception $e) {
+		$checked = false;
+	}
+
+	if($checked) {
+		$html = $html2;
+	}
+
+	$event         = $menu->getEvent();
+	$id            = time() . uniqid();
+	$blockId       = $menu->getAlias() .'-'. time();
+	$disableBellow = (int) $menu->getDisableBellow();
+	$navId         = 'nav-'. $menu->getAlias() .'-' . $id;
+	$classes       .= ' ves-megamenu-' . $event . ' ' . $menu->getData("classes") . ' ' . $menu->getAlias();
+	$title         = $this->getData("title");
+	if ($title) $classes .= ' ' . 'has-title';
+	$sticky = $menu->getData('scrolltofixed');
+	$design = $menu->getDesign();
+	$googleLink = $styles = '';
+	if ($design) {
+		if (!is_array($design)) {
+			$design = unserialize($design);
+		}
+		if (isset($design['margin_top']) && $design['margin_top']) {
+			$styles .= 'margin-top:' . $design['margin_top'] . $design['margin_units'] . ';';
+		}
+		if (isset($design['margin_right']) && $design['margin_right']) {
+			$styles .= 'margin-right:' . $design['margin_right'] . $design['margin_units'] . ';';
+		}
+		if (isset($design['margin_bottom']) && $design['margin_bottom']) {
+			$styles .= 'margin-bottom:' . $design['margin_bottom'] . $design['margin_units'] . ';';
+		}
+		if (isset($design['margin_left']) && $design['margin_left']) {
+			$styles .= 'margin-left:' . $design['margin_left'] . $design['margin_units'] . ';';
+		}
+		if (isset($design['border_top_width']) && $design['border_top_width']) {
+			$styles .= 'border-top-width:' . $design['border_top_width'] . $design['border_units'] . ';';
+		}
+		if (isset($design['border_right_width']) && $design['border_right_width']) {
+			$styles .= 'border-right-width:' . $design['border_right_width'] . $design['border_units'] . ';';
+		}
+		if (isset($design['border_bottom_width']) && $design['border_bottom_width']) {
+			$styles .= 'border-bottom-width:' . $design['border_bottom_width'] . $design['border_units'] . ';';
+		}
+		if (isset($design['border_left_width']) && $design['border_left_width']) {
+			$styles .= 'border-left-width:' . $design['border_left_width'] . $design['border_units'] . ';';
+		}
+		if (isset($design['padding_top']) && $design['padding_top']) {
+			$styles .= 'padding-top:' . $design['padding_top'] . $design['padding_units'] . ';';
+		}
+		if (isset($design['padding_right']) && $design['padding_right']) {
+			$styles .= 'padding-right:' . $design['padding_right'] . $design['padding_units'] . ';';
+		}
+		if (isset($design['padding_bottom']) && $design['padding_bottom']) {
+			$styles .= 'padding-bottom:' . $design['padding_bottom'] . $design['padding_units'] . ';';
+		}
+		if (isset($design['padding_left']) && $design['padding_left']) {
+			$styles .= 'padding-left:' . $design['padding_left'] . $design['padding_units'] . ';';
+		}
+		if (isset($design['border_style']) && $design['border_style']) {
+			$styles .= 'border-style: ' . $design['border_style'] . ';';
+		}
+		if (isset($design['border_color']) && $design['border_color']) {
+			$styles .= 'border-color: ' . $design['border_color'] . ';';
+		}
+		if (isset($design['border_top_left_radius']) && $design['border_top_left_radius']) {
+			$styles .= 'border-top-left-radius: ' . $design['border_top_left_radius'] . $design['radius_units'] . ';';
+		}
+		if (isset($design['border_top_right_radius']) && $design['border_top_right_radius']) {
+			$styles .= 'border-top-right-radius: ' . $design['border_top_right_radius'] . $design['radius_units'] . ';';
+		}
+		if (isset($design['border_bottom_right_radius']) && $design['border_bottom_right_radius']) {
+			$styles .= 'border-bottom-right-radius: ' . $design['border_bottom_right_radius'] . $design['radius_units'] . ';';
+		}
+		if (isset($design['border_bottom_left_radius']) && $design['border_bottom_left_radius']) {
+			$styles .= 'border-bottom-left-radius: ' . $design['border_bottom_left_radius'] . $design['radius_units'] . ';';
+		}
+		if (isset($design['background']) && $design['background']) {
+			$styles .= 'background-color: ' . $design['background'] . ';';
+		}
+		if (isset($design['boxshadow_color']) && $design['boxshadow_color']) {
+			$boxshadowUnits = $design['boxshadow_units'];
+			$styles .= 'box-shadow: ' . ($design['boxshadow_inset']?'boxshadow_inset':'') . ' ' . $design['boxshadow_x'] . $boxshadowUnits . ' ' . $design['boxshadow_y'] . $boxshadowUnits . ' ' . $design['boxshadow_blur'] . $boxshadowUnits . ' ' . $design['boxshadow_spread'] . $boxshadowUnits . ' ' . $design['boxshadow_color'] . ';';
+		}
+		if (isset($design['font_group']) && $design['font_group'] == 'google') {
+			$amp = ',';
+			$charSubset = '';
+			if ($subsets = $design['font_char_subset']){
+				$charSubset = "{$amp}subset={$subsets}";
+			}
+			$fontWeight = '';
+			$weight = $design['font_weight'];
+			if ($weight){
+				$fontWeight = ':' . $weight;
+			}
+			$googleLink = 'https://fonts.googleapis.com/css?family='.str_replace(' ', '+', $design['font_google']) . $fontWeight . $charSubset;
+			if (isset($design['font_google']) && $design['font_google'] && $design['font_google']) {
+				$styles .= 'font-family: ' . $design['font_google'] . ';';
+			}
+		} else if (isset($design['font_group']) && $design['font_group'] != 'custom') {
+			$styles .= 'font-family: ' . $design['font_group'] . ';';
+		} else if (isset($design['font_custom']) && $design['font_custom'] && $design['font_group'] == 'custom') {
+			$styles .= 'font-family: ' . $design['font_custom'] . ';';
+		}
+		if (isset($design['font_size']) && $design['font_size']) {
+			$styles .= 'font-size: ' . $design['font_size'] . ';';
+		}
+		if (isset($design['font_weight']) && $design['font_weight']) {
+			$styles .= 'font-weight: ' . $design['font_weight'] . ';';
+		}
+	}
+	//if ($styles) {
+		//$styles = 'style="' . $styles . '"';
+	//}
+    $custom_css_class = $this->getConfig("custom_class");
+    $show_menu_block_title = (int)$this->getConfig("show_menu_block_title");
+    if ($custom_css_class) {
+		$classes .=" ".$custom_css_class;
+	}
+?>
+<div id="<?= $blockId ?>" class="block ves-megamenu <?= $classes ?>">
+    <?php if ($title && $show_menu_block_title) : ?>
+    <div class="block-title"><strong><span><?= __($title); ?></span></strong></div>
+    <?php endif; ?>
+    <?php if($mobileTemplate == 0 || $mobileTemplate == 2) : ?>
+    <div class="navbar ves-navbar">
+        <span class="ves-navtoggle ves-navtoggle<?= $blockId ?>">
+            <span><?= __('Toggle Nav'); ?></span>
+        </span>
+    </div>
+    <?php endif; ?>
+    <div class="header-overlay"></div>
+    <div class="navigation navitaion<?= $id ?>" data-action="navigation">
+        <ul id="<?= $navId ?>" class="<?= $navId ?>"  <?php if ($disableBellow > 0) : ?>data-disable-bellow="<?= $disableBellow ?>"<?php endif; ?> data-toggle-mobile-nav="false">
+            <?= $html; ?>
+        </ul>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "#<?= $block->escapeHtmlAttr($blockId) ?>": {
+            "Ves_Megamenu/js/megamenu": {
+                "id": "<?= $block->escapeHtmlAttr($id); ?>",
+                "navId": "<?= $block->escapeHtmlAttr($navId); ?>",
+                "blockId": "<?= $block->escapeHtmlAttr($blockId); ?>",
+                "googleLink": "<?= $block->escapeHtmlAttr($googleLink); ?>",
+                "event": "<?= $block->escapeHtmlAttr($event); ?>",
+                "desktopTemplate": "<?= $block->escapeHtml($desktopTemplate); ?>",
+                "mobileTemplate": "<?= $block->escapeHtml($mobileTemplateLabel); ?>",
+                "scrolltofixed": <?= $menu->getData('scrolltofixed') ? 'true' : 'false'; ?>,
+                "drilldownSpeed": <?= (int)$drilldown_speed; ?>,
+                "isDrillDown": <?= $isDrillDown ?>
+            }
+        }
+    }
+</script>
+<?php if ($styles): ?>
+<style>
+#<?= $block->escapeHtmlAttr($blockId) ?> {
+    <?= $styles; ?>
+}
+<?= $menu->getCustomCss(); ?>
+</style>
+<?php endif; ?>
+<?php endif; ?>

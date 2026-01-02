@@ -1,0 +1,48 @@
+<!--@subject Welcome to collaboration@-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image",
+"var data.name":"Sender Name",
+"var data.email":"Sender Email",
+"var data.phone":"Sender Telephone",
+"var data.catalog":"Overview"}
+@-->
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table style="margin: 0px 20px !important;">
+    <tr class="email-intro">
+        <td>
+            <p>
+                Hello {{var data.name}},
+            </p>
+        </td>
+       
+    </tr>
+    <tr class="email-intro">
+       
+        <td>
+            <p>
+                Thank you for joining collaboration.
+            </p>
+        </td>
+     
+    </tr>
+    <tr class="email-intro">
+    
+       
+        <td>
+            <p>
+                If you have any questions, feel free to contact us at <a
+                    href="mailto:info@thehouseofthings.com">info@thehouseofthings.com</a>.
+    
+            </p>
+        </td>
+    </tr>
+ 
+</table>
+
+{{template config_path="design/email/footer_template"}}

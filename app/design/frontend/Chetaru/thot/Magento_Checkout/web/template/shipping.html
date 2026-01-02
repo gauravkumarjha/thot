@@ -1,0 +1,71 @@
+<!-- SHIPPING ADDRESS ACCORDION -->
+<li id="shipping" class="checkout-step accordion-step" data-bind="css: { active: isShippingOpen() }">
+<each if="!quoteIsVirtual" args="getRegion('customer-email')" render=""></each>
+<each args="getRegion('address-list')" render=""></each>
+<each args="getRegion('address-list-additional-addresses')" render=""></each>
+
+    <div class="step-header" data-bind="click: toggleShipping">
+        <h3>Shipping Address</h3>
+        <span class="arrow" data-bind="css: { open: isShippingOpen() }"></span>
+    </div>
+
+    <div class="step-content accordion-content" data-bind="visible: isShippingOpen()">
+
+      
+        <!-- Address popup -->
+        <if args="!isFormInline">
+            <div class="new-address-popup">
+                <button type="button" class="action action-show-popup" click="showFormPopUp"
+                    visible="!isNewAddressAdded()">
+                    <span translate="'New Address'"></span>
+                </button>
+            </div>
+            <div id="opc-new-shipping-address" visible="isFormPopUpVisible()" render="shippingFormTemplate"></div>
+        </if>
+
+        <each args="getRegion('before-form')" render=""></each>
+
+        <!-- Inline address form -->
+        <render if="isFormInline" args="shippingFormTemplate"></render>
+    </div>
+</li>
+
+
+<!-- SHIPPING METHODS ACCORDION -->
+<li id="opc-shipping_method" class="checkout-step accordion-step" data-bind="css: { active: isShippingOpen() }">
+
+  
+
+    <div class="step-content accordion-content" data-bind="visible: isShippingOpen();">
+
+        <each args="getRegion('before-shipping-method-form')" render=""></each>
+
+        <form id="co-shipping-method-form" class="form methods-shipping" if="rates().length"
+            submit="setShippingInformation" novalidate="novalidate">
+
+            <render args="shippingMethodListTemplate"></render>
+
+            <div id="onepage-checkout-shipping-method-additional-load">
+                <each args="getRegion('shippingAdditional')" render=""></each>
+            </div>
+
+            <div role="alert" if="errorValidationMessage().length" class="message notice">
+                <span text="errorValidationMessage()"></span>
+            </div>
+
+            <div class="actions-toolbar" id="shipping-method-buttons-container">
+                <div class="primary">
+                    <button data-role="opc-continue" type="submit" class="button action continue primary">
+                        <span translate="'Next'"></span>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+        <div class="no-quotes-block" ifnot="rates().length > 0"
+            translate="'Sorry, no quotes are available for this order at this time..'"></div>
+
+    </div>
+ 
+</li>

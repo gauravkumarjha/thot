@@ -1,0 +1,27 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var \Bss\GA4\Block\EventAddToWishlist $block
+ */
+$escaper = $block->escaper();
+$item = $block->prepareItem();
+?>
+<?php if ($item): ?>
+    <script>
+        gtag("event", "add_to_wishlist", {
+            currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+            value: "<?=$escaper->escapeHtml($block->getValue())?>",
+            items: <?=/** @noEscape  */ $item;?>
+        });
+    </script>
+<?php endif;?>

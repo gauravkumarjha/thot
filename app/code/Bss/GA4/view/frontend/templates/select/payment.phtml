@@ -1,0 +1,28 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var \Bss\GA4\Block\Select\Payment $block
+ */
+$escaper = $block->escaper();
+?>
+<?php if ($block->getListItems()): ?>
+    <script class="bss_add_payment_info">
+        gtag("event", "add_payment_info", {
+            currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+            value: "<?=$escaper->escapeHtml($block->getValue())?>",
+            coupon: "<?=$escaper->escapeHtml($block->getCouponCode())?>",
+            payment_type: "<?=$escaper->escapeHtml($block->getPaymentType())?>",
+            items: <?= /** @noEscape  */ $block->serializeItem($block->getListItems())?>
+        });
+    </script>
+<?php endif; ?>

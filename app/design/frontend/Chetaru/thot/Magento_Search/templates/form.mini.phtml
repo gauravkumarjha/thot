@@ -1,0 +1,44 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $helper \Magento\Search\Helper\Data */
+$helper = $this->helper('Magento\Search\Helper\Data');
+?>
+<div class="block block-search">
+    <a id="searchLink"  href="javascript:void(0);"><i class="icon ion-search"></i></a>
+</div>
+
+<div class="block block-search mobile-search">
+    <a id="searchLink" href="javascript:void(0);"><i class="icon ion-search"></i></a>
+</div>
+
+
+<script type="text/javascript">
+require(['jquery','jquery.bootstrap'], function($){
+    $(document).ready(function(){
+        
+        console.log($("#search").length );
+    $("#searchLink").click(function(){
+        if($('#TopnavSearch').is(':visible')==false){
+            $(".sp").focus();
+        }
+        $('#TopnavSearch').show();
+        $('.search-overlay').show();
+        $("input.search-query").focus();
+        
+    });
+    $("#TopnavSearch .close").click(function(){
+        $('#TopnavSearch').hide();
+        $('.search-overlay').hide();
+    });
+    
+});
+});
+
+</script>

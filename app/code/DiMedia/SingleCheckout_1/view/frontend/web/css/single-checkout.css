@@ -1,0 +1,21 @@
+.single-checkout-wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.single-shipping,
+.single-payment,
+.single-summary {
+    width: 33%;
+}
+
+.payment-locked,
+.method-disabled-msg {
+    color: red;
+    font-size: 14px;
+}
+
+.payment-method.disabled {
+    opacity: .4;
+    pointer-events: none;
+}

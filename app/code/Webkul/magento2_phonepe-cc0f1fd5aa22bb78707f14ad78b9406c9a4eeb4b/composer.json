@@ -1,0 +1,20 @@
+{
+    "name": "webkul/phonepe",
+    "description": "Webkul PhonePe Module for Magento2",
+    "require": {
+        "phonepe/phonepe-pg-php-sdk": ">=1.0"
+    },
+    "type": "magento2-module",
+    "version": "4.0.0",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "src/app/code/Webkul/PhonePe/registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\PhonePe\\": "src/app/code/Webkul/PhonePe"
+        }
+    }
+}

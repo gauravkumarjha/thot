@@ -1,0 +1,19 @@
+{
+    "name": "rossmc/magento2-partytown",
+    "description": "A module which adds Partytown to Magento 2",
+    "require": {
+        "php": "^8.1",
+        "magento/framework": "*"
+    },
+    "type": "magento2-module",
+    "license": "MIT",
+    "homepage": "https://github.com/rossmc/magento2-partytown",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Rossmc\\Partytown\\": ""
+        }
+    }
+}

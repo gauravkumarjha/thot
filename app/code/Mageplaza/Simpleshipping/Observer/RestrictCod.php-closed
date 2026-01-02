@@ -1,0 +1,55 @@
+<?php
+
+namespace Mageplaza\Simpleshipping\Observer;
+
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Psr\Log\LoggerInterface;
+
+class RestrictCod implements ObserverInterface
+{
+    protected $logger;
+    protected $checkoutSession;
+    protected $cartRepository;
+
+    public function __construct(
+        LoggerInterface $logger,
+        CheckoutSession $checkoutSession,
+        CartRepositoryInterface $cartRepository
+    ) {
+        $this->logger = $logger;
+        $this->checkoutSession = $checkoutSession;
+        $this->cartRepository = $cartRepository;
+    }
+
+    public function execute(Observer $observer)
+    {
+        $method = $observer->getEvent()->getMethodInstance();
+        $result = $observer->getEvent()->getResult();
+
+    
+        $this->logger->info("method-" . $method->getCode());
+        // Check if the payment method is COD
+        if ($method->getCode() == 'msp_cashondelivery') {
+            // Retrieve the current quote from the checkout session
+            $quote = $this->checkoutSession->getQuote();
+
+            if ($quote && $quote->getShippingAddress()) {
+                $shippingAddress = $quote->getShippingAddress();
+                $region = $shippingAddress->getRegion(); // State/Region name
+
+                $this->logger->info('Shipping Region: ' . $region);
+
+                // Restrict COD for regions other than Delhi
+                if ($region !== 'Delhi') {
+                    // Disable the COD payment method if the region is not Delhi
+                    $result->setData('is_available', false);
+                }
+            } else {
+                $this->logger->warning('Shipping address or quote is not available.');
+            }
+        }
+    }
+}

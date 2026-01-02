@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="head.additional">
+            <block name="partytown.config_js" template="Rossmc_Partytown::js/config-js.phtml" ifconfig="rossmc_partytown/general/enabled">
+                <arguments>
+                    <argument name="settings_view_model" xsi:type="object">Rossmc\Partytown\ViewModel\Settings</argument>
+                </arguments>
+            </block>
+            <block name="partytown.inline_js" template="Rossmc_Partytown::js/inline-js.phtml" ifconfig="rossmc_partytown/general/enabled"/>
+        </referenceBlock>
+        <referenceContainer name="before.body.end">
+            <block name="partytown.unregister_sw" template="Rossmc_Partytown::js/unregister-sw.phtml" ifconfig="rossmc_partytown/general/unregister_sw">
+                <arguments>
+                    <argument name="settings_view_model" xsi:type="object">Rossmc\Partytown\ViewModel\Settings</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

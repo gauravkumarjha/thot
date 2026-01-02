@@ -1,0 +1,43 @@
+<div id="v4u-checkout" data-bind="scope:'v4uCheckout'">
+
+    <!-- LEFT SIDE: Shipping -->
+    <div class="v4u-left">
+        <h3>Shipping Information</h3>
+
+        <!-- SHIPPING FORM -->
+        <!-- ko template: 'Magento_Checkout/shipping' --><!-- /ko -->
+
+        <!-- SHIPPING METHODS -->
+        <!-- ko template: 'Magento_Checkout/shipping-method/list' --><!-- /ko -->
+
+        <h3>Payment Method</h3>
+
+        <!-- PAYMENT METHODS -->
+        <!-- ko template: 'Magento_Checkout/payment' --><!-- /ko -->
+    </div>
+
+    <!-- RIGHT SIDE: ORDER SUMMARY -->
+    <div class="v4u-right">
+        <!-- ko template: 'Magento_Checkout/sidebar' --><!-- /ko -->
+    </div>
+
+</div>
+
+
+<script type="text/x-magento-init">
+{
+    "#v4u-checkout": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "v4uCheckout": {
+                    "component": "uiComponent",
+                    "children": {
+                        "shipping": { "component": "Magento_Checkout/js/view/shipping" },
+                        "payment": { "component": "Magento_Checkout/js/view/payment" }
+                    }
+                }
+            }
+        }
+    }
+}
+</script>

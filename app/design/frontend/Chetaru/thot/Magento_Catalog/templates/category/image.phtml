@@ -1,0 +1,49 @@
+<?php
+
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+$new_layout = array(137);
+$mood_layout = array(338);
+?>
+<?php
+    $_helper    = $this->helper('Magento\Catalog\Helper\Output');
+    $_category  = $block->getCurrentCategory();
+    $_imgHtml   = '';
+    if ($_imgUrl = $_category->getImageUrl()) {
+        $_imgHtml = '<div class="category-image"><img src="' . $_imgUrl . '" alt="' . $block->escapeHtml($_category->getName()) . '" title="' . $block->escapeHtml($_category->getName()) . '" class="image" /></div>';
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+       // /* @escapeNotVerified */ echo $_imgHtml;
+    }
+if ($_imgUrl = $_category->getImageUrl()) {
+?>
+<?php if( in_array( $block->getCurrentCategory()->getId() , $new_layout )  ){ ?>
+<div class="col-md-12 col-sm-12 col-xs-12 art_banner_image">
+    <div class="row">
+        <?php if( in_array( $block->getCurrentCategory()->getId() , $new_layout )  ){ ?>
+            <h5>The House of Things</h5>
+        <?php } ?>  
+        <img src="<?php /* @escapeNotVerified */ echo $_imgUrl;?>" class="img-responsive" style="min-height: 300px;" />
+    </div>  
+</div>
+<?php  } elseif ( in_array( $block->getCurrentCategory()->getId() , $mood_layout ) ) { ?>
+    <div class="shopmood_banner_image col-md-8 col-sm-8 col-xs-12 float-R">
+    <div class="row"> 
+        <img src="<?php /* @escapeNotVerified */ echo $_imgUrl;?>" class="img-responsive" style="min-height: 300px;" />
+    </div>  
+</div>
+<?php } else { ?>
+<div class="col-md-8 col-sm-8 col-xs-12 float-R">
+    <div class="row"> 
+        <img src="<?php /* @escapeNotVerified */ echo $_imgUrl;?>" class="img-responsive" style="min-height: 300px;" />
+    </div>  
+</div>
+<?php  } ?>
+<?php  } ?>

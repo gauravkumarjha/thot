@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="chetaru_edit_post" resource="default" engine="innodb" comment="Edit Post Table">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" identity="true" comment="Post ID"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Edit Title"/>
+        <column xsi:type="varchar" name="url_key" nullable="true" length="255" comment="Edit Url Key"/>
+        <column xsi:type="text" name="post_content" nullable="true" comment="Edit Content"/>
+        <column xsi:type="varchar" name="featured_image" nullable="true" length="255" comment="Edit Featured Image"/>
+        <column xsi:type="varchar" name="banner_image" nullable="true" length="255" comment="Edit Banner Image"/>
+        <column xsi:type="varchar" name="brand_page_image" nullable="true" length="255" comment="Edit Brand Page Image"/>
+        <column xsi:type="varchar" name="short_description" nullable="true" length="255" comment="Edit Short Description"/>
+        <column xsi:type="varchar" name="shop_for" nullable="true" length="255" comment="Edit Shop For"/>
+        <column xsi:type="varchar" name="logo" nullable="true" length="255" comment="Edit Logo Image"/>
+        <column xsi:type="text" name="products" nullable="true" comment="Edit Products"/>
+        <column xsi:type="int" name="status" nullable="true" identity="false" default="1" comment="Edit Post Status"/>
+        <column xsi:type="varchar" name="categories" nullable="true" length="255" comment="Edit Categories"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Edit Meta Title"/>
+        <column xsi:type="text" name="meta_keywords" nullable="true" comment="Edit Meta Keywords"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Edit Meta Description"/>
+        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Edit Post Creation Time"/>
+        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Edit Post Modification Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+        </constraint>
+    </table>
+</schema>

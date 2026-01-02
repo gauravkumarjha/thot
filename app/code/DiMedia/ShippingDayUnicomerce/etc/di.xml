@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/ObjectManager/etc/config.xsd">
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="add_store_code_to_order_api" type="DiMedia\ShippingDayUnicomerce\Plugin\AddStoreCodeToOrderApi"/>
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer">
+        <plugin name="DiMedia_ShippingDayUnicomerce_default_renderer_plugin" type="DiMedia\ShippingDayUnicomerce\Plugin\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRendererPlugin" />
+    </type>
+      <type name="Magento\Sales\Block\Order\Email\Items\Order">
+        <plugin name="custom_order_email_items_plugin" type="DiMedia\ShippingDayUnicomerce\Plugin\Sales\Block\Order\Email\Items\AddCustomAttribute" />
+    </type>
+
+</config>

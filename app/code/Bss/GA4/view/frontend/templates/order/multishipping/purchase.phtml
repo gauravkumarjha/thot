@@ -1,0 +1,35 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var \Bss\GA4\Block\Order\MultiShipping\Purchase $block
+ */
+$escaper = $block->escaper();
+?>
+<?php if ($block->getMultiAddressItem()): ?>
+    <?php foreach ($block->getMultiAddressItem() as $items): ?>
+        <?php if (!$items['isExclude'] && $items['item']): ?>
+            <script>
+                gtag("event", "purchase", {
+                    transaction_id: "<?=$escaper->escapeHtml($items['transactionId'])?>",
+                    value: "<?=$escaper->escapeHtml($items['value'])?>",
+                    tax:"<?=$escaper->escapeHtml($items['taxAmount'])?>",
+                    shipping: "<?=$escaper->escapeHtml($items['shippingAmount'])?>",
+                    currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+                    coupon: "<?=$escaper->escapeHtml($items['couponCode'])?>",
+                    items: <?= /** @noEscape  */ $block->serializeItem($items['item'])?>
+                });
+            </script>
+        <?php endif;?>
+    <?php endforeach;?>
+<?php endif; ?>
+

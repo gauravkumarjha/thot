@@ -1,0 +1,26 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * @var \Magento\Customer\Block\Account\AuthorizationLink $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$dataPostParam = '';
+if ($block->isLoggedIn()) {
+    $dataPostParam = sprintf(" data-post='%s'", $block->getPostParams());
+    $url = $this->getUrl('customer/account/logout');
+    $label = $escaper->escapeHtml('Sign Out');
+    
+}
+else {
+
+    $url = $this->getUrl('customer/account/login/');
+    $label = $escaper->escapeHtml('SIGN UP/LOGIN');
+}
+?>
+<li class="authorization-link" data-label="<?= $escaper->escapeHtml(__('or')) ?>">
+    <a href="<?php echo $url ?>"><?php echo $label ?></a>
+</li>

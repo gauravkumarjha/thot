@@ -1,0 +1,22 @@
+<!--@subject CMS Block Updated: {{var title}} by {{var username}} from {{var ip}} @-->
+
+<h2>CMS Block Updated</h2>
+<p><strong>Title:</strong> {{var title}}</p>
+<p><strong>Identifier:</strong> {{var identifier}}</p>
+<p><strong>Block ID:</strong> {{var block_id}}</p>
+<p><strong>Updated By:</strong> {{var username}}</p>
+<p><strong>IP Address:</strong> {{var ip}}</p>
+<p><strong>Detected Area:</strong> {{var area}}</p>
+<p><strong>Source:</strong> {{var source}}</p>
+<p><strong>Request URI:</strong> {{var request_uri}}</p>
+<p><strong>HTTP Method:</strong> {{var http_method}}</p>
+<p><strong>Auth Header Present:</strong> {{var auth_header_present}}</p>
+<p><strong>Full Action:</strong> {{var full_action}}</p>
+<hr />
+<h3>Old Content</h3>
+<pre style="white-space:pre-wrap; font-family: monospace; font-size:12px;">{{var old_content|escape}}</pre>
+<hr />
+<h3>New Content</h3>
+<pre style="white-space:pre-wrap; font-family: monospace; font-size:12px;">{{var new_content|escape}}</pre>
+
+<p style="font-size:12px;color:#666;">This is an automated notification from V4U_CmsWatcher module.</p>

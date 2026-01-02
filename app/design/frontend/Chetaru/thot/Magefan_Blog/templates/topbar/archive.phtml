@@ -1,0 +1,43 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ *
+ * Glory to Ukraine! Glory to the heroes!
+ */
+?>
+<?php
+/**
+ * Blog sidebar archive template
+ *
+ * @var $block \Magefan\Blog\Block\Sidebar\Archive
+ */
+?>
+
+<?php
+    $_months = $block->getMonths();
+?>
+<?php if (count($_months)) { ?>
+<div class="widget block block-archive" data-bind="scope: 'blog-archive'">
+    <!-- <div class="block-title">
+        <strong><?= $block->escapeHtml(__('Archive')) ?></strong>
+    </div> -->
+    <div class="block-content">
+        <select name="blog-archive-dropdown" onchange="window.location.href=this.value" class="selectpicker"><option value="/journals">All</option>
+        <?php foreach ($_months as $time) { ?>
+            <?php
+                $title = $block->getTranslatedDate($time);
+            ?>
+            
+            <div class="item">
+
+                <option title="<?= $block->escapeHtml(__('Archive %1', $title)) ?>"
+                   value="<?= $block->escapeUrl($block->getTimeUrl($time)) ?>">
+                    <?= $block->escapeHtml($title); ?>
+                </option>
+            </div>
+        <?php } ?>
+        </select>
+    </div>
+</div>
+<?php } ?>

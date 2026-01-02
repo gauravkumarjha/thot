@@ -1,0 +1,52 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @var $block \Magento\Catalog\Block\Product\ProductList\Toolbar
+ */
+use Magento\Catalog\Model\Product\ProductList\Toolbar;
+$url = '?';
+if( isset($_GET['cat']) && $_GET['cat'] !='' ){
+    $url = $url.'cat='.$_GET['cat'].'&';
+} elseif( isset($_GET['q']) && $_GET['q'] !='' ){
+    $url = $url.'q='.$_GET['q'].'&';
+}
+
+if( isset($_GET['cat']) && $_GET['cat'] !='' ){
+    if (isset($_GET['q']) && $_GET['q'] !='') {
+        $url = $url.'q='.$_GET['q'].'&';
+    }
+    
+}
+?>
+<div class="toolbar-sorter sorter">
+    <label class="sorter-label" for="sorter"><?php /* @escapeNotVerified */ echo __('Sort By') ?></label>
+        <select id="sorter" class="sorter-options">
+            <option data-src="<?php echo $url;?>product_list_order=position" value="position" <?php if( isset($_GET['product_list_order']) && $_GET['product_list_order'] =='position' ){ echo "selected"; } ;?>>Position</option>
+            <option data-src="<?php echo $url;?>product_list_order=exclusive" value="exclusive" <?php if( isset($_GET['product_list_order']) && $_GET['product_list_order'] =='exclusive' ){ echo "selected"; } ;?>>Exclusive</option>
+            <option data-src="<?php echo $url;?>product_list_order=price" value="price" <?php if( isset($_GET['product_list_order']) && $_GET['product_list_order'] =='price' && !isset($_GET['product_list_dir']) ){ echo "selected"; } ;?>>Price - Low To High</option>
+            <option data-src="<?php echo $url;?>product_list_order=price&product_list_dir=desc" value="price" <?php if( isset($_GET['product_list_order']) && $_GET['product_list_order'] =='price' && isset($_GET['product_list_dir']) ){ echo "selected"; } ;?>>Price - High To Low</option>
+        </select>
+</div>
+<script type="text/javascript">
+    require(['jquery'], function($){
+       $('select#sorter').on('change', function (e) {
+        var valSelected = $("select#sorter option:selected").attr('data-src');
+        var origin   = window.location.origin;
+        var pathname = window.location.pathname; 
+        window.location.href = origin + pathname + valSelected;
+       });
+
+
+
+     });
+</script>

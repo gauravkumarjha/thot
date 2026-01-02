@@ -1,0 +1,12 @@
+<?php 
+ $title_str= trim($block->escapeHtml($block->getPageHeading()));
+ $title_array = explode(" ",$title_str);
+ $helper = $this->helper('Magento\Search\Helper\Data');
+?>
+<div class="options-bar2">
+	<div class="col-md-12">
+		<div class="row">
+			<p>Your Results for <i>"<?php  echo $helper->getEscapedQueryText();?>"</i></p>
+		</div>
+	</div>	
+</div>

@@ -1,0 +1,17 @@
+<!-- This is the subject of the email -->
+<!--@subject {{trans "This is your custom subject"}} @-->
+<!--@vars
+{
+   "var product_name":"Custom variable",
+  "var product_sku" : "Enter Name"
+}
+@-->
+<html>
+
+<body>
+    <p>Hello,</p>
+    <p>The product "{{var product_name }}" with SKU "{{var product_sku }}" has been saved with custom settings.</p>
+    <p>Thank you!</p>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+<!--
+  * Landofcoder
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Landofcoder.com license that is
+  * available through the world-wide-web at this URL:
+  * https://landofcoder.com/terms
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade this extension to newer
+  * version in the future.
+  *
+  * @category   Landofcoder
+  * @package    Lof_ShopByBrand
+  * @copyright  Copyright (c) 2021 Landofcoder (https://www.landofcoder.com/)
+  * @license    https://landofcoder.com/terms
+  -->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+	<!-- Backend REST API -->
+	<route method="PUT" url="/V1/lof-shopbybrand/productbrands">
+		<service class="Lof\ShopByBrand\Api\BrandProductsManagementInterface" method="putBrandProducts"/>
+		<resources>
+			<resource ref="Ves_Brand::brand_save_product"/>
+		</resources>
+	</route>
+	<route method="GET" url="/V1/lof-shopbybrand/brand/search">
+		<service class="Lof\ShopByBrand\Api\BrandRepositoryInterface" method="getList"/>
+		<resources>
+			<resource ref="Ves_Brand::brand"/>
+		</resources>
+	</route>
+	<route method="POST" url="/V1/lof-shopbybrand/brand">
+		<service class="Lof\ShopByBrand\Api\BrandRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Ves_Brand::brand_save"/>
+		</resources>
+	</route>
+	<route method="GET" url="/V1/lof-shopbybrand/brand/:brandId">
+		<service class="Lof\ShopByBrand\Api\BrandRepositoryInterface" method="get"/>
+		<resources>
+			<resource ref="Ves_Brand::brand"/>
+		</resources>
+	</route>
+	<route method="PUT" url="/V1/lof-shopbybrand/brand/:brandId">
+		<service class="Lof\ShopByBrand\Api\BrandRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Ves_Brand::brand_save"/>
+		</resources>
+	</route>
+	<route method="DELETE" url="/V1/lof-shopbybrand/brand/:brandId">
+		<service class="Lof\ShopByBrand\Api\BrandRepositoryInterface" method="deleteById"/>
+		<resources>
+			<resource ref="Ves_Brand::brand_delete"/>
+		</resources>
+	</route>
+	<route method="GET" url="/V1/lof-shopbybrand/group/search">
+		<service class="Lof\ShopByBrand\Api\GroupRepositoryInterface" method="getList"/>
+		<resources>
+			<resource ref="Ves_Brand::group"/>
+		</resources>
+	</route>
+	<route method="POST" url="/V1/lof-shopbybrand/group">
+		<service class="Lof\ShopByBrand\Api\GroupRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Ves_Brand::group_save"/>
+		</resources>
+	</route>
+	<route method="GET" url="/V1/lof-shopbybrand/group/:groupId">
+		<service class="Lof\ShopByBrand\Api\GroupRepositoryInterface" method="get"/>
+		<resources>
+			<resource ref="Ves_Brand::group"/>
+		</resources>
+	</route>
+	<route method="PUT" url="/V1/lof-shopbybrand/group/:groupId">
+		<service class="Lof\ShopByBrand\Api\GroupRepositoryInterface" method="save"/>
+		<resources>
+			<resource ref="Ves_Brand::group_save"/>
+		</resources>
+	</route>
+	<route method="DELETE" url="/V1/lof-shopbybrand/group/:groupId">
+		<service class="Lof\ShopByBrand\Api\GroupRepositoryInterface" method="deleteById"/>
+		<resources>
+			<resource ref="Ves_Brand::group_delete"/>
+		</resources>
+	</route>
+
+	<!-- Frontend REST API -->
+	<route method="GET" url="/V1/lof-shopbybrand/brands">
+		<service class="Lof\ShopByBrand\Api\BrandRepositoryInterface" method="getList"/>
+		<resources>
+			<resource ref="anonymous"/>
+		</resources>
+	</route>
+	<route method="GET" url="/V1/lof-shopbybrand/brandgroups">
+		<service class="Lof\ShopByBrand\Api\GroupRepositoryInterface" method="getList"/>
+		<resources>
+			<resource ref="anonymous"/>
+		</resources>
+	</route>
+	<route method="GET" url="/V1/lof-shopbybrand/brandproducts/:brand_id">
+		<service class="Lof\ShopByBrand\Api\BrandProductsManagementInterface" method="getBrandProducts"/>
+		<resources>
+			<resource ref="anonymous"/>
+		</resources>
+	</route>
+
+</routes>

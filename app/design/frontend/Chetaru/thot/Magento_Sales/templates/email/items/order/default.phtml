@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+/** @var $block \Magento\Sales\Block\Order\Email\Items\DefaultItems */
+
+/** @var $_item \Magento\Sales\Model\Order\Item */
+$_item = $block->getItem();
+$_order = $_item->getOrder();
+
+
+$_store = $_order->getStore();
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+$_baseImageUrl = $_store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'catalog/product';
+
+
+
+$imageUrl = $_imageHelper->init($_item->getProduct(), 'small_image', ['type' => 'small_image'])->keepAspectRatio(true)->resize(100)->getUrl();
+
+
+$itemId = $_item->getItemId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$orderItemCollectionFactory = $objectManager->get(\Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory::class);
+
+$orderItemCollection = $orderItemCollectionFactory->create()
+	->addFieldToFilter('parent_item_id', $itemId)
+	->getFirstItem();
+$getShippingFulfillmentDate = $orderItemCollection->getFulfillmentDate();
+if ($orderItemCollection->getId()) {
+	$productId = $orderItemCollection->getProductId();
+	$getCustomShippingPrice = $orderItemCollection->getCustomShippingPrice();
+	$getCustomShippingPrice = $orderItemCollection->getCustomShippingPrice();
+
+} else {
+	$productId = $_item->getProductId();
+	// $getCustomShippingPrice = $_item->getProduct()->getCustomAttribute('custom_shipping_price')->getValue();
+	$getCustomShippingPrice = $_item->getProduct()->getCustomAttribute('custom_shipping_price');
+
+
+	// Check if the attribute exists before calling getValue()
+	if (isset($customShippingPriceAttribute) && $customShippingPriceAttribute) {
+		$getCustomShippingPrice = $customShippingPriceAttribute->getValue();
+	} else {
+		$getCustomShippingPrice = 'N/A'; // Or set a default value if the attribute doesn't exist
+	}
+
+
+	// if ($customShippingPriceAttribute) {
+	//     $getCustomShippingPrice = $customShippingPriceAttribute->getValue();
+	// } else {
+	//     $getCustomShippingPrice = 'N/A'; // Or set a default value if the attribute doesn't exist
+	// }
+
+
+}
+
+if (
+	is_int($getCustomShippingPrice) && (is_numeric($getCustomShippingPrice) && (int)$getCustomShippingPrice == $getCustomShippingPrice)
+) {
+
+	$getCustomShippingPrice = "₹" . $getCustomShippingPrice . ".00";
+} else {
+	$getCustomShippingPrice = $getCustomShippingPrice;
+}
+
+// $helperImport = $objectManager->get('\Magento\Catalog\Helper\Image');
+// $imageUrl = $helperImport->init($product_order, 'product_page_image_small')
+//                 ->setImageFile($product_order->getSmallImage()) // image,small_image,thumbnail
+//                 ->resize(100)
+//                 ->getUrl();
+
+
+$hsnCode = $_item->getProduct()->getHsncode();
+
+if (! ($hsnCode)) {
+	$hsnCode =  'N/A';
+}
+
+
+?>
+<style>
+	dd {
+		margin-left: 0px;
+	}
+</style>
+<td class="item-info<?= ($block->getItemOptions() ? ' has-extra' : '') ?>">
+
+	<table>
+		<tr>
+			<td>
+				<?php if ($imageUrl) {
+					echo '<a style="float: left;" href="' . $_item->getProduct()->getProductUrl() . '"><img src="' . $imageUrl . '" alt="" />';
+				} ?>
+			</td>
+			<td>
+				<div class="content-item" style="float: left; padding-left:12px;">
+					<p class="product-name"><a href="<?php echo  $_item->getProduct()->getProductUrl(); ?>"><?= $block->escapeHtml($_item->getName()) ?></a></p>
+					<p style="text-align:left;" class="hsn"><?php echo "HSN CODE:" . $hsnCode; ?></p>
+					<?php if ($getCustomShippingPrice) { ?>
+						<p style="text-align:left;" class="hsn"><?php echo "shipping:" . $getCustomShippingPrice; ?></p>
+					<?php } ?>
+					<?php if ($getShippingFulfillmentDate) { ?>
+						<p style="text-align:left;" class="hsn"><?php echo "shipped By:" . $getShippingFulfillmentDate; ?></p>
+					<?php } ?>
+					<?php if ($block->getItemOptions()) : ?>
+						<dl class="item-options">
+							<?php foreach ($block->getItemOptions() as $option) : ?>
+								<dt><strong><em><?= $block->escapeHtml($option['label']) ?></em></strong></dt>
+								<dd style="margin-left: 0; text-align:left;">
+									<?= /* @noEscape */ nl2br($block->escapeHtml($option['value'])) ?>
+								</dd>
+							<?php endforeach; ?>
+						</dl>
+					<?php endif; ?>
+					<?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+					<?php if ($addInfoBlock) : ?>
+						<?= $addInfoBlock->setItem($_item)->toHtml() ?>
+					<?php endif; ?>
+					<?= $block->escapeHtml($_item->getDescription()) ?>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+
+
+
+
+</td>
+<td class="item-qty" style="
+    text-align: center;
+"><?= (float) $_item->getQtyOrdered() ?></td>
+<td class="item-price" style="text-align: right; width:45%;">
+
+	<?= /* @noEscape */ $block->getItemPrice($_item) ?>
+
+</td>
+
+<?php if (
+	$_item->getGiftMessageId()
+	&& $_giftMessage = $this->helper(\Magento\GiftMessage\Helper\Message::class)
+	->getGiftMessage($_item->getGiftMessageId())
+) : ?>
+
+	<table class="message-gift">
+		<tr>
+			<td>
+				<h3><?= $block->escapeHtml(__('Gift Message')) ?></h3>
+				<strong><?= $block->escapeHtml(__('From:')) ?></strong> <?= $block->escapeHtml($_giftMessage->getSender()) ?>
+				<br /><strong><?= $block->escapeHtml(__('To:')) ?></strong> <?= $block->escapeHtml($_giftMessage->getRecipient()) ?>
+				<br /><strong><?= $block->escapeHtml(__('Message:')) ?></strong>
+				<br /><?= $block->escapeHtml($_giftMessage->getMessage()) ?>
+			</td>
+		</tr>
+	</table>
+
+<?php endif; ?>

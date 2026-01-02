@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/events.xsd">
+    <event name="catalog_product_save_before">
+        <observer name="validate_attribute_relation" instance="Mageplaza\Simpleshipping\Observer\ValidateAttributeRelation" />
+    </event>
+     <event name="sales_order_save_after">
+        <observer name="save_custom_attribute_to_order_item" instance="Mageplaza\Simpleshipping\Observer\SaveCustomAttributeToOrderItem" />
+    </event>
+</config>

@@ -1,0 +1,197 @@
+"Gst Report","Gst Report"
+"Invalid parent block for this block","Invalid parent block for this block"
+"Check Latest Version","Check Latest Version"
+"Shipping & Handling","Shipping & Handling"
+Magecomp,Magecomp
+Gstreport,Gstreport
+"Gstreport Item Wise","Gstreport Item Wise"
+"Gst Report Item Wise","Gst Report Item Wise"
+"Please correct csv File Format.","Please correct csv File Format."
+"Successfully Imported Gst Rate In "" . . "" Products","Successfully Imported Gst Rate In "" . . "" Products"
+None,None
+0%,0%
+0.25%,0.25%
+3%,3%
+5%,5%
+12%,12%
+18%,18%
+24%,24%
+28%,28%
+"Excluding Tax","Excluding Tax"
+"Including Tax","Including Tax"
+"Gst added to quote","Gst added to quote"
+Products,Products
+Qty,Qty
+Price,Price
+Subtotal,Subtotal
+Discount,Discount
+"Tax Amt","Tax Amt"
+CGST(%),CGST(%)
+SGST(%),SGST(%)
+IGST(%),IGST(%)
+"Row Total","Row Total"
+"Credit Memo # ","Credit Memo # "
+"Invoice # ","Invoice # "
+"Order # ","Order # "
+"Order Date:: ","Order Date:: "
+"Tax Invoice/Bill of Supply/Cash Memo","Tax Invoice/Bill of Supply/Cash Memo"
+"GST NUMBER : ","GST NUMBER : "
+"PAN NUMBER : ","PAN NUMBER : "
+"CIN NUMBER : ","CIN NUMBER : "
+"Sold to:","Sold to:"
+"Ship to:","Ship to:"
+"Payment Method:","Payment Method:"
+"Payment Method","Payment Method"
+"Shipping Method:","Shipping Method:"
+"Total Shipping Charges","Total Shipping Charges"
+Title,Title
+Number,Number
+"Authorized Signatory","Authorized Signatory"
+"CGST Fee","CGST Fee"
+"IGST Fee","IGST Fee"
+"SGST Fee","SGST Fee"
+"shipping_cgst_charge Fee","shipping_cgst_charge Fee"
+"shipping_igst_charge Fee","shipping_igst_charge Fee"
+"shipping_sgst_charge Fee","shipping_sgst_charge Fee"
+CGST,CGST
+IGST,IGST
+"Custom Fee","Custom Fee"
+N/A,N/A
+"Buyer GST Number","Buyer GST Number"
+SKU,SKU
+Ordered,Ordered
+Invoiced,Invoiced
+Shipped,Shipped
+Refunded,Refunded
+Canceled,Canceled
+"Items Refunded","Items Refunded"
+Product,Product
+"Discount Amount","Discount Amount"
+"Tax Amount","Tax Amount"
+Rate,Rate
+Amount,Amount
+SGST,SGST
+"""HSNCODE :"" .","""HSNCODE :"" ."
+Items,Items
+"Gift Message for this Order","Gift Message for this Order"
+From:,From:
+To:,To:
+Message:,Message:
+"HSN CODE","HSN CODE"
+"Gift Message","Gift Message"
+"* Required Fields","* Required Fields"
+"Additional Information","Additional Information"
+"GST Number#","GST Number#"
+"Account Information","Account Information"
+"Change Email","Change Email"
+"Change Password","Change Password"
+"Change Email and Password","Change Email and Password"
+Email,Email
+"Current Password","Current Password"
+"New Password","New Password"
+"Password Strength","Password Strength"
+"No Password","No Password"
+"Confirm New Password","Confirm New Password"
+Save,Save
+"Go back","Go back"
+"Print All Refunds","Print All Refunds"
+"Refund #","Refund #"
+"Print Refund","Print Refund"
+"Product Name","Product Name"
+Quantity,Quantity
+"Order Information","Order Information"
+"Shipping Address","Shipping Address"
+"Shipping Method","Shipping Method"
+"No shipping information available","No shipping information available"
+"Billing Address","Billing Address"
+"Print All Invoices","Print All Invoices"
+"Invoice #","Invoice #"
+"Print Invoice","Print Invoice"
+"""GST Number #"" .","""GST Number #"" ."
+"Items Invoiced","Items Invoiced"
+HSNCODE,HSNCODE
+"Qty Invoiced","Qty Invoiced"
+"Items Ordered","Items Ordered"
+Close,Close
+From,From
+To,To
+"Refund #%1","Refund #%1"
+"State Code : ","State Code : "
+"Buyer GST Number :","Buyer GST Number :"
+"Invoice ###","Invoice ###"
+"Shipment #%1","Shipment #%1"
+"Qty Shipped","Qty Shipped"
+"Indian GST","Indian GST"
+"Module Version","Module Version"
+Configuration,Configuration
+"QR Code","QR Code"
+"GSTIN Number","GSTIN Number"
+"PAN Number","PAN Number"
+"CIN Number","CIN Number"
+"GST Rate(in Percentage)","GST Rate(in Percentage)"
+"Minimum Product Price to Apply GST Rate","Minimum Product Price to Apply GST Rate"
+"GST Rate if Product Price Below Minimum Set Price","GST Rate if Product Price Below Minimum Set Price"
+"Business Origin","Business Origin"
+"Display Product Prices In Catalog","Display Product Prices In Catalog"
+"Buyer GSTIN on Frontend","Buyer GSTIN on Frontend"
+"Invoice PDF Signature","Invoice PDF Signature"
+"Allowed file types: jpg, jpeg, gif, png.","Allowed file types: jpg, jpeg, gif, png."
+"Invoice PDF Signature Text","Invoice PDF Signature Text"
+"Shipping GST Settings","Shipping GST Settings"
+"GST Apply on Shipping Charge ?","GST Apply on Shipping Charge ?"
+"Display Shipping Prices","Display Shipping Prices"
+"Import CSV File","Import CSV File"
+"Import CSV","Import CSV"
+"Upload CSV fil to Import Product GST.","Upload CSV fil to Import Product GST."
+"Shipping IGST","Shipping IGST"
+"Shipping CGST","Shipping CGST"
+"Shipping SGST","Shipping SGST"
+"We can't find records for this period.","We can't find records for this period."
+"Bill Number","Bill Number"
+"First Name","First Name"
+"Last Name","Last Name"
+Status,Status
+HSN,HSN
+"GST No.","GST No."
+"Net Amt W/O Tax","Net Amt W/O Tax"
+"Shipping Amount","Shipping Amount"
+Igst,Igst
+Cgst,Cgst
+Sgst,Sgst
+"Gross Value","Gross Value"
+"Place Of Supply","Place Of Supply"
+"Gst Rate","Gst Rate"
+"Order Date","Order Date"
+"Order Status","Order Status"
+HSN/SAC,HSN/SAC
+"Ship To City","Ship To City"
+"Ship To State","Ship To State"
+"Ship To Country","Ship To Country"
+"Ship To Postal Code","Ship To Postal Code"
+"Grass Value","Grass Value"
+"Total Tax Amount","Total Tax Amount"
+"Cgst Tax","Cgst Tax"
+"Sgst Tax","Sgst Tax"
+"Igst Tax","Igst Tax"
+"Shipping Cgst Tax","Shipping Cgst Tax"
+"Shipping Sgst Tax","Shipping Sgst Tax"
+"Shipping Igst Tax","Shipping Igst Tax"
+"Cgst Rate","Cgst Rate"
+"Sgst Rate","Sgst Rate"
+"Igst Rate","Igst Rate"
+Magecomp_Gstcharge::order/creditmemo/view/items.phtml,Magecomp_Gstcharge::order/creditmemo/view/items.phtml
+Magecomp_Gstcharge::order/invoice/view/items.phtml,Magecomp_Gstcharge::order/invoice/view/items.phtml
+"GST Resource","GST Resource"
+"GST Min Price Resource","GST Min Price Resource"
+"Tax Rate if Product Price Below Minimum Set Price","Tax Rate if Product Price Below Minimum Set Price"
+"Shipping CGST Fee","Shipping CGST Fee"
+"Shipping SGST Fee","Shipping SGST Fee"
+"Shipping IGST Fee","Shipping IGST Fee"
+Magecomp_Gstcharge::email/creditmemo/items.phtml,Magecomp_Gstcharge::email/creditmemo/items.phtml
+Magecomp_Gstcharge::email/invoice/items.phtml,Magecomp_Gstcharge::email/invoice/items.phtml
+Magecomp_Gstcharge::email/items.phtml,Magecomp_Gstcharge::email/items.phtml
+Magecomp_Gstcharge::order/invoice/items.phtml,Magecomp_Gstcharge::order/invoice/items.phtml
+Magecomp_Gstcharge::order/items.phtml,Magecomp_Gstcharge::order/items.phtml
+Magecomp_Gstcharge::order/creditmemo/items.phtml,Magecomp_Gstcharge::order/creditmemo/items.phtml
+Magecomp_Gstcharge::order/info.phtml,Magecomp_Gstcharge::order/info.phtml
+Magecomp_Gstcharge::order/print/invoice.phtml,Magecomp_Gstcharge::order/print/invoice.phtml

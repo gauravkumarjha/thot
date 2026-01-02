@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Show "Best Seller" in sort dropdown -->
+    <type name="Magento\Catalog\Model\Config">
+        <plugin name="bestseller_sort_config" type="DiMedia\BestsellerSort\Plugin\Catalog\Model\Config" />
+    </type>
+<preference for="Magento\Catalog\Block\Product\ProductList\Toolbar"
+            type="DiMedia\BestsellerSort\Block\Product\ProductList\Toolbar" />
+
+                <!-- <type name="Magento\Catalog\Model\Layer">
+        <plugin name="bestseller_sort_plugin" type="DiMedia\BestsellerSort\Plugin\Model\LayerPlugin" />
+    </type> -->
+    <!-- Modify sorting logic -->
+    <!-- <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+        <plugin name="bestseller_sort_plugin" type="Vendor\BestsellerSort\Plugin\CollectionSortPlugin" />
+    </type> -->
+
+</config>

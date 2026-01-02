@@ -1,0 +1,15 @@
+<?php
+$fulfillmentDate = $this->getFulfillmentDate();
+?>
+
+<?php if($fulfillmentDate != "") { ?>
+
+        <tr>
+            <th><?= __('Fulfillment Date') ?></th>
+            <td><?php echo date("Y-m-d",strtotime($fulfillmentDate)) ?></td>
+        </tr>
+      
+
+
+
+<?php } ?>

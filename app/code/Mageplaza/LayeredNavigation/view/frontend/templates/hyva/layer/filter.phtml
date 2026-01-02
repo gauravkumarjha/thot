@@ -1,0 +1,90 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_LayeredNavigation
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\LocaleFormatter;
+use Magento\Catalog\Helper\Data;
+
+/** @var \Magento\LayeredNavigation\Block\Navigation\FilterRenderer $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var LocaleFormatter $localeFormatter */
+
+$catalogHelper = $this->helper(Data::class);
+
+/** @var array $filterItems */
+
+
+/** @type \Mageplaza\Layerednavigation\Model\Layer\Filter $filterModel */
+
+$filterModel = $this->helper(\Mageplaza\LayeredNavigation\Helper\Data::class)->getFilterModel();
+
+/** @type \Mageplaza\LayeredNavigation\Model\Layer\Filter\Attribute $filter */
+$filter = $this->getFilter();
+$attributeCode = $filter->getRequestVar();
+$priceRange = ['', ''];
+if ($filterModel->isSliderTypes($filter) && $block->getRequest()->getParam($attributeCode)) {
+    $priceRange = $block->getRequest()->getParam($attributeCode);
+}
+?>
+<ol class="items" aria-label="<?= $escaper->escapeHtmlAttr(__('%1 filter options', $block->getFilterTitle())) ?>">
+    <?php if ($filterModel->isSliderTypes($filter) > 0): ?>
+        <li>
+            <tc-range-slider value1="<?= $block->escapeHtml($priceRange[0]) ?>" value2="<?= $block->escapeHtml($priceRange[1]) ?>" class="ln_slider_container" dataAttr="<?= /** @noEscape */ $attributeCode ?>"></tc-range-slider>
+            <div id="ln_slider_<?= /** @noEscape */ $attributeCode ?>"></div>
+            <div id="ln_slider_text_<?= /** @noEscape */ $attributeCode ?>"></div>
+        </li>
+    <?php else: ?>
+        <?php foreach ($filterItems as $filterItem): ?>
+            <li>
+                <?php if ($filterItem->getCount() > 0): ?>
+                    <input @click="clickCheckBox($event)" style="cursor:pointer;" type="<?= /** @noEscape */ $filterModel->isMultiple($filter) ? 'checkbox' : 'radio' ?>"
+                        <?= /** @noEscape */ $filterModel->getInputName($filter)?>
+                        <?= /** @noEscape */ $filterModel->isSelected($filterItem) ? 'checked="checked"' : '' ?> />
+                    <a
+                        @click="clickLink($event,'<?= $escaper->escapeUrl($filterModel->getItemUrl($filterItem)) ?>')"
+                        href="<?= $escaper->escapeUrl($filterModel->getItemUrl($filterItem)) ?>"
+                        class="flex justify-between py-1 hover:text-black"
+                        <?php if ((int) $filterItem->getCount() === 1): ?>
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('%1 filter, 1 available product', strip_tags((string)$filterItem->getLabel()))) ?>"
+                        <?php else: ?>
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('%1 filter, %2 available products', strip_tags((string)$filterItem->getLabel()), $filterItem->getCount())) ?>"
+                        <?php endif; ?>
+                    >
+                        <span><?= /* @noEscape */ $filterItem->getLabel() ?></span>
+                        <?php if ($catalogHelper->shouldDisplayProductCountOnLayer()): ?>
+                            <span class="count text-primary">(<?= /* @noEscape */ $localeFormatter->formatNumber((int)$filterItem->getCount()) ?>)</span>
+                        <?php endif; ?>
+                    </a>
+                <?php else: ?>
+                    <input type="<?= /** @noEscape */ $filterModel->isMultiple($filter) ? 'checkbox' : 'radio' ?>"
+                           disabled="disabled"/>
+                    <span class="py-1 hover:text-black">
+                    <span><?= /* @noEscape */ $filterItem->getLabel() ?></span>
+                <?php if ($catalogHelper->shouldDisplayProductCountOnLayer()): ?>
+                    <span class="count text-primary">(<?= /* @noEscape */ $localeFormatter->formatNumber((int)$filterItem->getCount()) ?>)</span>
+                <?php endif; ?>
+            </span>
+                <?php endif; ?>
+            </li>
+        <?php endforeach ?>
+    <?php endif; ?>
+</ol>

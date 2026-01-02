@@ -1,0 +1,19 @@
+<form class="form subscribe" novalidate action="/newsletter/subscriber/new/" method="post"
+        data-mage-init='{"validation": {"errorClass": "mage-error"}}' id="newsletter-validate-detail">
+        <div class="field newsletter">
+            <div class="control">
+                <label for="newsletter">
+                    <span class="label">
+                        Sign Up for Our Newsletter: </span>
+                    <input name="email" type="email" id="newsletter" placeholder="Enter your email ID"
+                        data-mage-init='{"mage/trim-input":{}}'
+                        data-validate="{required:true, 'validate-email':true}" />
+                </label>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="action subscribe primary" title="Subscribe" type="submit" aria-label="Subscribe">
+                <span>Subscribe</span>
+            </button>
+        </div>
+    </form>

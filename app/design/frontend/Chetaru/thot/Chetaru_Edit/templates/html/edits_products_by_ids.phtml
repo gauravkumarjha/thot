@@ -1,0 +1,89 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$blockObj= $block->getLayout()->createBlock('Magento\Catalog\Block\Product\View');
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+$_helper  = $this->helper(Magento\Catalog\Helper\Output::class);
+$ids = $block->getData('ids');
+$productLayout = $block->getData('productLayout');
+$ids_arr = explode(',', (string)$ids);
+if( !empty($ids_arr) ){
+	?>
+<div class="edits-products bg-white">
+   <div class="container">
+      <div class="row">
+         <div class="row-inner">
+	<?php 
+	foreach ($ids_arr as $key => $product_id) {
+		// $product_id = $objectManager->get('Magento\Catalog\Model\Product')->getIdBySku($product_sku);
+		$_item = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+      if (!empty($_item->getName()) && $_item->getStatus() == 1 ) {
+      
+        $link = $_item->getProductUrl();
+          
+         	$resizedImageUrl = $_imageHelper->init($_item, 'hot_product_page_image_medium')->getUrl();
+          ?>
+         
+           <div class="<?=$productLayout == 'half_width' ? 'col-lg-6' : 'col-lg-3'?> col-md-4 col-sm-6 col-xs-12">
+           	<div class="col-inner">
+           		<div class="gallery_product">
+                  <div class="thumbnail" >
+					  		<a href="<?php /* @escapeNotVerified */ echo $link; ?>">
+                          <img class="lazy" src="<?php echo $resizedImageUrl;?>" alt="<?php echo $block->escapeHtml($_item->getName());?>"/>
+                     </a>
+                  </div>
+                     <div class="caption">
+                        <div class="row">
+                           <div class="custom-row">
+										<h3 class="productName">
+										<a title="<?php echo $block->escapeHtml($_item->getName()) ?>"
+                                       href="<?php /* @escapeNotVerified */ echo $link; ?>"
+                                       class="">
+                                        <?php echo $block->escapeHtml($_item->getName());?>
+                              </a>
+										</h3>
+                           </div>
+
+                           <div class="custom-row">
+	                        <p class="productDetail">
+	                      		<?php
+                                $brands = $_item->getData("product_brand");
+                                if( $brands ){
+                                    $sql = "SELECT name, url_key FROM ves_brand WHERE brand_id IN (".$brands.")";
+                                    $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+                                    $connection = $resource->getConnection();
+                                    $results = $connection->fetchAll($sql);
+                                     
+                                    if( !empty($results) ){?>
+
+                                       <?php echo 'By '; ?>
+                                       <a href="/makers/<?php echo $results[0]['url_key']; ?>" title="<?php echo $results[0]['name']; ?>"><?php echo $results[0]['name']; ?></a><?php
+                                     } 
+                                }?>
+							   	</p>
+	                     </div>
+                     </div>
+	                     <div class="row">
+							   	<?php 
+									if($_item->getAttributeText('price_on_request')=='Yes'){?>
+										<h3 class="price_request"><?php /* @escapeNotVerified */ echo __('Price on request') ?></h3>
+										<?php
+										}else{
+										?>
+										<h3 class="productPrice"><?php echo $blockObj->getProductPrice($_item) ?></h3>
+									<?php } ?>      
+	                     </div>
+                     </div>
+                  </div>
+                 </div>
+               </div>
+            
+         <?php
+      }
+	}
+	?>
+   </div>
+      </div>
+   </div>
+</div>
+	<?php
+}

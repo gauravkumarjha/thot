@@ -1,0 +1,47 @@
+.single-checkout-page {
+    /* Main container for the checkout */
+    padding: 20px;
+}
+
+.single-checkout-layout {
+    /* Use Flexbox for the two-column layout */
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkout-main-sections {
+    /* Shipping and Payment (Left side - 60-70% width) */
+    flex: 2;
+    margin-right: 30px;
+}
+
+.checkout-sidebar-summary {
+    /* Order Summary (Right side - 30-40% width) */
+    flex: 1;
+    position: sticky;
+    /* Keep it visible while scrolling */
+    top: 20px;
+}
+
+/* Accordion Styles */
+.single-checkout-accordion-item {
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+.single-checkout-accordion-title {
+    padding: 15px;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.single-checkout-accordion-title._active {
+    background: #e0e0e0;
+}
+
+.single-checkout-accordion-content {
+    padding: 20px;
+    /* This visibility is controlled by Knockout's data-bind="visible: ..." */
+}

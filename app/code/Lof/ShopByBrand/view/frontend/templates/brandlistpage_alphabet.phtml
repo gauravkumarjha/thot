@@ -1,0 +1,156 @@
+<?php
+/**
+ * Landofcoder
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Landofcoder.com license that is
+ * available through the world-wide-web at this URL:
+ * https://landofcoder.com/terms
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category   Landofcoder
+ * @package    Lof_ShopByBrand
+ * @copyright  Copyright (c) 2021 Landofcoder (https://www.landofcoder.com/)
+ * @license    https://landofcoder.com/terms
+ */
+
+$_brandCollection = $block->getCollection();
+$show_brand_name = $this->getShopbybrandConfig('brand_list_page/show_brand_name');
+$all_brand_text = $this->getShopbybrandConfig('brand_list_page/all_partner_text');
+$show_tooltip = $this->getShopbybrandConfig('brand_list_page/show_tooltip');
+$all_brand_text = $all_brand_text?$all_brand_text:__("All Brands");
+$number_columns = 3;
+$pretext = $this->getData("pretext");
+echo $pretext;
+?>
+
+<?php if ($_brandCollection) { ?>
+<div class="content">
+    <div class="brands-filters">
+        <div class="input-box">
+            <div class="lofbrands-search-wrapper">
+                <?php echo $block->getChildHtml("brand.alphabetsearchform.main"); ?>
+            </div>
+        </div>
+        <div class="letters">
+            <div class="letters-box">
+                    <a href="javascript:void(0)" class="letter letter-all" title="<?php $all_brand_text;?>"><?php echo $all_brand_text;?></a>
+            </div>
+            <div class="letters-box">
+                <?php foreach ($_brandCollection as $letter => $_brand) { ?>
+                    <a href="javascript:void(0)" class="letter <?php if ($_brand) { echo 'letter-'.$letter;
+                                                               } else { echo 'disabled'; } ?>"><?php echo $letter; ?></a>
+                <?php } ?>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="brandlist">
+        <div class="block-content">
+            <?php
+            $i = 1;
+            $lastLetter = null;
+            ?>
+            <?php foreach ($_brandCollection as $letter => $_brands) { ?>
+                <?php if ($i == 1) { ?>
+            <div class="brand-images">
+            <?php }?>
+                <?php
+                $css_style = "";
+                $css_class = "";
+                if (!$_brands) {
+                    $css_style = 'display:none;';
+                    $css_class = ' lofhidden';
+                }
+                if ($lastLetter !== $letter) {
+                    if ($lastLetter) { echo "</ul></dd></dl>";
+                    }
+                    ?>
+                <dl class="brands-letter letter-<?php echo $letter.$css_class;?>" style="<?php echo $css_style; ?>">
+                    <dt class="letter">
+                        <span class="title"><?php echo $letter;?></span>
+                    </dt>
+                <dd>
+                    <ul class="bare-list">
+                    <?php
+                }
+                $lastLetter = $letter;
+                foreach ($_brands as $_brand) {
+                    ?>
+            <li class="brand-item" <?php if ($show_tooltip) { ?>data-lofshopby-js="brand-tooltip" data-tooltip-content="<?php echo $this->getBrandToolTip($_brand); ?>"<?php } ?>>
+                <a href="<?php echo $_brand->getUrl(); ?>" class="item" title="<?php echo $_brand->getName(); ?>">
+                        <div class="lof-image-wrapper">
+                            <?php if ($thumbnail_url = $_brand->getThumbnailUrl()) { ?>
+                            <p class="brand-img"><img src="<?php echo $thumbnail_url; ?>" alt="<?php echo $_brand->getName(); ?>"/></p>
+                            <?php } else { ?>
+                            <p class="no-img"><?php echo $letter; ?></p>
+                            <?php } ?>
+                        </div>
+                        <p class="label"><?php echo $_brand->getName(); ?></p>
+                        <p class="count"><?php echo $_brand->getTotalProducts(); ?></p>
+                </a>
+            </li>
+                    <?php
+                }
+                ?>
+                <?php if ($i%$number_columns == 0) { ?>
+            </div>
+                    <?php $i=1;
+                } else { $i++; } ?>
+            <?php } ?>
+            <div style="clear:both;"></div>
+        </div>
+        <?php if ($html = $block->getChildHtml('toolbar')) { ?>
+        <div class="brand-toolbar  toolbar toolbar-products">
+            <?php echo $block->getChildHtml('toolbar'); ?>
+        </div>
+        <?php } ?>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Lof_ShopByBrand/js/brand-filter',
+        'domReady!'
+    ], function ($) {
+        $(".letters-box a").click(function(e) {
+            e.preventDefault();
+            $(this).applyBrandFilter('.brands-letter');
+        });
+    });
+
+        require([
+        'jquery',
+        "mage/tooltip"
+    ], function ($) {
+        $('[data-lofshopby-js="brand-tooltip"]').tooltip({
+            position: {
+                my: "left-20 bottom",
+                at: "right top",
+                collision: "flip flip",
+                using: function (position, feedback) {
+                    $(this).css(position);
+                    $("<div>")
+                        .addClass("arrow")
+                        .addClass(feedback.vertical)
+                        .addClass(feedback.horizontal)
+                        .appendTo(this);
+                }
+            },
+            tooltipClass: "lofshopby-brand-tooltip",
+            content: function () {
+                var current = $(this).is('li') ? $(this) : $(this).parent();
+                return current.data('tooltip-content');
+            }
+        });
+    });
+</script>
+<?php } else { ?>
+<div class="message info empty"><div><?php echo __('We can\'t find brands matching the selection.'); ?></div></div>
+<?php } ?>

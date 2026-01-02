@@ -1,0 +1,204 @@
+<?php
+
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+$currentPageUrl = $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+?>
+<div class="custom-theme-popup">
+    <div id="RMIPopup">
+        <span class="close">Close</span>
+        <div class="modal-body-content">
+            <div class="col-md-7 col-xs-12">
+                <form autocomplete="off" class="form quickrfq" action="<?php /* @escapeNotVerified */ echo $block->getFormAction(); ?>"
+                    id="quickrfq_form" enctype="multipart/form-data" method="post"
+                    data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>"
+                    data-mage-init='{"validation":{}}'>
+
+
+                    <fieldset class="fieldset">
+                        <legend class="legend">
+                            <span><?php /* @escapeNotVerified */ echo __('Request more Information') ?></span>
+                        </legend>
+                        <br />
+
+                        <div class="row">
+                            <div class="form-group col-md-6 field name required">
+                                <label class="label" for="first_name"><?php echo __('First Name') ?></label>
+                                <div class="control">
+                                    <input name="company" id="company"
+                                        title="<?php /* @escapeNotVerified */ echo __('First Name') ?>" value=""
+                                        class="input-text" type="text" data-validate="{required:true}" />
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 field last required">
+                                <label class="label" for="last_name"><?php echo __('Last Name') ?></label>
+                                <div class="control">
+                                    <input name="contact_name" id="contact_name"
+                                        title="<?php /* @escapeNotVerified */ echo __('Last Name') ?>" value=""
+                                        class="input-text" type="text" data-validate="{required:true}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label"
+                                for="prefer_contact"><span><?php /* @escapeNotVerified */ echo __('Mode Of Communication') ?></span></label>
+                            <div class="control">
+                                <select name='prefer_contact' id="prefer_contact" data-validate="{required:true}">
+                                    <option value="">Select</option>
+                                    <option value="Call">Call</option>
+                                    <option value="WhatsApp">WhatsApp</option>
+                                    <option value="Email">Email</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group field email required">
+                            <label class="label"
+                                for="email"><?php /* @escapeNotVerified */ echo __('Your Email') ?></label>
+                            <div class="control">
+                                <input name="email" id="email"
+                                    title="<?php /* @escapeNotVerified */ echo __('Email') ?>"
+                                    value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>"
+                                    class="input-text" type="email" validate-email="true" />
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <input name="country_code" id="country_code"
+                                title="<?php /* @escapeNotVerified */ echo __('Code') ?>" maxlength="3"
+                                placeholder="<?php /* @escapeNotVerified */ echo __('+91') ?>" value=""
+                                class="input-text" type="hidden" />
+
+                            <div class="form-group col-md-9 field phone">
+                                <label class="label"
+                                    for="phone"><span><?php /* @escapeNotVerified */ echo __('Your Mobile Number') ?></span></label>
+                                <div class="control">
+                                    <input name="phone" id="phone_full" title="<?php /* @escapeNotVerified */ echo __('Mobile Number') ?>"
+                                        value="" class="input-text" type="hidden" />
+                                    <input id="phone" title="<?php /* @escapeNotVerified */ echo __('Mobile Number') ?>"
+                                        value="" class="input-text" type="text" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label"
+                                for="message"><span><?php /* @escapeNotVerified */ echo __('Your Message') ?></span></label>
+                            <div class="control">
+                                <textarea name="overview" id="overview"
+                                    title="<?php /* @escapeNotVerified */ echo __('Your Message') ?>" class="input-text"
+                                    cols="5" rows="3" data-validate="{required:true}"></textarea>
+                            </div>
+                        </div>
+
+                        <input name="project_title" id="current_url"
+                            value="<?php /* @escapeNotVerified */ echo $currentPageUrl; ?>" type="hidden" />
+
+
+
+                        <div class="field">
+
+                            <?php /*if($block->isCaptchaEnable()): ?>
+                            <div class="g-recaptcha" name="recaptcha" id="recaptcha"
+                                data-sitekey="<?php echo $block->getPublicKey(); ?>"></div>
+
+
+
+                            <?php endif;*/ ?>
+                        </div>
+
+
+
+
+                        <?php echo $block->getChildHtml('form.additional.info'); ?>
+                    </fieldset>
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <input type="hidden" name="hideit" id="hideit" value="" />
+                            <button id="RMIPopupSubmitBtn" type="submit"
+                                title="<?php /* @escapeNotVerified */ echo __('Submit') ?>"
+                                class="action submit primary">
+                                <span><?php /* @escapeNotVerified */ echo __('Submit') ?></span>
+                            </button>
+<?php
+date_default_timezone_set('Asia/Kolkata'); // Set your timezone
+
+$currentHour = (int)date('H'); // 24-hour format
+if ($currentHour <= 19) {
+    ?>
+                            <a class="btn btn-transparent-border btn100 popupStartChat" id="popupStartChats">
+                                <?php /* @escapeNotVerified */ echo __('Start Live Chat') ?>
+                            </a>
+                        <?php } ?>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5 col-xs-12">
+                <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('rmipopup')->toHtml(); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function myFunction2() {
+        var exists = document.getElementById("g-recaptcha-response");
+
+        if (exists == null) {
+
+        } else {
+
+            var check = document.getElementById("g-recaptcha-response").value;
+            // alert(check);
+            if (check == '' || check == null) {
+                document.getElementById("recaptcha").style.border = "1px solid #ea0e0e";
+                return false;
+            } else {
+                document.getElementById("recaptcha").style.border = "none";
+                return true;
+            }
+        }
+
+
+    }
+</script>
+
+
+<style type="text/css">
+    #recaptcha {
+        display: inline-block;
+        position: relative;
+
+
+
+
+    }
+
+    #popupStartChats {
+        cursor: pointer;
+        background: 0 0;
+        border: #2d2d2d 1px solid;
+        border-radius: 0;
+        color: #2d2d2d;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        display: inline;
+        width: 100%;
+        text-align: center;
+        padding: 6px 10px 6px;
+        max-width: 360px;
+        margin: 16px auto 0 auto;
+    }
+
+    #quickrfq_form #popupStartChats {
+        margin: 0px auto 0 auto;
+    }
+
+    #quickrfq_form .actions-toolbar .primary {
+        display: flex;
+    }
+</style>

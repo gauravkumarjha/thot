@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <head>
+        <css src="Magento_Checkout::css/custom-checkout.css"/>
+    </head>
+
+    <body>
+
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+
+                                        <!-- Force billing + payment to load with shipping -->
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="config" xsi:type="array">
+                                                <item name="deps" xsi:type="string">checkout.steps.shipping-step</item>
+                                            </item>
+                                        </item>
+
+                                        <item name="payment-step" xsi:type="array">
+                                            <item name="config" xsi:type="array">
+                                                <item name="deps" xsi:type="string">checkout.steps.shipping-step</item>
+                                            </item>
+                                        </item>
+
+                                        <!-- Shipping Section -->
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shipping-address-fieldset" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+
+                                                                <!-- First Name -->
+                                                                <item name="firstname" xsi:type="array">
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-half first-col</item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">10</item>
+                                                                </item>
+
+                                                                <!-- Last Name -->
+                                                                <item name="lastname" xsi:type="array">
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-half last-col</item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">20</item>
+                                                                </item>
+
+                                                                <!-- Street Lines -->
+                                                                <item name="street" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/components/group</item>
+                                                                    <item name="children" xsi:type="array">
+
+                                                                        <item name="0" xsi:type="array">
+                                                                            <item name="config" xsi:type="array">
+                                                                                <item name="additionalClasses" xsi:type="string">field-col field-col-full</item>
+                                                                            </item>
+                                                                            <item name="sortOrder" xsi:type="string">30</item>
+                                                                        </item>
+
+                                                                        <item name="1" xsi:type="array">
+                                                                            <item name="config" xsi:type="array">
+                                                                                <item name="additionalClasses" xsi:type="string">field-col field-col-full</item>
+                                                                            </item>
+                                                                            <item name="sortOrder" xsi:type="string">40</item>
+                                                                        </item>
+
+                                                                    </item>
+                                                                </item>
+
+                                                                <!-- City -->
+                                                                <item name="city" xsi:type="array">
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-third</item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">100</item>
+                                                                </item>
+
+                                                                <!-- Region -->
+                                                                <item name="region_id" xsi:type="array">
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-third</item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">180</item>
+                                                                </item>
+
+                                                                <!-- Postcode -->
+                                                                <item name="postcode" xsi:type="array">
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-third</item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">200</item>
+                                                                </item>
+
+                                                                <!-- Telephone -->
+                                                                <item name="telephone" xsi:type="array">
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-full phone-row</item>
+                                                                        <item name="tooltip" xsi:type="array">
+                                                                            <item name="description" xsi:type="string" translate="true">For delivery questions.</item>
+                                                                        </item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">205</item>
+                                                                </item>
+
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+
+                                    </item>
+                                </item>
+                            </item>
+
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+    </body>
+</page>

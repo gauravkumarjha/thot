@@ -1,0 +1,15 @@
+var config = {
+    config: {
+        mixins: {
+            'Magento_Checkout/js/view/shipping': {
+                'Magento_Checkout/js/view/shipping-mixin': true
+            },
+            'Magento_Checkout/js/view/payment': {
+                'Magento_Checkout/js/view/shipping-mixin': true
+            },
+            'Magento_Checkout/js/view/sidebar': {
+                'Magento_Checkout/js/view/sidebar-mixin': true
+            }
+        }
+    }
+};

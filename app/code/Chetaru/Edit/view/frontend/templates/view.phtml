@@ -1,0 +1,91 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$redirect = $objectManager->get('\Magento\Framework\App\Response\Http');
+$connection = $resource->getConnection();
+$parameters = $block->getRequest()->getParams();
+//print_r($parameters);
+//die();
+if (!isset($parameters['url_key'])) {
+	$redirect->setRedirect('/inedit');
+}
+$tableName = $resource->getTableName('chetaru_edit_post');
+$sql = "SELECT * FROM " . $tableName . " WHERE url_key='" . $parameters['url_key'] . "' AND status=1";
+$in_edit_res = $connection->fetchAll($sql);
+//print_r($in_edit_res);
+//die();
+if (empty($in_edit_res)) {
+	$redirect->setRedirect('/inedit');
+}
+///die();
+$in_edit = $in_edit_res[0];
+$base_url 		= $block->getBaseUrl();
+//$productBlock =  $block->getLayout()->createBlock('Magento\Catalog\Block\Product\ListProduct');
+//getting brand settings 
+
+
+// $tableName = $resource->getTableName('core_config_data');
+// $sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_prefix'";
+// $url_prefix = $connection->fetchAll($sql);
+// $sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_suffix'";
+// $url_suffix = $connection->fetchAll($sql); 
+
+if (!$in_edit['status']) {
+	//print_r($in_edit);
+?>
+	<script>
+		window.location.href = "/inedit";
+	</script>
+<?php
+}
+?>
+<?php if (!empty($in_edit)) : ?>
+	<div id="edit_<?php echo $in_edit['post_id']; ?>" class="page-content theedit_page">
+		<?php
+		$products = array();
+		if (isset($in_edit['products']) && !empty(isset($in_edit['products']))) {
+			$products = $block->getProducts($in_edit['products']);
+		}
+
+		?>
+		<!-- Brand (Makers Detail) page starts -->
+		<section class="brand-banner-container ">
+			<div class="banner_text">
+				<div class="brand-top-heading">
+					<h1><?php echo $in_edit['name'] ?></h1>
+				</div>
+				<div class="banner_des">
+					<?php if (isset($in_edit['short_description']) && !empty(isset($in_edit['short_description']))) {
+						echo $this->helper('Chetaru\Edit\Helper\Data')->filter($in_edit['short_description']);
+					} ?>
+				</div>
+			</div>
+			<?php if ($in_edit['banner_image']) { ?>
+				<div class="inedit-banner-image">
+					<img src="<?php echo $base_url . '/' . $in_edit['banner_image'] ?>" class="img-responsive" alt="<?php echo $in_edit['name'] ?>" />
+				</div>
+			<?php } ?>
+
+		</section>
+		<section class="custom-breadcrumb-container">
+			<div class="breadcrumbs">
+				<ul class="items">
+					<li class="item home">
+						<a href="/" title="Go to Home Page">
+							Home </a>
+					</li>
+					<li class="item home">
+						<a href="/inedit/" title="Edits">
+							Edits </a>
+					</li>
+					<li class="item cms_page"><strong><?php echo $in_edit['name'] ?></strong></li>
+				</ul>
+			</div>
+		</section>
+		<div class="edit-content">
+			<?php if (isset($in_edit['post_content']) && !empty(isset($in_edit['post_content']))) {
+				echo $this->helper('Chetaru\Edit\Helper\Data')->filter($in_edit['post_content']);
+			} ?>
+		</div>
+	</div>
+<?php endif; ?>

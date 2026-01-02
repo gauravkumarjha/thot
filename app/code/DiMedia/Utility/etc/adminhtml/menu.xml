@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+
+    <menu>
+
+        <add id="DiMedia_Utility::dimedia_utility" title="Dimedia Abandoned" module="DiMedia_Utility" action="dimedia_utility" sortOrder="60" resource="DiMedia_Utility::dimedia_utility" />
+    </menu>
+
+</config>
+

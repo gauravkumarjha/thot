@@ -1,0 +1,5 @@
+<?php
+
+use \Magento\Framework\Component\ComponentRegistrar;
+
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'DiMedia_SendEmail', __DIR__);

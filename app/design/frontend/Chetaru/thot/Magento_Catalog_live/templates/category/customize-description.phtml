@@ -1,0 +1,62 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+?>
+<?php
+$new_layout = array(137);
+$mood_layout = array(338);
+ 
+if( in_array( $block->getCurrentCategory()->getId() , $new_layout )  ){ 
+	if ($_description = $block->getCurrentCategory()->getDescription()): ?>
+	   	<div class="artconsultancy_description products-host-content">
+			 <?php /* @escapeNotVerified */ echo $this->helper('Magento\Catalog\Helper\Output')->categoryAttribute($block->getCurrentCategory(), $_description, 'description') ?>
+		</div>
+	<?php endif; 
+}elseif (in_array( $block->getCurrentCategory()->getId() , $mood_layout )) {
+	if ($_description = $block->getCurrentCategory()->getDescription()): ?>
+	   	<div class="shopmood_description col-md-4 col-sm-8 col-xs-12 products-host-content" style="min-height: 300px;">
+			 <?php /* @escapeNotVerified */ echo $this->helper('Magento\Catalog\Helper\Output')->categoryAttribute($block->getCurrentCategory(), $_description, 'description') ?>
+		</div>
+	<?php endif; 
+}
+else{
+	if ($_description = $block->getCurrentCategory()->getDescription()): ?>
+	   	<div class="col-md-4 col-sm-8 col-xs-12 products-host-content" style="min-height: 300px;">
+			 <?php /* @escapeNotVerified */ echo $this->helper('Magento\Catalog\Helper\Output')->categoryAttribute($block->getCurrentCategory(), $_description, 'description') ?>
+			<p class="ImgShare">
+					<?php 
+					$blockObj= $block->getLayout()->createBlock('Chetaru\Hot\Block\FacebookUri');
+					$facebookUrl=$blockObj->getFacebookUrl();
+					if(!empty($facebookUrl)) {
+					?>
+				<a class="social-icon addthis_button_facebook" href="<?php echo $facebookUrl;?>" target="_blank">Facebook</a>
+				<?php 
+					}
+					$blockObj= $block->getLayout()->createBlock('Chetaru\Hot\Block\InstagramUri');
+					$instagramUrl=$blockObj->getInstagramUrl();
+					if(!empty($instagramUrl)) {
+				?>
+				<a class="social-icon " href="<?php echo $instagramUrl;?>" target="_blank">Instagram</a>
+				<?php 
+					}
+					$blockObj= $block->getLayout()->createBlock('Chetaru\Hot\Block\TwitterUri');
+					$twitterUrl=$blockObj->getTwitterUrl();
+					if(!empty($twitterUrl)) {
+					?>
+				<a class="social-icon addthis_button_twitter" href="<?php echo $twitterUrl;?>" target="_blank">Twitter</a>
+				<?php }?>
+			</p>
+		</div>
+	<?php endif; 
+}?>

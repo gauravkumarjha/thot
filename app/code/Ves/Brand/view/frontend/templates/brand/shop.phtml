@@ -1,0 +1,116 @@
+<?php
+	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+	$abstractProductBlock = $block->getLayout()->createBlock('\Magento\Catalog\Block\Product\AbstractProduct');
+	$collection = $this->getCollection();
+	$image = 'product_page_related_images';
+	$maker = $this->getMaker();
+	
+?>
+<?php if(count($collection)>0) :?>
+
+	<div class="row">
+			<section class="bg-white similar-products similar-products-desktop">
+				 <div class="container">
+					<?php if(!empty($maker)):?>
+					 <?php 
+					$curPage=$this->getCollection()->getCurPage();
+					$innHclass="";
+					$lastPage=$collection->getLastPageNumber();
+					if($curPage<=$lastPage && $curPage!=1){
+						$innHclass="style='display:none;'";
+					}
+					?>
+				   <div class="section-header text-center" <?php echo $innHclass;?>>
+					  <div class="sectionTitle"><?php echo $maker['name']?></div>
+					  <hr class="hr--small">
+				   </div>
+				   <?php endif;?>
+					<div class="row">
+					<?php foreach ($collection as $_product): ?>
+					   <div class="col-md-4 col-sm-6 col-xs-12">
+						  <div class="thumbnail" >
+							<?php
+							$imageHelper  = $objectManager->get('\Magento\Catalog\Helper\Image');
+							$image_url = $imageHelper->init($_product, $image)->setImageFile($_product->getFile())->getUrl();
+							?>
+							 <a href="<?php echo $_product->getProductUrl();?>">
+								<img src="<?php echo $image_url?>" alt="<?php echo $_product->getName();?>" class="img-responsive">
+							 </a>
+							  <?php 
+								$productName=$_product->getName();
+									$your_desired_width = 30;
+									if (strlen($productName) > $your_desired_width) {
+											$productName = wordwrap($productName, $your_desired_width);
+											$productName = substr($productName, 0, strpos($productName, "\n")) . "...";
+								}
+							?>
+							 <div class="caption">
+								<div class="row">
+								   <div class="col-md-6 col-xs-6">
+									  <div class="custom-row">
+										 <a href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName();?>">
+											<h3 class="productName"><?php echo $productName;?></h3>
+										 </a>
+									  </div>
+								   </div>
+								   <div class="col-md-6 col-xs-6 price">
+									  <div class="custom-row">
+										 	<?php 
+										if($_product->getAttributeText('price_on_request')=='Yes'){
+											?>
+											<h3 class="price_request"><?php /* @escapeNotVerified */ echo __('Price on request') ?></h3>
+											<?php
+										}else{
+											?>
+										<h3 class="productPrice"><?php echo $abstractProductBlock->getProductPrice($_product) ?></h3>
+										<?php } ?>
+									  </div>
+								   </div>
+								</div>
+								<div class="row">
+								<div class="col-md-7 col-xs-7">
+									<div class="custom-row">
+										&nbsp;
+									</div>
+								</div>
+								<div class="col-md-5 col-xs-5 price">
+									<div class="custom-row">
+									<?php if (!$_product->isSaleable()): ?>
+										<p class="sold-out red"><?php /* @escapeNotVerified */ echo __('Sold Out') ?></p> 
+										<?php endif;?>
+									</div>
+								</div>
+							</div>
+								<div class="custom-row">
+							<?php 
+							// if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+							// echo '<span class="btnGrey">'.__('Options Available').'</span> ';
+							// } 
+							if($_product->getAttributeText('options_available')=='Yes'){
+								echo '<span class="btnGrey">'.__('Options Available').'</span>';
+							}
+							
+							if($_product->getAttributeText('is_customizable')=='Yes'){
+								echo '<span class="btnBlack">'.__('Customizable').'</span>';
+							}
+						 ?>
+							</div>
+							 </div>
+						  </div>
+					   </div>
+					<?php endforeach; ?>
+					</div>
+					<?php if ($this->getPagerHtml()): ?>
+							<div class="order-products-toolbar toolbar bottom  toolbar-products"><?php echo $this->getPagerHtml();?></div>
+					<?php else: ?>
+						<div class="message info empty"><span><?php echo __('No Products found.'); ?></span></div>
+					<?php endif ?>
+				 </div>
+				 <div class="clearfix"></div>
+			  </section>
+			  </div>
+<?php else:?>
+<div class="container">
+	<?php echo __('No Product found.'); ?>
+</div>
+<?php endif;?>

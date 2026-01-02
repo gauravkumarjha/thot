@@ -1,0 +1,31 @@
+<script type="text/x-magento-init">  
+{  
+    "*": {  
+        "jquery": {  
+            "noConflict": true  
+        }  
+    }  
+}  
+</script>  
+<script type="text/javascript">  
+require(['jquery'], function($) {  
+    jQuery(document).ready(function() {  
+        alert(1);
+        
+         jQuery.ajax({
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    
+                  
+                    },
+                url: '',
+                success: function (msg) {
+                        
+                }
+       
+         });
+    });
+});  
+</script>  
+

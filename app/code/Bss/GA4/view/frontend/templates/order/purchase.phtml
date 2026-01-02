@@ -1,0 +1,30 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var \Bss\GA4\Block\Order\Purchase $block
+ */
+$escaper = $block->escaper();
+?>
+<?php if (!$block->isExclude() && $block->getItemsEvent()): ?>
+    <script>
+        gtag("event", "purchase", {
+            transaction_id: "<?=$escaper->escapeHtml($block->getTransactionId())?>",
+            value: "<?=$escaper->escapeHtml($block->getValue())?>",
+            tax:"<?=$escaper->escapeHtml($block->getTaxAmount())?>",
+            shipping: "<?=$escaper->escapeHtml($block->getShippingAmount())?>",
+            currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+            coupon: "<?=$escaper->escapeHtml($block->getCouponCode())?>",
+            items: <?= /** @noEscape  */ $block->serializeItem($block->getItemsEvent())?>
+        });
+    </script>
+<?php endif;?>

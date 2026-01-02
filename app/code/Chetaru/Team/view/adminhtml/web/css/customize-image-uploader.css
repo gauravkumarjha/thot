@@ -1,0 +1,11 @@
+/* Hide Upload Button  */
+
+input[name="featured_image"] + label.file-uploader-button {
+    display: none;
+    }
+
+/* Hide Image Previews */
+
+.image-uploader .image-placeholder {
+    display: none;
+}

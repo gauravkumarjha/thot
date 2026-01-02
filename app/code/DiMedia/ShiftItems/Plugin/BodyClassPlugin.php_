@@ -1,0 +1,28 @@
+<?php
+
+namespace DiMedia\ShiftItems\Plugin;
+
+use Magento\Framework\View\Page\Config;
+use Magento\Store\Model\StoreManagerInterface;
+
+class BodyClassPlugin
+{
+    protected $storeManager;
+
+    public function __construct(
+        StoreManagerInterface $storeManager
+    ) {
+        $this->storeManager = $storeManager;
+    }
+
+    public function beforeAddBodyClass(Config $subject, $className)
+    {
+        // Get store code
+        $storeCode = $this->storeManager->getStore()->getCode();
+
+        // Add store-based body class
+        $className .= ' store-' . $storeCode;
+
+        return [$className];
+    }
+}

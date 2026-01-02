@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_PaymentShippingRestriction
+ * @author    Webkul
+ * @copyright Copyright (c)Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Webkul_PaymentShippingRestriction::mapping" title="Payment Shipping Mapping" module="Webkul_PaymentShippingRestriction" sortOrder="10" resource="Webkul_PaymentShippingRestriction::mapping"/>
+        <add id="Webkul_PaymentShippingRestriction::shippingmapping" title="Payment and Shipping Mapping" module="Webkul_PaymentShippingRestriction" sortOrder="2" parent="Webkul_PaymentShippingRestriction::mapping" action="shippingrestriction/shippingmapping" resource="Webkul_PaymentShippingRestriction::shippingmapping"/>
+    </menu>
+</config>

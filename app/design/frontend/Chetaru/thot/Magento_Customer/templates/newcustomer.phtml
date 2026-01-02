@@ -1,0 +1,28 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Customer\Block\Form\Login\Info $block */
+?>
+<?php if ($block->getRegistration()->isAllowed()) : ?>
+<div class="block block-new-customer">
+    <div class="block-content" aria-labelledby="block-new-customer-heading">
+        <h5><?= $block->escapeHtml(__('New To The House Of Things?')) ?></h5>
+        <p><?= $block->escapeHtml(__('Make Shopping for beautiful interiors online truly effortless by creating an account.')) ?></p>
+        <p><?= $block->escapeHtml(__('With a simple registration, you can:')) ?></p>
+        <ul>
+            <li><?= $block->escapeHtml(__('Save items in your favourites')) ?></li>
+            <li><?= $block->escapeHtml(__('Be the first to hear about exciting THOT news')) ?></li>
+            <li><?= $block->escapeHtml(__('Manage your address details')) ?></li>
+            <li><?= $block->escapeHtml(__('Track existing orders and view your order history')) ?></li>
+        </ul>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <a href="<?= $block->escapeUrl($block->getCreateAccountUrl()) ?>" class="action create primary"><span><?= $block->escapeHtml(__('SIGN UP')) ?></span></a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

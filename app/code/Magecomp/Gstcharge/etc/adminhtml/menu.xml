@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Backend/etc/menu.xsd">
+    <menu>        
+        <add id="Magecomp_Gstcharge::gstreport" title="Gst Report" module="Magecomp_Gstcharge" sortOrder="10" action="gst/gstreport" resource="Magecomp_Gstcharge::gstreport" parent="Magento_Reports::report_salesroot"/>
+        <add id="Magecomp_Gstcharge::gstreportitemwise" title="Gst Report Item Wise" module="Magecomp_Gstcharge" sortOrder="10" action="gst/gstreportitemwise" resource="Magecomp_Gstcharge::gstreportitemwise" parent="Magento_Reports::report_salesroot"/>
+    </menu>
+</config>

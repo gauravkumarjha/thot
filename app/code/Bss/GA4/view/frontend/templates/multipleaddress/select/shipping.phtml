@@ -1,0 +1,30 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var \Bss\GA4\Block\MultipleAddress\Select\Shipping $block
+ */
+$escaper = $block->escaper();
+?>
+<?php if ($block->getListItems()): ?>
+<?php foreach ($block->getListItems() as $item): ?>
+        <script class="bss_add_shipping_info">
+            gtag("event", "add_shipping_info", {
+                currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+                value: "<?=$escaper->escapeHtml($item['value'])?>",
+                coupon: "<?=$escaper->escapeHtml($block->getCouponCode())?>",
+                shipping_tier: "<?=$escaper->escapeHtml($item['shipping_type'])?>",
+                items: <?= /** @noEscape  */ $block->serializeItem($item['item'])?>
+            });
+        </script>
+<?php endforeach; ?>
+<?php endif; ?>

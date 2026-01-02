@@ -1,0 +1,46 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Wishlist\Block\Catalog\Product\View\Addto\Wishlist */
+/** @var \Magento\Wishlist\Helper\Data $wishlistHelper **/
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$wishlist = $objectManager->get('\Magento\Wishlist\Model\Wishlist');
+$customerSession = $objectManager->get('Magento\Customer\Model\SessionFactory')->create();
+$customerData = $customerSession->getCustomer()->getData(); //get all data of customerData
+$customerId = $customerSession->getCustomer()->getId();//get id of customer
+$isAdded = $wishlist->loadByCustomerId($customerId, true)->getItemCollection();
+$classs_added = 0;
+if( $isAdded->count() > 0 ){
+    foreach($isAdded as $item){
+        if( $item->getProduct()->getID() == $block->getProduct()->getID() ){
+            $classs_added = 1;
+        }
+    }
+}
+?>
+<?php if ($block->isWishListAllowed()) : ?>
+<div class="whishlist">
+    <h4 class="pull-right">
+    <?php if( $classs_added ){ ?>
+			<a href="/wishlist/" class="action towishlist already_added"><i class="fa fa-heart-o"></i></a>
+	 <?php } else { ?>
+		<a href="javascript:void(0)"
+       class="action towishlist gk"
+       data-post='<?php /* @escapeNotVerified */ echo $block->getWishlistParams(); ?>'
+       data-action="add-to-wishlist" title="<?php /* @escapeNotVerified */ echo __('Add to Wish List') ?>" ><i class="fa fa-heart-o"></i></a>
+    <?php }  ?>
+    </h4>
+</div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "addToWishlist": <?php /* @escapeNotVerified */ echo $block->getWishlistOptionsJson() ?>
+        }
+    }
+</script>

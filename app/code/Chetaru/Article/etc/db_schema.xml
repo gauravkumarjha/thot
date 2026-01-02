@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="chetaru_article_post" resource="default" engine="innodb" comment="Article Post Table">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" identity="true" comment="Post ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Article Title"/>
+        <column xsi:type="varchar" name="url_key" nullable="false" length="255" comment="Article Url Key"/>
+        <column xsi:type="text" name="post_content" nullable="true" comment="Article Content"/>
+        <column xsi:type="int" name="status" unsigned="true" nullable="true" identity="false" default="1" comment="Article Status"/>
+        <column xsi:type="varchar" name="featured_image" nullable="true" length="255" comment="Article Featured Image"/>
+        <column xsi:type="varchar" name="large_image" nullable="true" length="255" comment="Article Large Image"/>
+        <column xsi:type="varchar" name="link" nullable="true" length="255" comment="Article Link"/>
+        <column xsi:type="datetime" name="article_date" on_update="false" nullable="true" comment="Article Date"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Article Meta Title"/>
+        <column xsi:type="text" name="meta_keywords" nullable="true" comment="Article Meta Keywords"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Article Meta Description"/>
+        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Article Post Creation Time"/>
+        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Article Post Modification Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+        </constraint>
+    </table>
+</schema>

@@ -1,0 +1,85 @@
+<?php 
+	//echo $this->getData('number'); 
+	$base_url = $block->getBaseUrl();
+	$articles = $block->getArticles();
+?> 
+<div class="container bg-white">
+	<div class="col-md-12">
+		<?php if(!empty($articles) && count($articles)>0):?>
+			<div class="row">
+				<?php $cnt=1; ?>
+				<?php foreach($articles as $article):?>
+				<div class="col-md-4 article-img divImg effect4 ">
+					<?php 
+						if(!empty($article['link'])) $anchor = 'href="'.$article['link'].'"'. ' target="_blank" ';
+						else $anchor = 'href="javascript:void(0);" data-toggle="modal" data-target="#'.$article['url_key'].'" class="popup_anchor"';
+					?>
+					<a <?php echo $anchor; ?>>
+						<h4 class="article-name"><?php echo $article['name'];?></h4>
+						<h5 class="article-date"><?php if(!empty($article['article_date'])) echo date("F d, Y",strtotime($article['article_date']));?></h5>
+						<img src="<?php echo $base_url.$article['featured_image']?>" class="img-responsive" alt="<?php echo $article['name'];?>" title="<?php echo $article['name'];?>"/>
+						<div class="caption">
+							<div class="caption-text">
+								<div class="read-article">Read Article</div>
+							</div>
+						</div>	
+					</a>
+				</div>
+				<?php if($cnt==3){?>
+				 <div class="clearfix"></div>
+				 <?php $cnt=0;?>
+				<?php }?>
+				<?php $cnt++; ?>
+				<?php endforeach;?>	
+			</div>
+		<?php endif;?>
+	</div>
+</div>
+<?php if(!empty($articles) && count($articles)>0):?>
+	<!-- Modal -->
+	<div class="model_wrapper" style="display:none">
+		<?php foreach($articles as $article):?>
+			<div id="<?php echo $article['url_key']?>" class="modal fade" role="dialog">
+				<?php if(!empty($article['large_image'])):?>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<img data-src="<?php echo $base_url.$article['large_image']?>" class="img-fluid " alt="<?php echo $article['name'];?>" title="<?php echo $article['name'];?>">
+						</div>
+					</div>
+				</div>
+				<?php endif;?>
+			</div>
+		<?php endforeach;?>	
+	</div>
+<?php endif;?>
+<script type="text/javascript">
+    require([
+        "jquery",
+        "Magento_Ui/js/modal/modal"
+    ],function($, modal) {
+
+        var options = {
+            type: 'popup',
+            responsive: true,
+            modalClass: 'large-image-popup',
+            //title: 'Main title',
+            buttons: [{
+                text: $.mage.__('Close'),
+                class: '',
+                click: function () {
+                    this.closeModal();
+                }
+            }]
+        };
+
+        $(".popup_anchor").click(function() {
+			var datatarget = $(this).attr('data-target');
+			var img = $(datatarget).find('img').attr('data-src');
+			$(datatarget).find('img').attr('src',img);
+			var popup = modal(options, $(datatarget));
+            $(datatarget).modal('openModal');
+            $(".modal-footer").remove();
+        });
+    });
+</script>

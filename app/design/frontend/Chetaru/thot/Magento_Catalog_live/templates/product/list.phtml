@@ -1,0 +1,550 @@
+<?php
+
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\App\Action\Action;
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ * 
+ */
+/** @var \Magento\Wishlist\Helper\Data $wishlistHelper **/
+
+$new_layout = array(137);
+$mood_layout = array(338);
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$request = $objectManager->get('Magento\Framework\App\Action\Context')->getRequest();
+$catid = 0;
+if ($request->getFullActionName() == 'catalog_category_view') {
+	$category = $objectManager->get('Magento\Framework\Registry')->registry('current_category');
+	$mediaUrl =  $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()->getBaseUrl();
+	$catid = $category->getId();
+}
+
+$_productCollection = $block->getLoadedProductCollection()->addAttributeToSelect('art_archive_image')->load();
+
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+
+/// wishlist check 
+$wishlist = $objectManager->get('\Magento\Wishlist\Model\Wishlist');
+$customerSession = $objectManager->get('Magento\Customer\Model\Session');
+$customerData = $customerSession->getCustomer()->getData(); //get all data of customerData
+$customerId = $customerSession->getCustomerId(); //get id of customer
+$isAdded = $wishlist->loadByCustomerId($customerId, true)->getItemCollection();
+$customer_wishlist_solution = array();
+if ($isAdded->count() > 0) {
+	foreach ($isAdded as $item) {
+		$customer_wishlist_solution[] = $item->getProduct()->getID();
+	}
+}
+///echo $_productCollection->count();
+?>
+<style>
+	.products-grid h4.pull-right {
+		position: absolute;
+		right: 30px;
+		top: 10px;
+		z-index: 9;
+	}
+
+	.sorter {
+		float: unset;
+		margin: 15px 0 0 auto;
+	}
+
+	.products_di.wrapper_di.grid_di.products-grid-dimeida .toolbar.toolbar-products {
+		display: none;
+	}
+</style>
+
+<?php if (!$_productCollection->count()): ?>
+	<div class="message info empty">
+		<div><?php /* @escapeNotVerified */ echo __('We can\'t find products matching the selection.') ?></div>
+	</div>
+<?php else: ?>
+	<?php echo $block->getToolbarHtml() ?>
+	<?php echo $block->getAdditionalHtml() ?>
+	<?php
+	if ($block->getMode() == 'grid') {
+		$viewMode = 'grid';
+		$image = 'hot_product_page_image_medium';
+		$showDescription = false;
+		$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+	} else {
+		$viewMode = 'list';
+		$image = 'category_page_list';
+		$showDescription = true;
+		$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+	}
+	/**
+	 * Position for actions regarding image size changing in vde if needed
+	 */
+
+	$pos = $block->getPositioned();
+
+	// new design
+
+	if (in_array($catid, $new_layout)) { ?>
+		<div class="head_con_page">
+			<h2>OUR WORK</h2>
+		</div>
+		<div class="artconsultancy_products products wrapper">
+			<?php $iterator = 1; ?>
+			<?php $counter = 0;
+			$clss = 0; ?>
+
+			<?php  ?>
+			<?php foreach ($_productCollection as $_product): ?>
+				<?php
+
+				$productImage = $block->getImage($_product, 'product_page_main_image');
+				//echo $_product->getThumbnail();
+				$productName = $_helper->productAttribute($_product, $_product->getName(), 'name');
+				if ($counter == 0 || $counter == 1) {
+					$cls = 'col-md-6 column' . $clss;
+				}
+				if ($counter == 2) {
+					$cls = 'col-md-12 column' . $clss;
+				}
+
+
+
+				$art_archive_image = $_product->getThumbnail();
+
+				$resizedImageUrl = $mediaUrl . "media/catalog/product" . $art_archive_image;
+
+				?>
+				<?php // Product Image 
+				?>
+				<div class="gallery_product <?php echo $cls; ?>">
+					<div class="thumbnail">
+						<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>">
+							<img src="<?php /* @escapeNotVerified */ echo $resizedImageUrl; ?>"
+								alt="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" title="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" /><span class="house_logo"></span>
+						</a>
+
+						<div class="caption">
+							<div class="row">
+								<div class="col-md-7 col-xs-7">
+									<div class="custom-row">
+										<h3 class="productName">
+											<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" title="<?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>">
+												<?php /* @escapeNotVerified */ echo $productName; ?>
+											</a>
+										</h3>
+										<div class="short_escription">
+											<?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description'); ?>
+										</div>
+										<div class="more">
+											<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" title="<?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>">View more</a>
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
+				$counter++;
+				$clss++;
+
+				if ($counter == 3 || $counter == 2) {
+				?>
+					<div class="clearfix"></div>
+				<?php
+				}
+				if ($counter == 3) {
+					$counter = 0;
+				}
+				if ($clss == 3) {
+					$clss = 0;
+				}
+				?>
+			<?php endforeach; ?>
+		</div>
+	<?php
+	} elseif (in_array($catid, $mood_layout)) { ?>
+		<div class="products wrapper <?php /* @escapeNotVerified */ echo $viewMode; ?> products-<?php /* @escapeNotVerified */ echo $viewMode; ?>">
+			<?php $iterator = 1;
+			$counter = 0;
+			$product_count = 0;
+			?>
+
+			<?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+			<?php foreach ($_productCollection as $_product): ?>
+				<?php
+
+				$productImage = $block->getImage($_product, $image);
+				if ($pos != null) {
+					$position = ' style="left:' . $productImage->getWidth() . 'px;'
+						. 'top:' . $productImage->getHeight() . 'px;"';
+				}
+
+
+				?>
+				<?php // Product Image 
+				?>
+				<div class="shop-mood-products gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter">
+					<div class="thumbnail">
+						<?php
+						if ($_product->getAttributeText('exclusive') == 'Yes') {
+						?>
+							<div class="thumb-logo">
+								<img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('Magento_Theme::images/hot-exclusive.png') ?>"
+									alt="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+									title="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+									<?php //echo $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' 
+									?>
+									<?php //echo $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' 
+									?> />
+							</div>
+						<?php } ?>
+						<div class="whishlist">
+							<h4 class="pull-right">
+								<?php if (!empty($customer_wishlist_solution) &&  (in_array($_product->getID(), $customer_wishlist_solution))) { ?>
+									<a href="/wishlist/" class="action towishlist already_added"><i class="fa fa-heart-o"></i></a>
+								<?php } else { ?>
+									<a href="javascript:void(0);" data-post='<?php echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($_product) ?>'
+										class="action towishlist" data-action="add-to-wishlist"><i class="fa fa-heart-o"></i></a>
+								<?php } ?>
+							</h4>
+						</div>
+						<div class="image-view">
+							<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>">
+								<img src="<?php /* @escapeNotVerified */ echo $productImage->getImageUrl(); ?>"
+									alt="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" title="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" />
+							</a>
+						</div>
+						<?php
+						$productName = $_helper->productAttribute($_product, $_product->getName(), 'name');
+						$your_desired_width = 30;
+						if (strlen($productName) > $your_desired_width) {
+							$productName = wordwrap($productName, $your_desired_width);
+							$productName = substr($productName, 0, strpos($productName, "\n")) . "...";
+						}
+						?>
+						<div class="caption">
+							<div class="row">
+								<div class="col-md-7 col-xs-7">
+									<div class="custom-row">
+										<h3 class="productName">
+											<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" title="<?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>">
+												<?php /* @escapeNotVerified */ echo $productName; ?>
+											</a>
+										</h3>
+									</div>
+									<div class="custom-row">
+										<p class="productDetail">
+											<?php
+											$productData = $_product->getData();
+											$product_id = $productData['entity_id'];
+
+											$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+											$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();
+											$tableName = $resource->getTableName('ves_brand_product');
+											$sql = "SELECT brand_id FROM " . $tableName . " WHERE product_id=" . $product_id;
+											$results = $connection->fetchAll($sql);
+
+											if (!empty($results)) {
+												$brand_ids = array();
+												foreach ($results as $result) {
+													array_push($brand_ids, $result['brand_id']);
+												}
+												$tableName = $resource->getTableName('ves_brand');
+												$sql = "SELECT * FROM " . $tableName . " WHERE brand_id IN (" . implode(",", $brand_ids) . ")";
+												$brands = $connection->fetchAll($sql);
+
+												$tableName = $resource->getTableName('core_config_data');
+												$sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_prefix'";
+												$url_prefix = $connection->fetchAll($sql);
+												$sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_suffix'";
+												$url_suffix = $connection->fetchAll($sql);
+												echo 'By ';
+												foreach ($brands as $i => $brand) {
+													echo '<a href=' . $block->getBaseUrl() . $url_prefix['0']['value'] . '/' . $brand['url_key'] . $url_suffix[0]['value'] . ' title="' . $brand['name'] . '">' . $brand['name'] . '</a>';
+													if (count($brands) > 1 && $i < count($brands) && $i < count($brands) - 1) echo ', ';
+												}
+											}
+											?>
+
+										</p>
+									</div>
+								</div>
+								<div class="col-md-5 col-xs-5">
+									<a class="get-quote-price popup_anchor">Get a Quote</a>
+
+									<?php
+									// for price print code
+									//if($_product->getAttributeText('price_on_request')=='Yes'){
+									?>
+									<!-- <h3 class="price_request"><?php /* @escapeNotVerified */ // echo __('Price on request') 
+																	?></h3> -->
+									<?php
+									//}else{
+									?>
+									<?php //if ($_product->isSaleable()): 
+									?>
+									<?php // echo $block->getProductPrice($_product) 
+									?>
+									<?php //endif;
+									?>
+									<? php // } 
+									?>
+
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col-md-7 col-xs-7">
+
+								</div>
+								<div class="col-md-5 col-xs-5 price">
+									<div class="custom-row">
+										<?php if (!$_product->isSaleable()): ?>
+											<p class="sold-out red"><?php /* @escapeNotVerified */ echo __('Sold Out') ?></p>
+										<?php endif; ?>
+									</div>
+								</div>
+							</div>
+							<div class="custom-row">
+								<?php
+								// if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+								// echo '<span class="btnGrey">'.__('Options Available').'</span> ';
+								// } 
+								if ($_product->getAttributeText('options_available') == 'Yes') {
+									echo '<span class="btnGrey">' . __('Options Available') . '</span>';
+								}
+
+								if ($_product->getAttributeText('is_customizable') == 'Yes') {
+									echo '<span class="btnBlack">' . __('Customizable') . '</span>';
+								}
+								?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
+				$counter++;
+
+				if ($counter == 3) {
+					$counter = 0;
+				?>
+					<div class="clearfix"></div>
+
+				<?php }
+
+				$product_count++;
+				if ($product_count == 4) {
+					echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('shop-the-mood-block-first')->toHtml();
+				}
+				if ($product_count == 8) {
+					echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('shop-the-mood-block-second')->toHtml();
+				}
+				?>
+			<?php endforeach; ?>
+			<div class="clearfix"></div>
+		</div>
+
+	<?php } else { // old design 
+	?>
+		<div class="products wrapper <?php /* @escapeNotVerified */ echo $viewMode; ?> products-<?php /* @escapeNotVerified */ echo $viewMode; ?>">
+			<?php $iterator = 1; ?>
+			<?php $counter = 0; ?>
+
+			<?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+			<?php foreach ($_productCollection as $_product): ?>
+				<?php
+
+				$productImage = $block->getImage($_product, $image);
+				if ($pos != null) {
+					$position = ' style="left:' . $productImage->getWidth() . 'px;'
+						. 'top:' . $productImage->getHeight() . 'px;"';
+				}
+
+
+				?>
+				<?php // Product Image 
+				?>
+				<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter">
+					<div class="thumbnail">
+						<?php
+						if ($_product->getAttributeText('exclusive') == 'Yes') {
+						?>
+							<div class="thumb-logo">
+								<img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('Magento_Theme::images/hot-exclusive.png') ?>"
+									alt="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+									title="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+									<?php //echo $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' 
+									?>
+									<?php //echo $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' 
+									?> />
+							</div>
+						<?php } ?>
+						<div class="whishlist">
+							<h4 class="pull-right">
+								<?php if (!empty($customer_wishlist_solution) &&  (in_array($_product->getID(), $customer_wishlist_solution))) { ?>
+									<a href="/wishlist/" class="action towishlist already_added"><i class="fa fa-heart-o"></i></a>
+								<?php } else { ?>
+									<a href="javascript:void(0);" data-post='<?php echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($_product) ?>'
+										class="action towishlist" data-action="add-to-wishlist"><i class="fa fa-heart-o"></i></a>
+								<?php } ?>
+
+							</h4>
+						</div>
+						<div class="image-view">
+							<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>">
+								<img src="<?php /* @escapeNotVerified */ echo $productImage->getImageUrl(); ?>"
+									alt="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" title="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" />
+							</a>
+						</div>
+						<?php
+						$productName = $_helper->productAttribute($_product, $_product->getName(), 'name');
+						$your_desired_width = 30;
+						if (strlen($productName) > $your_desired_width) {
+							$productName = wordwrap($productName, $your_desired_width);
+							$productName = substr($productName, 0, strpos($productName, "\n")) . "...";
+						}
+						?>
+						<div class="caption">
+							<div class="row">
+								<div class="col-md-7 col-xs-7">
+									<div class="custom-row">
+										<h3 class="productName">
+											<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" title="<?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>">
+												<?php /* @escapeNotVerified */ echo $productName; ?>
+											</a>
+										</h3>
+									</div>
+									<div class="custom-row">
+										<p class="productDetail">
+											<?php
+											$productData = $_product->getData();
+											$product_id = $productData['entity_id'];
+
+											$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+											$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();
+											$tableName = $resource->getTableName('ves_brand_product');
+											$sql = "SELECT brand_id FROM " . $tableName . " WHERE product_id=" . $product_id;
+											$results = $connection->fetchAll($sql);
+
+											if (!empty($results)) {
+												$brand_ids = array();
+												foreach ($results as $result) {
+													array_push($brand_ids, $result['brand_id']);
+												}
+												$tableName = $resource->getTableName('ves_brand');
+												$sql = "SELECT * FROM " . $tableName . " WHERE brand_id IN (" . implode(",", $brand_ids) . ")";
+												$brands = $connection->fetchAll($sql);
+
+												$tableName = $resource->getTableName('core_config_data');
+												$sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_prefix'";
+												$url_prefix = $connection->fetchAll($sql);
+												$sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_suffix'";
+												$url_suffix = $connection->fetchAll($sql);
+												echo 'By ';
+												foreach ($brands as $i => $brand) {
+													echo '<a href=' . $block->getBaseUrl() . $url_prefix['0']['value'] . '/' . $brand['url_key'] . $url_suffix[0]['value'] . ' title="' . $brand['name'] . '">' . $brand['name'] . '</a>';
+													if (count($brands) > 1 && $i < count($brands) && $i < count($brands) - 1) echo ', ';
+												}
+											}
+											?>
+
+										</p>
+									</div>
+								</div>
+								<div class="col-md-5 col-xs-5">
+									<?php
+									if ($_product->getAttributeText('price_on_request') == 'Yes') {
+									?>
+										<h3 class="price_request"><?php /* @escapeNotVerified */ echo __('Price on request') ?></h3>
+									<?php
+									} else {
+									?>
+										<?php //if ($_product->isSaleable()): 
+										?>
+										<?php echo $block->getProductPrice($_product) ?>
+										<?php //endif;
+										?>
+									<?php } ?>
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col-md-7 col-xs-7">
+
+								</div>
+								<div class="col-md-5 col-xs-5 price">
+									<div class="custom-row">
+										<?php if (!$_product->isSaleable()): ?>
+											<p class="sold-out red"><?php /* @escapeNotVerified */ echo __('Sold Out') ?></p>
+										<?php endif; ?>
+									</div>
+								</div>
+							</div>
+							<div class="custom-row">
+								<?php
+								// if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+								// echo '<span class="btnGrey">'.__('Options Available').'</span> ';
+								// } 
+								if ($_product->getAttributeText('options_available') == 'Yes') {
+									echo '<span class="btnGrey">' . __('Options Available') . '</span>';
+								}
+
+								if ($_product->getAttributeText('is_customizable') == 'Yes') {
+									echo '<span class="btnBlack">' . __('Customizable') . '</span>';
+								}
+								?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
+				$counter++;
+				if ($counter == 3) {
+					$counter = 0;
+				?>
+					<div class="clearfix"></div>
+				<?php
+				}
+				?>
+			<?php endforeach; ?>
+			<div class="clearfix"></div>
+		</div>
+	<?php } ?>
+
+	<?php echo $block->getToolbarHtml() ?>
+	<?php if (!$block->isRedirectToCartEnabled()) : ?>
+		<script type="text/x-magento-init">
+			{
+            "[data-role=tocart-form], .form.map.checkout": {
+                "catalogAddToCart": {}
+            }
+        }
+		
+        </script>
+	<?php endif; ?>
+	<script type="text/x-magento-init">
+		{
+			"*": {
+				"Magento_Ui/js/core/app": {
+					"components": {
+						"wishlist": {
+							"component": "Magento_Wishlist/js/view/wishlist"
+						}
+					}
+				}
+			}
+		}
+		 </script>
+<?php endif; ?>

@@ -1,0 +1,21 @@
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+    @media only screen and (min-width: @screen__desktop){
+        .hide-on-desktop{
+            display:none!important;
+        }
+    }
+    @media only screen and (max-width: (@screen__desktop - 1)) and (min-width: @screen__tablet){
+        .hide-on-tablet{
+            display:none!important;
+        }
+    }
+    @media only screen and (max-width: (@screen__tablet - 1)){
+        .hide-on-mobile{
+            display:none!important;
+        }
+    }
+}

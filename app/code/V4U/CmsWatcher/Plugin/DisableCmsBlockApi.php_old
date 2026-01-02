@@ -1,0 +1,18 @@
+<?php
+
+namespace V4U\CmsWatcher\Plugin;
+
+use Magento\Framework\Exception\LocalizedException;
+
+class DisableCmsBlockApi
+{
+    public function beforeSave()
+    {
+        throw new LocalizedException(__('API access denied: Cannot create or update CMS Blocks.'));
+    }
+
+    public function beforeDeleteById()
+    {
+        throw new LocalizedException(__('API access denied: Cannot delete CMS Blocks.'));
+    }
+}

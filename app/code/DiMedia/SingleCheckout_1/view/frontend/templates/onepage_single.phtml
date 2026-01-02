@@ -1,0 +1,85 @@
+<?php
+
+        /** @var $block \Magento\Framework\View\Element\Template */
+
+        $checkoutRoot = $block->getLayout()->getBlock('checkout.root');
+
+        if (!$checkoutRoot) {
+            echo "<pre style='color:red'>checkout.root NOT FOUND</pre>";
+            return;
+        }
+
+        $jsLayoutJson = $checkoutRoot->getJsLayout();
+
+        ?>
+
+<!--div id="single-checkout-root">
+
+    <div id="checkout-loader" data-role="checkout-loader" class="loading-mask">
+        <div class="loader">
+            <img src="<?= $block->getViewFileUrl('images/loader-1.gif') ?>" alt="Loading..." />
+        </div>
+    </div>
+
+    <script type="text/x-magento-init">
+        {
+        "#single-checkout-root": {
+            "Magento_Ui/js/core/app": <?= /* @noEscape */ $jsLayoutJson ?>
+        }
+    }
+    </script>
+
+    <script type="text/x-magento-init">
+        {
+    "#dm-single-checkout": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "dmSingleCheckout": {
+                    "component": "DiMedia_SingleCheckout/js/view/single-checkout"
+                }
+            }
+        }
+    }
+}
+</script>
+
+</div>
+
+<script>
+    require(['uiRegistry'], function(registry) {
+        registry.async('dmCheckoutRoot')(function(node) {
+            console.log("dmCheckoutRoot Loaded:", node);
+        });
+    });
+</script> -->
+
+
+
+<!-- IMPORTANT: YOU WERE MISSING THIS DIV -->
+<div id="dm-single-checkout" data-bind="scope:'dmSingleCheckout'"></div>
+
+<!-- initialize Magento checkout -->
+<div id="single-checkout-root">
+    <script type="text/x-magento-init">
+        {
+        "#single-checkout-root": {
+            "Magento_Ui/js/core/app": <?= /* @noEscape */ $jsLayoutJson ?>
+        }
+    }
+    </script>
+</div>
+
+<!-- initialize YOUR Single Checkout Component -->
+<script type="text/x-magento-init">
+    {
+    "#dm-single-checkout": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "dmSingleCheckout": {
+                    "component": "DiMedia_SingleCheckout/js/view/single-checkout"
+                }
+            }
+        }
+    }
+}
+</script>

@@ -1,0 +1,179 @@
+<?php
+/**
+ * @author      Olegnax
+ * @package     Olegnax_HotSpotQuickview
+ * @copyright   Copyright (c) 2022 Olegnax (http://olegnax.com/). All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Olegnax\HotSpotQuickview\Block\Widget\HotSpot;
+use Olegnax\HotSpotQuickview\Model\Config\Source\ModalSource;
+use Olegnax\HotSpotQuickview\Model\Config\Source\Icon;
+
+/** @var HotSpot $block */
+/** @var Escaper $escaper */
+if ($block->isEnabled()):
+	$mobileBreakpoint = 768;
+	$quickviewBtnClass = 'ox-quickview-button';
+	$widgetId = $block->getWidgetId();
+	$hotspotHeight = (int)$block->getHeight();
+	$hotspotWidth = (int)$escaper->escapeHtmlAttr($block->getWidth());
+	$hotspotFontSize = (int)$escaper->escapeHtmlAttr($block->getLabelFontSize());
+	$hotspotFontWeight = (int)$escaper->escapeHtmlAttr($block->getLabelFontWeight());
+	$inlineStyles =	$inlineStylesInner = $customStyles = $classes = [];
+	$tooltipText = $block->getTooltipText();
+	if (Icon::ICON_CUSTOM == $block->getIcon()){
+		$iconClass = '-icon-custom';
+	} else {
+		$iconClass = 'athlete2-icon-' . $block->getIcon();
+	}
+	$iconStyle = ($block->getColor() != '') ? ('style="color: ' . $block->getColor() . '"') : '';
+	if($block->getColorBackground()){
+		$inlineStylesInner[] = 'background-color: ' . $block->getColorBackground() . ';';
+	}
+	if($block->getBorderRadius() != ''){
+		$inlineStylesInner[] = 'border-radius: ' . $escaper->escapeHtmlAttr($block->getBorderRadius()) . 'px;';
+	}
+	if($hotspotHeight){
+		$inlineStyles[] = 'height: ' . $escaper->escapeHtmlAttr($hotspotHeight) . 'px;';
+	}
+	if($hotspotWidth){
+		$inlineStyles[] = 'min-width: ' . $hotspotWidth . 'px;';
+	}
+	$inlineStyles[] = 'left: ' . $escaper->escapeHtmlAttr($block->getPositionLeft()) . '%;';
+	$inlineStyles[] = 'top: ' . $escaper->escapeHtmlAttr($block->getPositionTop()) . '%;';
+	if($block->getBorderSize() > 0){
+		$inlineStylesInner[] = 'border: ' . $escaper->escapeHtmlAttr($block->getBorderSize()) . 'px solid;';
+	}
+	if( $block->getBorderColor() ){
+		$inlineStylesInner[] = 'border-color:' . $block->getBorderColor(). '; ';
+	}
+	if($hotspotFontWeight || $hotspotFontSize) {
+		$customStyles[] = '#' . $widgetId . '.ox-hotspot__item .-text.hs{';
+		if($hotspotFontWeight) {
+			$customStyles[] = 'font-weight: ' . $hotspotFontWeight . ';';
+		}
+		if( $hotspotFontSize) {
+			$customStyles[] = 'font-size: ' . $hotspotFontSize . 'px;';
+		}
+		$customStyles[] = '}';
+	}
+	if($block->getHideMobile()){	
+		$classes[] = 'hide-on-mobile';
+	}
+	if($block->getMobileMinimized()){
+		$classes[] = 'mobile-minimized';
+	}
+	$classes[] = $escaper->escapeHtmlAttr($block->getCustomClass());
+
+	if($block->getPulseAnimation()){
+		$classes[] = '-pulse';
+		if($block->getPulseAnimationColor()){
+			$customStyles[] = '#' . $widgetId . '.ox-hotspot__item.-pulse:before{background-color:' . $block->getPulseAnimationColor() . '}';
+		}
+	}
+	$tooltip_color = $block->getTooltipColor();
+	$tooltip_color_background = $block->getTooltipColorBackground();
+	$tooltip_width = (int)$escaper->escapeHtmlAttr($block->getTooltipWidth());
+	$tooltip_border_radius = $escaper->escapeHtmlAttr($block->getTooltipBorderRadius());
+	$mobileTop = $escaper->escapeHtmlAttr($block->getPositionTopM());
+	$mobileLeft =  $escaper->escapeHtmlAttr($block->getPositionLeftM());
+
+	if($mobileLeft != ''){
+		$customStyles[] = '@media (max-width: ' . $mobileBreakpoint . 'px){#' . $widgetId . '.ox-hotspot__item{left: ' . $mobileLeft . '%!important;}}';
+	}
+	if($mobileTop != ''){
+		$customStyles[] = '@media (max-width: ' . $mobileBreakpoint . 'px){#' . $widgetId . '.ox-hotspot__item{top: ' . $mobileTop . '%!important;}}';
+	}
+	if(	$hotspotWidth && (($block->getTooltipContent() && $block->getTooltipStatic() != '' ) || (!$block->getTooltipContent() && $tooltipText != ''))){
+		$customStyles[] = '#' . $widgetId . ' .ox-hotspot__tooltip{left: ' . $hotspotWidth/2 . 'px;}';
+		if($block->getMobileMinimized()){
+			$customStyles[] = '@media (max-width: ' . $mobileBreakpoint . 'px){#' . $widgetId . ' .ox-hotspot__tooltip.mobile-minimized .ox-hotspot__tooltip{left: 10px;}}';
+		}
+	}
+	if (Icon::ICON_CUSTOM == $block->getIcon()){
+		$iconWidth= (int)$escaper->escapeHtmlAttr($block->getIconCustomWidth());
+		$iconHeight = (int)$escaper->escapeHtmlAttr($block->getIconCustomHeight());
+		if($iconHeight || $iconWidth){
+			$customStyles[] = '#' . $widgetId . ' .ox-hotspot__icon img{';
+			if($iconWidth){
+				$customStyles[] = 'width:' . $iconWidth . 'px;';
+			}
+			if($iconHeight){
+				$customStyles[] = 'height:' . $iconHeight . 'px;';
+			}
+			$customStyles[] = '}';
+		}
+	}
+	if($tooltip_width != '' && $tooltip_width){
+		$customStyles[] = '#' . $widgetId . ' .ox-hotspot__tooltip{width: ' . $tooltip_width . 'px;}';
+	}
+	if($tooltip_color_background != ''){
+		$customStyles[] = '#' . $widgetId . ' .ox-hotspot__tooltip{background-color: ' . $tooltip_color_background . ';}';
+	}
+	if($tooltip_border_radius != ''){
+		$customStyles[] = '#' . $widgetId . ' .ox-hotspot__tooltip{border-radius: ' . (int)$tooltip_border_radius . 'px;}';
+	}
+	if($tooltip_color != ''){
+		$customStyles[] = '#' . $widgetId . ' .ox-hotspot__tooltip{color: ' . $tooltip_color . ';}';
+	}
+	if($block->getShadow()){
+		$classes[] = '-shadow';
+		if($block->getShadowColor()){
+			$customStyles[] = '#' . $widgetId . '.ox-hotspot__item.-shadow .inner{box-shadow:0px 7px 16px ' . $block->getShadowColor() . '}';
+		}
+	}
+	if ( !empty($customStyles) ){
+		echo '<style>' . implode(' ', $customStyles) . '</style>'; 	
+	}
+
+	$custom_link = '';
+	$quick_view_url = '';
+	if($block->getClickAction() === ModalSource::SOURCE_URL){
+		if($block->getHotspotUrl()){
+			$linkTarget = $block->getHotspotUrlTarget() ? 'target="_blank"' : '';
+			$custom_link = '<a href="' . $escaper->escapeUrl($block->getHotspotUrl()) . '" class="overlay-link" aria-label="'. $block->escapeHtml(__('Click for Details')) .'" ' . $linkTarget . '></a>';
+		}
+	} elseif($block->getClickAction() === ModalSource::SOURCE_PRODUCT){
+		if($block->getHref()) {
+		$quick_view_url = 'data-quickview-url="'. $escaper->escapeUrl($block->getHref()) .'"';
+		$classes[] = $quickviewBtnClass;
+		}
+	} elseif($block->getClickAction() === ModalSource::SOURCE_CUSTOM){
+        $quick_view_url = 'data-quickview-url="'. $escaper->escapeUrl($block->getCustomHref()) .'"';
+		$classes[] = $quickviewBtnClass;
+	}
+    ?>
+	<div id="<?= $widgetId ?>" 
+		 class="ox-hotspot__item  <?php if ( !empty($classes) ){ echo implode(' ', $classes); } ?>" 
+		 <?= $quick_view_url ?>
+		<?php if ( !empty($inlineStyles) ){ echo 'style="' . implode(' ', $inlineStyles) . '"';	} ?> >
+		<div class="inner" <?php if ( !empty($inlineStylesInner) ){ echo 'style="' . implode(' ', $inlineStylesInner) . '"';} ?>>
+			<?php if ( $block->getIcon() ){ ?>
+			 <span class="ox-hotspot__icon <?= $iconClass ?>" <?= $iconStyle ?> >
+                <?php if (Icon::ICON_CUSTOM == $block->getIcon()): ?>
+					<img src="<?= $this->getViewFileUrl($block->getIconCustom()) ?>" />
+                <?php endif; ?>
+			 </span>
+			<?php } ?>
+			<?php  $label_text = $escaper->escapeHtml($block->getLabelText()); ?>
+			<?php if ( $label_text != '' ){ ?>
+			 <span class="-text hs" <?= $iconStyle ?>><?= $label_text ?></span>
+			<?php } ?>
+			 <?php if ($block->getTooltipContent()){
+				if ( $block->getTooltipStatic() != '' ){ ?>
+					<div class="ox-hotspot__tooltip <?php if($block->getTooltipBoldText()) { echo '-text'; } ?>"><?= $block->getLayout()->createBlock( 'Magento\Cms\Block\Block' )->setBlockId( $block->getTooltipStatic() )->toHtml();?></div>
+				<?php }
+				} else {
+					if($tooltipText != '') { ?> 
+						<div class="ox-hotspot__tooltip <?php if($block->getTooltipBoldText()) { echo '-text'; } ?>"><?= $tooltipText ?></div>
+					<?php }
+			 }?>
+			<?= $custom_link ?>
+		 </div>
+	</div>
+<?php 
+unset($classes,$customStyles, $inlineStyles, $inlineStylesInner);
+endif;

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- <type name="Magento\MediaStorage\Model\File\Uploader">
+        <plugin name="dimedia_webp_convert_plugin" type="DiMedia\WebpImage\Plugin\ConvertToWebp" />
+    </type>
+<type name="Magento\Catalog\Model\Product\Image\UrlBuilder">
+    <plugin name="dimedia_webp_url" type="DiMedia\WebpImage\Plugin\ImageUrlWebp"/>
+</type> -->
+<!-- CMS / Blocks / WYSIWYG -->
+<type name="Magento\Framework\View\Asset\File">
+    <plugin name="dimedia_webp_render_cms" type="DiMedia\WebpImage\Plugin\RenderWebp"/>
+</type>
+
+<!-- Product / Category images -->
+<!-- <type name="Magento\Catalog\Model\Product\Image\UrlBuilder">
+    <plugin name="dimedia_webp_render_product" type="DiMedia\WebpImage\Plugin\RenderWebpProduct"/>
+</type> -->
+<type name="Magento\Catalog\Model\View\Asset\Image">
+    <plugin name="dimedia_webp_render_catalog" type="DiMedia\WebpImage\Plugin\RenderWebpCatalog"/>
+</type>
+</config>

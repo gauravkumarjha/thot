@@ -1,0 +1,62 @@
+<?php
+namespace Magecomp\Gstcharge\Setup\Patch\Data;
+
+use Magento\Eav\Setup\EavSetup;
+use Magento\Eav\Setup\EavSetupFactory;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\Patch\DataPatchInterface;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+
+class AddGstSourceMinprice implements DataPatchInterface
+{
+    private $moduleDataSetup;
+
+    private $eavSetupFactory;
+
+    public function __construct(
+        ModuleDataSetupInterface $moduleDataSetup,
+        EavSetupFactory $eavSetupFactory
+    ) {
+        $this->moduleDataSetup = $moduleDataSetup;
+        $this->eavSetupFactory = $eavSetupFactory;
+    }
+    
+    public function apply()
+    {
+        /** @var EavSetup $eavSetup */
+        $eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
+        $eavSetup->addAttribute(
+            Product::ENTITY,
+            'gst_source_minprice',
+            [
+                'group' => 'Indian GST',
+                'label' => 'Minimum Product Price to Apply GST Rate',
+                'type'  => 'decimal',
+                'input' => 'text',
+                'required' => false,
+                'sort_order' => 8,
+                'searchable' => false,
+                'filterable' => false,
+                'length'    => '10,2',
+                'global' => Attribute::SCOPE_STORE,
+            ]
+        );
+    }
+
+   /**
+    * {@inheritdoc}
+    */
+    public static function getDependencies()
+    {
+        return [];
+    }
+
+   /**
+    * {@inheritdoc}
+    */
+    public function getAliases()
+    {
+        return [];
+    }
+}

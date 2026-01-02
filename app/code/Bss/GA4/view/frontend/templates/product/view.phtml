@@ -1,0 +1,56 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+/**
+ * @var $block \Bss\GA4\Block\Product\View
+ */
+$escaper = $block->escaper();
+?>
+<?php if ($block->isEnableModule()): ?>
+    <?php if ($previous = $block->getPreviousUrl()): ?>
+        <script>
+            var isNavigate = window.performance.getEntriesByType('navigation').map((nav) => nav.type).includes('navigate');
+            if (isNavigate) {
+                gtag("event", "select_item", {
+                    item_list_id: "<?=$escaper->escapeHtml($previous['item_list_id'])?>",
+                    item_list_name: "<?=$escaper->escapeHtml($previous['item_list_name'])?>",
+                    items: [<?=/** @noEscape */$block->serializeItem($block->getItem())?>]
+                });
+            }
+        </script>
+    <?php endif;?>
+    <script>
+        gtag("event", "view_item", {
+            currency: "<?=$escaper->escapeHtml($block->getCurrency())?>",
+            value: "<?=$escaper->escapeHtml($block->getValue())?>",
+            items: [<?= /** @noEscape */ $block->serializeItem($block->getItem())?>]
+        });
+    </script>
+    <?php if ($items = $block->getUpSellProduct()): ?>
+    <script>
+        gtag("event", "view_item_list", {
+            item_list_id: "<?=$escaper->escapeHtml($items['item_list_id'])?>",
+            item_list_name: "<?=$escaper->escapeHtml($items['item_list_name'])?>",
+            items: <?= /** @noEscape */ $block->serializeItem($items['items'])?>
+        });
+    </script>
+    <?php endif; ?>
+    <?php if ($items = $block->getRelatedProduct()): ?>
+        <script>
+            gtag("event", "view_item_list", {
+                item_list_id: "<?=$escaper->escapeHtml($items['item_list_id'])?>",
+                item_list_name: "<?=$escaper->escapeHtml($items['item_list_name'])?>",
+                items: <?=/** @noEscape */ $block->serializeItem($items['items'])?>
+            });
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

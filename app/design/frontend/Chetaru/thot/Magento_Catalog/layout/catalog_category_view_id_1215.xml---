@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!--  -->
+        <referenceContainer name="content">
+            <container name="category.header-fix.desktop" label="Main Content Top" htmlClass="pro-list-header-fixed2-desktop" htmlTag="div">
+                <container name="category.header-fix.desktop.container" label="Header fix desktop container" htmlClass="container" htmlTag="div">
+                    <container name="category.header-fix.desktop.row" label="Header fix desktop container row" htmlClass="row" htmlTag="div">
+                    </container>
+                    <container name="category.div.clear" label="Header fix desktop container row" htmlClass="clearfix" htmlTag="div">
+                        <block class="Magento\Framework\View\Element\Text" name="div.clear">
+                          <arguments>
+                            <argument name="text" xsi:type="string"><![CDATA[<!-- -->]]></argument>
+                          </arguments>
+                        </block>
+                    </container>
+                </container>
+            </container>
+            <container name="category.sticky-anchor" htmlTag="div" htmlId="sticky-anchor">
+                <block class="Magento\Framework\View\Element\Text" name="clear2">
+                  <arguments>
+                    <argument name="text" xsi:type="string"><![CDATA[<!-- -->]]></argument>
+                  </arguments>
+                </block>
+                <block template="FME_Quickrfq::postform.phtml" class="FME\Quickrfq\Block\Postform" name="fme_quickrfq_postform">
+                    <container name="form.additional.info" label="Form Additional Info"/>
+                </block>
+            </container>
+            <container name="product.container.row" as="product_row_container" htmlClass="row" htmlTag="div">
+            <container name="product.container.host" as="product_row_container_host" htmlClass="col-md-12 product-host-and-content-container row" htmlTag="div">
+                <container name="cate.desk.container" htmlClass="col-md-12 products-host-image-container-desktop" htmlTag="div">
+                <container name="cat.new.row" htmlClass="row" htmlTag="div">
+                        <block class="Magento\Catalog\Block\Category\View" name="category.image" template="Magento_Catalog::category/image.phtml"/>
+                        <block class="Magento\Catalog\Block\Category\View" name="category.customize.description" template="Magento_Catalog::category/customize-description.phtml"/>
+                        <block class="Magento\Catalog\Block\Category\View" name="category.cms" template="Magento_Catalog::category/cms.phtml"/>
+                </container>
+                </container>
+                    <container name="category.product.list.container" as="product_container" htmlClass="products-container col-md-12" htmlTag="div">
+                        <container name="cat.pro.row.container" htmlClass="row" htmlTag="div">
+                        <block class="Magento\Catalog\Block\Category\View" name="category.products" template="Magento_Catalog::category/products.phtml">
+                            <block class="Magento\Catalog\Block\Product\ListProduct" name="category.products.list" as="product_list" template="Magento_Catalog::product/list.phtml" cacheable="false">
+                                <container name="category.product.list.additional" as="additional" />
+                                <block class="Magento\Framework\View\Element\RendererList" name="category.product.type.details.renderers" as="details.renderers">
+                                    <block class="Magento\Framework\View\Element\Template" name="category.product.type.details.renderers.default" as="default"/>
+                                </block>
+                                <block class="Magento\Catalog\Block\Product\ProductList\Item\Container" name="category.product.addto" as="addto">
+                                    <block class="Magento\Catalog\Block\Product\ProductList\Item\AddTo\Compare"
+                                           name="category.product.addto.compare" as="compare"
+                                           template="Magento_Catalog::product/list/addto/compare.phtml"/>
+                                </block>
+                                <action method="setToolbarBlockName">
+                                    <argument name="name" xsi:type="string">product_list_toolbar</argument>
+                                </action>
+                            </block>
+                        </block>
+                    </container>
+                </container>
+            </container>
+        </container>
+            <block class="Magento\Cookie\Block\RequireCookie" name="require-cookie" template="Magento_Cookie::require_cookie.phtml">
+                <arguments>
+                    <argument name="triggers" xsi:type="array">
+                        <item name="compareProductLink" xsi:type="string">.action.tocompare</item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="main">
+            <container name="cat.page.container" label="Main Content container" htmlClass="page-content bg-white product-listing-page-content" htmlTag="div">
+            
+            <container name="category.page.container" label="Main Content Top" htmlClass="bg-white product-listing" htmlTag="section">
+                <container name="category.container" label="Main Content Top" htmlClass="container bg-white" htmlTag="div">
+                
+                    <container name="content.top" label="Main Content Top"/>
+                    <container name="content" label="Main Content Area"/>
+                    <container name="content.aside" label="Main Content Aside"/>
+                    <container name="content.bottom" label="Main Content Bottom"/>
+                </container>
+            </container>
+            </container>
+        </referenceContainer>
+        <referenceBlock name="page.main.title">
+            <arguments>
+                <argument name="id" xsi:type="string">page-title-heading</argument>
+                <argument name="add_base_attribute_aria" xsi:type="string">page-title-heading toolbar-amount</argument>
+            </arguments>
+            <block class="Magento\Catalog\Block\Category\Rss\Link" name="rss.link" template="Magento_Catalog::category/rss.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="category.products.list">
+            <arguments>
+                <argument name="viewModel" xsi:type="object">Magento\Catalog\ViewModel\Product\OptionsData</argument>
+            </arguments>
+        </referenceBlock>
+        <!-- <referenceContainer name="columns.top">
+            <container name="category.view.container" htmlTag="div" htmlClass="category-view-2" after="-">
+            
+            </container>
+        </referenceContainer> -->
+            <move element="category.view.container" destination="content" after="-"/>
+        <move element="catalog.leftnav" destination="product.container.host" after="cate.desk.container"/>
+        <move element="category.image" destination="cat.new.row" before="-"/>
+        <move element="cate.desk.container" destination="product.container.host" before="-"/>
+
+        <referenceBlock name="category.description" remove="true"/>
+
+         
+    </body>
+</page>

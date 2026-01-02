@@ -1,0 +1,68 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$blockObj= $block->getLayout()->createBlock('Magento\Catalog\Block\Product\View');
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+$_helper  = $this->helper(Magento\Catalog\Helper\Output::class);
+$section_title = $block->getData('section_title');
+$ids = $block->getData('ids');
+$ids_arr = explode(',', (string)$ids);
+
+if (!empty($ids_arr)) {?>
+<div class="discover-section">
+<div class="container">
+	<?php if (!empty($section_title)) {?>
+		<h2><?php echo $section_title; ?></h2>
+	<?php } ?>
+	
+	<div class="discover-slider">
+
+	<?php foreach ($ids_arr as $key => $product_id) {
+		// $product_id = $objectManager->get('Magento\Catalog\Model\Product')->getIdBySku($product_sku);
+		$_item = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+		if (!empty($_item->getName()) && $_item->getStatus() == 1 ) {
+			$link = $_item->getProductUrl();
+         	$resizedImageUrl = $_imageHelper->init($_item, 'recently_compared_products_list_content_widget')->getUrl();
+         ?>
+
+        <div class="discover-box">
+			<div class="discover-img">
+				<a href="<?php /* @escapeNotVerified */ echo $link; ?>">
+	              <img class="lazy" src="<?php echo $resizedImageUrl;?>" alt="<?php echo $block->escapeHtml($_item->getName());?>"/>
+			</div>
+			<a title="<?php echo $block->escapeHtml($_item->getName()) ?>" href="<?php /* @escapeNotVerified */ echo $link; ?>" class=""><h3 class="productName"><?php echo $block->escapeHtml($_item->getName());?></h3></a>
+			<?php
+		        $brands = $_item->getData("product_brand");
+		        if( $brands ){
+		            $sql = "SELECT name, url_key FROM ves_brand WHERE brand_id IN (".$brands.")";
+		            $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+		            $connection = $resource->getConnection();
+		            $results = $connection->fetchAll($sql);
+
+		            if( !empty($results) ){?>
+		               <?php echo 'By '; ?><a href="/makers/<?php echo $results[0]['url_key']; ?>" title="<?php echo $results[0]['name']; ?>"><?php echo $results[0]['name']; ?></a><?php
+		            } 
+		        }?>
+		    <a href="<?php /* @escapeNotVerified */ echo $link; ?>" class="shop-btn">SHOP NOW</a>
+		</div>
+		<?php }	
+	} ?>
+	</div>
+</div>
+</div>
+<?php } ?>
+
+
+<script type="text/javascript">
+	require(['jquery', 'jquery/ui', 'slick'], function($) {
+    $(document).ready(function() {
+        $(".discover-slider").slick({
+            dots: false,
+            infinite: false,
+            slidesToShow: 3,
+            slidesToScroll: 1
+        });
+    });
+});
+</script>
+
+

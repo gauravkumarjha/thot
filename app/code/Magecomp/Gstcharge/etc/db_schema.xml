@@ -1,0 +1,124 @@
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="quote">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/>
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/>
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/>
+        <column xsi:type="int" name="excl_price" nullable="false"  comment="excl_price"/>
+        <column xsi:type="text" name="buyer_gst_number" nullable="false"  comment="buyer_gst_number"/>
+        <column xsi:type="int" name="ship_excl_price" nullable="false" comment="ship_excl_price"/>
+    </table>
+    <table name="quote_address">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="2" precision="10" comment="cgst_charge"/>
+        <column xsi:type="decimal" name="base_cgst_charge" nullable="false" scale="2" precision="10" comment="base_cgst_charge"/>
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="2" precision="10" comment="sgst_charge"/>
+        <column xsi:type="decimal" name="base_sgst_charge" nullable="false" scale="2" precision="10" comment="base_sgst_charge"/>
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="2" precision="10" comment="igst_charge"/>
+        <column xsi:type="decimal" name="base_igst_charge" nullable="false" scale="2" precision="10" comment="base_igst_charge"/>
+        <column xsi:type="decimal" name="shipping_sgst_charge" nullable="false" scale="2" precision="10" comment="shipping_sgst_charge"/>
+        <column xsi:type="decimal" name="percent_shipping_sgst_charge" nullable="false" scale="2" precision="10" comment="percent_shipping_sgst_charge"/>
+        <column xsi:type="decimal" name="shipping_cgst_charge" nullable="false" scale="2" precision="10" comment="shipping_cgst_charge"/>
+        <column xsi:type="decimal" name="percent_shipping_cgst_charge" nullable="false" scale="2" precision="10" comment="percent_shipping_cgst_charge"/>
+        <column xsi:type="decimal" name="shipping_igst_charge" nullable="false" scale="2" precision="10" comment="shipping_igst_charge"/>
+        <column xsi:type="decimal" name="percent_shipping_igst_charge" nullable="false" scale="2" precision="10" comment="percent_shipping_igst_charge"/> 
+    </table>
+     <table name="quote_item">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/>
+        <column xsi:type="decimal" name="cgst_percent" nullable="false" scale="4" precision="12" comment="cgst_percent"/>
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/>
+        <column xsi:type="decimal" name="sgst_percent" nullable="false" scale="4" precision="12" comment="sgst_percent"/>
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/>
+        <column xsi:type="decimal" name="igst_percent" nullable="false" scale="4" precision="12" comment="igst_percent"/>
+        <column xsi:type="int" name="excl_price" nullable="false"  comment="excl_price"/>
+    </table>
+    <table name="sales_order_grid">
+       <column xsi:type="text" name="buyer_gst_number" nullable="false"  comment="Buyer GST Number"/> 
+    </table>
+    <table name="sales_order">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/> 
+        <column xsi:type="decimal" name="base_cgst_charge" nullable="false" scale="4" precision="12" comment="base_cgst_charge"/> 
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/> 
+        <column xsi:type="decimal" name="base_sgst_charge" nullable="false" scale="4" precision="12" comment="base_sgst_charge"/> 
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/> 
+        <column xsi:type="decimal" name="base_igst_charge" nullable="false" scale="4" precision="12" comment="base_igst_charge"/> 
+        <column xsi:type="decimal" name="shipping_sgst_charge" nullable="false" scale="4" precision="12" comment="shipping_sgst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_sgst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_sgst_charge"/> 
+        <column xsi:type="decimal" name="shipping_cgst_charge" nullable="false" scale="4" precision="12" comment="shipping_cgst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_cgst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_cgst_charge"/> 
+        <column xsi:type="decimal" name="shipping_igst_charge" nullable="false" scale="4" precision="12" comment="shipping_igst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_igst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_igst_charge"/> 
+         <column xsi:type="text" name="buyer_gst_number" nullable="false"  comment="Buyer GST Number"/>  
+    </table>
+    <table name="sales_invoice">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/> 
+        <column xsi:type="decimal" name="base_cgst_charge" nullable="false" scale="4" precision="12" comment="base_cgst_charge"/> 
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/> 
+        <column xsi:type="decimal" name="base_sgst_charge" nullable="false" scale="4" precision="12" comment="base_sgst_charge"/> 
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/> 
+        <column xsi:type="decimal" name="base_igst_charge" nullable="false" scale="4" precision="12" comment="base_igst_charge"/> 
+        <column xsi:type="decimal" name="shipping_sgst_charge" nullable="false" scale="4" precision="12" comment="shipping_sgst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_sgst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_sgst_charge"/> 
+        <column xsi:type="decimal" name="shipping_cgst_charge" nullable="false" scale="4" precision="12" comment="shipping_cgst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_cgst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_cgst_charge"/> 
+        <column xsi:type="decimal" name="shipping_igst_charge" nullable="false" scale="4" precision="12" comment="shipping_igst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_igst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_igst_charge"/> 
+        <column xsi:type="text" name="buyer_gst_number" nullable="false"  comment="Buyer GST Number"/>  
+    </table> 
+     <table name="sales_creditmemo">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/> 
+        <column xsi:type="decimal" name="base_cgst_charge" nullable="false" scale="4" precision="12" comment="base_cgst_charge"/> 
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/> 
+        <column xsi:type="decimal" name="base_sgst_charge" nullable="false" scale="4" precision="12" comment="base_sgst_charge"/> 
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/> 
+        <column xsi:type="decimal" name="base_igst_charge" nullable="false" scale="4" precision="12" comment="base_igst_charge"/> 
+        <column xsi:type="decimal" name="shipping_sgst_charge" nullable="false" scale="4" precision="12" comment="shipping_sgst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_sgst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_sgst_charge"/> 
+        <column xsi:type="decimal" name="shipping_cgst_charge" nullable="false" scale="4" precision="12" comment="shipping_cgst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_cgst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_cgst_charge"/> 
+        <column xsi:type="decimal" name="shipping_igst_charge" nullable="false" scale="4" precision="12" comment="shipping_igst_charge"/> 
+        <column xsi:type="decimal" name="percent_shipping_igst_charge" nullable="false" scale="4" precision="12" comment="percent_shipping_igst_charge"/> 
+        <column xsi:type="text" name="buyer_gst_number" nullable="false"  comment="Buyer GST Number"/> 
+     </table>
+     <table name="sales_order_item">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/>
+        <column xsi:type="decimal" name="cgst_percent" nullable="false" scale="4" precision="12" comment="cgst_percent"/>
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/>
+        <column xsi:type="decimal" name="sgst_percent" nullable="false" scale="4" precision="12" comment="sgst_percent"/>
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/>
+        <column xsi:type="decimal" name="igst_percent" nullable="false" scale="4" precision="12" comment="igst_percent"/>
+        <column xsi:type="int" name="excl_price" nullable="false"  comment="excl_price"/>
+     </table> 
+     <table name="sales_creditmemo_item">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/>
+        <column xsi:type="decimal" name="cgst_percent" nullable="false" scale="4" precision="12" comment="cgst_percent"/>
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/>
+        <column xsi:type="decimal" name="sgst_percent" nullable="false" scale="4" precision="12" comment="sgst_percent"/>
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/>
+        <column xsi:type="decimal" name="igst_percent" nullable="false" scale="4" precision="12" comment="igst_percent"/>
+        <column xsi:type="int" name="excl_price" nullable="false"  comment="excl_price"/>
+     </table>
+     <table name="sales_invoice_item">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/>
+        <column xsi:type="decimal" name="cgst_percent" nullable="false" scale="4" precision="12" comment="cgst_percent"/>
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/>
+        <column xsi:type="decimal" name="sgst_percent" nullable="false" scale="4" precision="12" comment="sgst_percent"/>
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/>
+        <column xsi:type="decimal" name="igst_percent" nullable="false" scale="4" precision="12" comment="igst_percent"/>
+        <column xsi:type="int" name="excl_price" nullable="false"  comment="excl_price"/>
+     </table> 
+     <table name="sales_shipment_item">
+        <column xsi:type="decimal" name="cgst_charge" nullable="false" scale="4" precision="12" comment="cgst_charge"/>
+        <column xsi:type="decimal" name="cgst_percent" nullable="false" scale="4" precision="12" comment="cgst_percent"/>
+        <column xsi:type="decimal" name="sgst_charge" nullable="false" scale="4" precision="12" comment="sgst_charge"/>
+        <column xsi:type="decimal" name="sgst_percent" nullable="false" scale="4" precision="12" comment="sgst_percent"/>
+        <column xsi:type="decimal" name="igst_charge" nullable="false" scale="4" precision="12" comment="igst_charge"/>
+        <column xsi:type="decimal" name="igst_percent" nullable="false" scale="4" precision="12" comment="igst_percent"/>
+        <column xsi:type="int" name="excl_price" nullable="false"  comment="excl_price"/>
+     </table>  
+     <table name="directory_country_region">
+        <column xsi:type="text" name="state_code" nullable="false"   comment="state_code"/>
+     </table>  
+     <table name="directory_country_region_name">
+        <column xsi:type="text" name="state_code" nullable="false"   comment="state_code"/>
+     </table>            
+</schema>

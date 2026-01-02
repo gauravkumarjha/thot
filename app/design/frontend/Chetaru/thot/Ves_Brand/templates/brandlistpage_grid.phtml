@@ -1,0 +1,169 @@
+<?php
+$_brandCollection = $block->getCollection();
+
+// Boostrap Carousel
+$itemsperpage = (int)$this->getConfig('brand_list_page/item_per_page', 12);
+$lg_column_item = (int)$this->getConfig('brand_list_page/lg_column_item', 6);
+$md_column_item = (int)$this->getConfig('brand_list_page/md_column_item', 6);
+$sm_column_item = (int)$this->getConfig('brand_list_page/sm_column_item', 4);
+$xs_column_item = (int)$this->getConfig('brand_list_page/xs_column_item', 2);
+
+$show_brand_name = $this->getConfig('brand_list_page/show_brand_name');
+$lg_column = 12 / $lg_column_item;
+$md_column = 12 / $md_column_item;
+$sm_column = 12 / $sm_column_item;
+$xs_column = 12 / $xs_column_item;
+$i = 1;
+$x = 0;
+
+?>
+<?php
+$all_alphabates = array();
+$aphbet = [];
+foreach ($_brandCollection as $_brand) {
+	$aphbet[str_replace(" ", "_", strtolower(trim($_brand->getName())))] =
+		array(
+			"brandName" => $_brand->getName(),
+			"brandURl" => $_brand->getUrl(),
+
+		);
+	$letter = strtolower(substr(trim($_brand->getName()), 0, 1));
+	if (!in_array($letter, $all_alphabates)) $all_alphabates[] = $letter;
+}
+asort($all_alphabates);
+$numericArray =  range('0', '9');
+$alphabateArray =  range('A', 'Z');
+
+$aphbetKeys = array_keys($aphbet);
+asort($aphbetKeys);
+
+?>
+<?php if ($_brandCollection->count()) { ?>
+	<div class="pro-list-header-fixed2-desktop">
+		<div class="">
+			<div class="row">
+				<div class="categories-list scrollbar-outer">
+					<div class="panel-heading">
+						<h4 class="panel-title">Filter Brands</h4>
+						<ul class="nav">
+							<!--<li><a href="#" class="filter-button" data-filter="all"><?php //echo __('All')
+																						?></a></li>-->
+							<?php //foreach ($all_alphabates as $k=>$v) { 
+							?>
+							<li><a href="#" class="filter-button" filter="num">#</a></li>
+							<?php foreach ($alphabateArray as $k => $v) { ?>
+								<li><a href="#" class="filter-button" filter="<?php echo $v; ?>"><?php echo strtoupper($v);  ?></a></li>
+							<?php } ?>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="makers-col-desktop">
+		<div class="">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-4 col-sm-6 col-xs-12">
+							<div class="explore-makers">
+								<div class="card card-inverse card-info">
+									<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('explore_makers_image')->toHtml(); ?>
+									<div class="card-block">
+										<h4 class="card-title"><?php echo __('Explore Our Makers'); ?></h4>
+										<div class="card-text">
+											<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('explore_makers_description')->toHtml(); ?>
+										</div>
+									</div>
+									<div class="card-footer">
+										<div class="btnViewAll">
+											<a href="javascript:void(0);" onclick="changeMakersPopupTitle()" data-toggle="modal" data-target="#ENQPopup" popuptitle="Connect with us" class="btnStyle popupEnq btn btn-transparent-border btn100 enq_popup_anchor"><?php /* @escapeNotVerified */ echo __('List Your Brand With us') ?></a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div id="filter_target_num" class="row">
+								<?php
+								// if(in_array(strtolower($alphabate), $numericArray)){
+								// 	$head_class="";
+								// }else{
+								// 	$head_class="no-data";
+								// }
+								?>
+								<div class="heading_filter <?php //echo $head_class;
+															?>">#</div>
+								<ul class="filterul">
+									<?php foreach ($_brandCollection as $_brand) { ?>
+										<?php
+										$letter = strtolower(substr(trim($_brand->getName()), 0, 1));
+										if (is_numeric($letter)) {	?>
+											<li><a title="<?php echo $_brand->getName() ?>" href="<?php echo $_brand->getUrl(); ?>"><?php echo $_brand->getName() ?></a></li>
+										<?php } ?>
+
+									<?php } ?>
+								</ul>
+							</div>
+
+							<?php foreach ($alphabateArray as $i => $alphabate) { ?>
+								<div id="filter_target_<?php echo $alphabate; ?>" class="row">
+									<?php
+									if (in_array(strtolower($alphabate), $all_alphabates)) {
+										$head_class = "";
+									} else {
+										$head_class = "no-data";
+									}
+									?>
+									<div class="heading_filter <?php echo $head_class; ?>"><?php echo $alphabate ?></div>
+									<ul class="filterul">
+										<?php  ?>
+										<?php //foreach ($_brandCollection as $_brand) { 
+										?>
+										<?php foreach ($aphbetKeys as $row) { ?>
+											<?php
+
+											$letter = strtolower(substr(trim($row), 0, 1));
+
+											if ($letter == strtolower($alphabate)) {	?>
+												<!-- <li><a title="<?php echo $_brand->getName() ?>" href="<?php echo $_brand->getUrl(); ?>"><?php echo $_brand->getName() ?></a></li> -->
+												<li><a title="<?php echo $aphbet[$row]['brandName'] ?>" href="<?php echo $aphbet[$row]['brandURl'] ?>"><?php echo $aphbet[$row]['brandName'] ?></a></li>
+
+											<?php } ?>
+
+										<?php } ?>
+									</ul>
+								</div>
+								<?php if ($i == 6 || $i == 14) echo '</div><div class="col-md-4 col-sm-6 col-xs-12">'; ?>
+							<?php } ?>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php } else { ?>
+	<div class="message info empty">
+		<div><?php echo __('We can\'t find brands matching the selection.'); ?></div>
+	</div>
+<?php } ?>
+
+<script>
+	require.config({
+		deps: [
+			'jquery',
+		],
+		callback: function($) {
+			$(".filter-button").click(function() {
+
+				$('html, body').animate({
+					scrollTop: $("#filter_target_" + $(this).attr('filter')).offset().top - 100
+				}, 1000);
+				return false;
+				e.preventDefault();
+
+			});
+		}
+	});
+</script>

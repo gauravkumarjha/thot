@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Email Creditmemo Items List" design_abstraction="custom">
+    <body>
+        <referenceBlock name="sales.email.order.invoice.renderers">
+            <block class="Magento\Sales\Block\Order\Email\Items\DefaultItems" as="default" template="Magecomp_Gstcharge::email/items/invoice/default.phtml" name="gst_email_invoice_view_renderer"/>
+			 <action method="setChild">
+				   <argument name="alias" xsi:type="string">default</argument>
+				   <argument name="block" xsi:type="string">gst_email_invoice_view_renderer</argument>
+			 </action>
+            <block class="Magento\Sales\Block\Order\Email\Items\DefaultItems" as="grouped" template="Magecomp_Gstcharge::email/items/invoice/default.phtml" name="gst_email_invoice_view_renderer_grouped"/>
+            <action method="setChild">
+                <argument name="alias" xsi:type="string">grouped</argument>
+                <argument name="block" xsi:type="string">gst_email_invoice_view_renderer_grouped</argument>
+            </action>
+            <block class="Magento\Sales\Block\Order\Email\Items\DefaultItems" as="downloadable" template="Magecomp_Gstcharge::email/items/invoice/default.phtml" name="gst_email_invoice_view_renderer_downloadable"/>
+            <action method="setChild">
+                <argument name="alias" xsi:type="string">downloadable</argument>
+                <argument name="block" xsi:type="string">gst_email_invoice_view_renderer_downloadable</argument>
+            </action>
+            <block class="Magento\Bundle\Block\Sales\Order\Items\Renderer" as="bundle" template="Magecomp_Gstcharge::email/items/invoice/bundle.phtml" name="gst_email_invoice_view_renderer_bundle"/>
+            <action method="setChild">
+                <argument name="alias" xsi:type="string">bundle</argument>
+                <argument name="block" xsi:type="string">gst_email_invoice_view_renderer_bundle</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

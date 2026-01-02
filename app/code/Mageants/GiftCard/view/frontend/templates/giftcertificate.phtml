@@ -1,0 +1,1009 @@
+<?php
+
+/**
+ * @category Mageants GiftCard
+ * @package Mageants_GiftCard
+ * @copyright Copyright (c) 2016 Mageants
+ * @author Mageants Team <support@mageants.com>
+ */
+// @codingStandardsIgnoreFile
+$viewModel = $block->getData("viewModel");
+$priceCurr = $block->convertPrice();
+$currency_rate = $block->getCurrentCurrencyRate();
+
+if ($block->storeCurrency() == $block->getBaseCurrency()) {
+    $max_price = $block->getMaxPrice();
+    $min_price = $block->getMinPrice();
+} else {
+    $max_currency = $priceCurr->convertAndFormat($block->getMaxPrice(), false, 0, null, $block->getCurrency());
+    $max_convert_currency = $block->modelCurrency()->formatPrecision(
+        str_replace(',', '', $max_currency),
+        0,
+        $block->currencyData(),
+        false
+    );
+    $max_price = str_replace(',', '', $max_convert_currency);
+
+    $min_currency = $priceCurr->convertAndFormat($block->getMinPrice(), false, 0, null, $block->getCurrency());
+    $min_convert_currency = $block->modelCurrency()->formatPrecision(
+        str_replace(',', '', $min_currency),
+        0,
+        $block->currencyData(),
+        false
+    );
+    $min_price = str_replace(',', '', $min_convert_currency);
+}
+
+if ($block->getProductTypeId() == 'giftcertificate'):
+    $prdId = $block->getProduct()->getId();
+    $count = $block->getCartQuoteById($prdId);
+    $url = $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+    if ($count == 0) { ?>
+        <input type="hidden" value=" <?= /* @noEscape */
+                                        $block->getProduct()->getId(); ?>" id="gift-product" name='giftproductid' />
+        <!-- <input type="hidden" value=" <?php /* @noEscape */ //$block->getCodeSetId(); 
+                                            ?>" id="codesetid" name='codesetid'/> -->
+        <input type="hidden" value="<?= /* @noEscape */ is_array($block->getCodeSetId()) ? implode(',', $block->getCodeSetId()) : $block->getCodeSetId(); ?>" id="codesetid" name="codesetid" />
+
+        <input type="hidden" value=" <?= /* @noEscape */
+                                        $block->getCustomerId(); ?>" id="customerid" name='customerid' />
+        <input type="hidden" value=" <?= /* @noEscape */
+                                        $block->getTempCustomerId(); ?>" id="temp_customer_id" name='temp_customer_id' />
+        <input type="hidden" id="template_id" name='template_id' />
+
+
+        <div class="giftcard-block">
+            <div class="gift-row" id="gift-price-row">
+                <?php
+                $attr = $block->getProduct()->getResource()->getAttribute('gifttype');
+                $optionText = "";
+                if ($attr->usesSource()) {
+                    $optionText = $attr->getSource()->getOptionText($block->getProduct()->getGifttype());
+                }
+                ?>
+                <!-- <div class="gift-product-label">
+                    <label class="giftcertificate-label"> <?= /* @noEscape */ $optionText; ?> Product</label>
+                </div> -->
+
+                <?php if (!empty($block->getGiftTemplates())): ?>
+                    <span style="display: none; color: red;">Amount Should In Given
+                        PriceRange <?= /* @noEscape */
+                                    $priceCurr->convertAndFormat(
+                                        $block->getMinPrice(),
+                                        false,
+                                        0,
+                                        null,
+                                        $block->getCurrency()
+                                    ) . " - " .
+                                        $priceCurr->convertAndFormat(
+                                            $block->getMaxPrice(),
+                                            false,
+                                            0,
+                                            null,
+                                            $block->getCurrency()
+                                        ); ?></span>
+
+                    <input type="hidden" name="minprice" id="minprice" class="minprice"
+                        value=" <?= /* @noEscape */ $min_price; ?>">
+                    <input type="hidden" name="maxprice" id="maxprice" class="maxprice"
+                        value=" <?= /* @noEscape */ $max_price; ?>">
+                        <div class="labelwrap">
+                    <div class="gift-label" id="gift-template-label">
+                        <label class="giftcertificate-label" id="template-label" for="template-content"><?= /* @noEscape */ __('Card Designs'); ?>
+                        </label>
+                    </div>
+                    <div class="gift-content" id="gift-template-content">
+                        <base href=" <?= /* @noEscape */ $block->getUrl() ?>" class="gifturl" />
+                        <input type="hidden" name="giftimage"
+                            value="<?php if ($block->getGiftImage() !== null) { ?>
+                            <?= /* @noEscape */ $block->getGiftImage();
+                                    } ?>"
+                            id="giftimage" class="sender-name required-entry" />
+                        <?= /* @noEscape */ $block->getTemplateImages(); ?>
+                    </div>
+                                </div>
+                <?php endif; ?>
+
+                <?php
+                $gift_type = is_object($block->getGiftType()) ? $block->getGiftType()->getText() : $block->getGiftType();
+
+                if ($gift_type == 'Combined'): ?>
+                                           <div class="labelwrap">
+ <div class="gift-label" id="gift-card-type-label">
+                        <label class="giftcertificate-label" id="card-types-label" for="card-types"> <?= /* @noEscape */ __('Select Card Type '); ?></label>
+                    </div>
+                    <div class="gift-content" id="gift-card-type-content">
+                        <?= /* @noEscape */ $block->getGiftTypeOption(); ?>
+                        <!-- <p>Note: On Printed/Combined type, You will get delivery of gift
+                            card on your shipping address which youprovide during checkout
+                        </p> -->
+                    </div>
+                </div>
+                <?php endif; ?>
+                <div class="labelwrap">
+
+                <div class="gift-label" id="gift-price-label">
+                    <label class="giftcertificate-label" id="tier-prices" for="gift-prices">
+                        <?= /* @noEscape */ __('Gift Card Value In ') . $block->getCurrency(); ?>
+                    </label>
+                </div>
+                <div class="gift-content" id="gift-price-content">
+                    <?php if ($block->getGiftCustomPrice() !== null) { ?>
+                        <style type="text/css">
+                          
+                            input.manual-price {
+                                display: inline-block;
+                            }
+                        </style>
+                        <script>
+                            require(["jquery", "giftcertificate"], function($) {
+                                jQuery(".switch-prices").text('Buy With System Price');
+                            });
+                        </script>
+                    <?php  } else { ?>
+                        <style type="text/css">
+                            input.manual-price {
+                                display: none;
+                            }
+                        </style>
+                    <?php } ?>
+
+                    <?= /* @noEscape */ $block->getProductPrice();
+                    ?>
+                    <input type="text" class="required-entry manual-price" id="manual-price" placeholder=" <?= /* @noEscape */
+                                                                                                            $priceCurr->convertAndFormat($block->getMinPrice(), false, 0, null, $block->getCurrency()) . " - " .
+                                                                                                                $priceCurr->convertAndFormat(
+                                                                                                                    $block->getMaxPrice(),
+                                                                                                                    false,
+                                                                                                                    0,
+                                                                                                                    null,
+                                                                                                                    $block->getCurrency()
+                                                                                                                ); ?>"
+                        name="manual-giftprices"
+                        value="<?php if ($block->getGiftCustomPrice() !== null) {  ?>
+                        <?= /* @noEscape */ $block->getGiftCustomPrice();
+                                } ?>" required />
+                    <a href="javascript:void(0)" class="switch-prices">
+                        <?= /* @noEscape */ __('Buy With Your Price'); ?></a>
+                </div>
+                            </div>
+<!-- not use -->
+
+
+
+
+
+<div class="custompopup-wrap">
+    <div class="custompopup-inner">
+        <span class="closecustom-popup">x</span>
+    <div class="custompopup-in">
+        <h6>E-GIFT CARD DETAILS</h6>
+<!-- <form> -->
+
+
+
+
+<!-- <div class="notuse-outside"> -->
+
+
+                            <div class="popuplabelwrap">
+
+                <div class="gift-label" id="gift-template-label">
+                    <label class="giftcertificate-label" id="sender-label" for="sender-name"><?= /* @noEscape */ __('Sender Name'); ?>*</label>
+                </div>
+                <div class="gift-content" id="gift-template-content">
+                    <input type="text" id="sender-name" placeholder="Sender Name" name="sender-name" data-binds="preview_senderName" class="sender-name required-entry" required
+                        value="<?php if ($block->getGiftSenderName() !== null) { ?>
+                        <?= /* @noEscape */ $block->getGiftSenderName();
+                                } ?>" />
+                </div>
+                            </div>
+                            <div class="popuplabelwrap">
+
+                <div class="gift-label" id="gift-template-label">
+                    <label class="giftcertificate-label" id="sender-email-label" for="sender-email "> <?= /* @noEscape */ __('Sender Email'); ?>*</label>
+                </div>
+                <div class="gift-content" id="gift-template-content">
+                    <input type="email" id="sender-email" placeholder="Sender Email" name="sender-email" data-binds="sender-email"
+                        class="sender-email required-entry" required
+                        value="<?php if ($block->getGiftSenderEmail() !== null) { ?>
+                        <?= /* @noEscape */ $block->getGiftSenderEmail();
+                                } ?>" />
+                </div>
+                            </div>
+
+
+            
+                           
+
+
+                <!-- If Selected Gift Type is Printed from frontend Not Display recipient-email & recipient-name-->
+                <script>
+                    require(
+                        [
+                            'jquery',
+                            'giftcertificate'
+                        ],
+                        function($) {
+                            $(document).ready(function() {
+                                $("#gift-types").change(function() {
+                                    var selected_type = $(this).children("option:selected").val();
+                                    if (selected_type == 1) {
+                                        $("#recipient-label-name").css("display", "none");
+                                        $("#recipient-name").css("display", "none");
+                                        $("#recipient-label-email").css("display", "none");
+                                        $("#recipient-email").css("display", "none");
+                                        $("div#gift-template-content").css("margin-bottom", "-8px");
+                                    } else {
+                                        $("#recipient-label-name").css("display", "block");
+                                        $("#recipient-name").css("display", "block");
+                                        $("#recipient-label-email").css("display", "block");
+                                        $("#recipient-email").css("display", "block");
+                                    }
+                                });
+                            });
+                        });
+                </script>
+
+                <?php if ($optionText->getText() == "Combined" || $optionText->getText() == "Virtual") { ?>
+                    <div class="popuplabelwrap">
+ <div class="gift-label" id="gift-template-label">
+                        <label class="giftcertificate-label" id="recipient-label-name"
+                            for="recipient-name "> <?= /* @noEscape */
+                                                    __('Recipient Name'); ?>*</label>
+                    </div>
+                    <div class="gift-content" id="gift-template-content">
+                        <input type="text" id="recipient-name" name="recipient-name" placeholder="Recipient Name" data-binds="preview_recipientName"
+                            class="recipient-name required-entry" required
+                            value="<?php if ($block->getGiftRecipientName() !== null) { ?>
+                        <?= /* @noEscape */ $block->getGiftRecipientName();
+                                    } ?>" />
+                    </div>
+                                </div>
+                                <div class="popuplabelwrap">
+
+                    <div class="gift-label" id="gift-template-label">
+                        <label class="giftcertificate-label" id="recipient-label-email"
+                            for="recipient-email "> <?= /* @noEscape */
+                                                    __('Recipient Email'); ?>*</label>
+                    </div>
+                    <div class="gift-content" id="gift-template-content">
+                        <input type="email" id="recipient-email" placeholder="Recipient Email" name="recipient-email" data-binds="recipient-email"
+                            class="recipient-email required-entry" required
+                            value="<?php if ($block->getGiftRecipientEmail() !== null) { ?>
+                        <?= /* @noEscape */ $block->getGiftRecipientEmail();
+                                    } ?>" />
+                    </div>
+                                </div>
+                <?php } ?>
+
+                <?php if ($block->isAllowDeliveryDate()): ?>
+                    <div class="popuplabelwrap">
+   <div class="gift-label" id="gift-template-label">
+                        <label class="giftcertificate-label" id="del-label" for="del-date ">
+                            <?= /* @noEscape */ __('Date of certificate delivery'); ?>*</label>
+                    </div>
+                    <div class="gift-content" id="gift-template-content">
+                        <input type="text" class="input-text required-entry" placeholder="Date of certificate delivery"
+                            id="del-date" onBlur="validateDate()" name="del-date"
+                            aria-required="true" value="<?php if (
+                                                            $block->getDateOfDelivery() !==
+                                                            null
+                                                        ) { ?> <?= /* @noEscape */ $block->getDateOfDelivery();
+                                                            } ?>">
+                    </div>
+
+                    <div class="error">
+                        <span id="dateerror" style="color: #f00"></span>
+                    </div>
+                                                        </div>
+
+
+
+                                                        
+                <?php endif; ?>
+                <?php if ($block->isallowGreetings()): ?>
+                    <div class="popuplabelwrap">
+   <div class="gift-label" id="gift-template-label">
+                        <label class="giftcertificate-label" id="message-label"
+                            for="message-content "> <?= /* @noEscape */ __('Message'); ?></label>
+                    </div>
+
+                    <div class="gift-content" id="gift-template-content">
+<textarea class="input-text" id="message-content" name="giftmessage" placeholder="Here is a gift for you!" data-binds="giftcard-message"><?php
+if ($block->getMessage() !== null) {
+?><?= /* @noEscape */ $block->getMessage();
+} ?></textarea>
+</div>
+<button type="submit" title="SUBMIT" class="btn btn-black btn100 " id="product-submit-button">
+                            <span>SUBMIT</span>
+                        </button>
+
+</div>
+
+
+</div>
+
+</div>
+</div>
+
+
+<!-- </div> -->
+<!-- not use -->
+
+
+
+
+<div class="labelwrap">
+<label for="sendAsGift"> <input type="checkbox" id="sendAsGift" name="send_as_gift" />  <span>I want to send someone this as a gift </span></label>
+</div>
+<div class="labelwrap">
+
+<label for="agreeTerms">  <input type="checkbox" id="agreeTerms" name="agree_terms" required /> <span>
+I agree to the Terms and Conditions.
+To know more about how we keep your data safe, refer to our 
+<a href="/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+</label>
+
+</div>
+
+
+                <?php endif; ?>
+                <?php if ($block->isallowtimezone()): ?>
+                    <div class="labelwrap">
+ <div class="gift-label" id="gift-template-label">
+                        <label class="giftcertificate-label" id="timezone-label"
+                            for="timezone-list"> <?= /* @noEscape */ __('Timezone'); ?></label>
+                    </div>
+                    <div class="gift-content" id="gift-template-content">
+                        <select id="timezone-list" name="timezone">
+                            <option value="">
+                                <?= /* @noEscape */ "-- Select Timezone --"; ?></option>
+                            <?php foreach ($block->getTimeZoneList() as $timezone) { ?>
+                                <option value=<?= /* @noEscape */ $timezone['value']; ?>>
+                                    <?= /* @noEscape */ __($timezone['label']); ?></option>
+                            <?php } ?>
+                        </select>
+                        <label class="giftcertificate-label" id="timezone-label" for="timezone-list"> <?= /* @noEscape */
+                                                                                                        __('If You Select Timezone Email will be Sent After Run Cron Job.'); ?></label>
+                    </div>
+                            </div>
+                <?php endif; ?>
+
+                <!-- preview code start-->
+                <!-- <button class="action action-preview" type="button" id="click-me"
+                    style="margin-top: 20px;margin-bottom: 20px;">Preview</button> -->
+
+
+
+
+                <div class="pre_error" style="display: none;">
+                    <span style="color: #f00"> <?= /* @noEscape */
+                                                __("Fill up Rquired Fields"); ?></span>
+                </div>
+
+                <div id="popup-modal" style="display:none;">
+                    <div class="sender_name"></div>
+                    <div class="sender_email"></div>
+                    <div class="recpt_name"></div>
+                    <div class="recpt_email"></div>
+                    <div class="g_price"></div>
+                    <div class="msg"></div>
+                    <!-- <div class="time"></div> -->
+                    <div class="code"></div>
+                    <div class="code1"></div>
+                    <div class="img"></div>
+                    <?php
+                    $storeManager = $viewModel->getStoredetail();
+                    $currentStore = $storeManager->getStore();
+                    $template_img = $currentStore->getBaseUrl(
+                        \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+                    ) . 'giftcertificate';
+                    ?>
+                    <script>
+                        require(
+                            [
+                                'jquery',
+                                'Magento_Catalog/js/price-utils',
+                                'giftcertificate'
+                            ],
+                            function($, priceUtils) {
+                                $("#click-me").click(function() {
+                                    var txt = $('#sender-name');
+                                    if (txt.val() != null && txt.val() != '') {
+                                        var sender_name = $("#sender-name").val();
+                                        var sender_email = $("#sender-email").val();
+                                        var recipient_name = $("#recipient-name").val();
+                                        var recipient_email = $("#recipient-email").val();
+                                        /*var gift_prices = jQuery("span.price-final_price > 
+                                            span.price-wrapper > span.price:first").text();*/
+
+                                        var gift_prices = document.getElementById('manual-price').value;
+                                        if (gift_prices) {
+                                            var gift_prices = priceUtils.formatPrice(document.getElementById('manual-price').value);
+                                        }
+
+                                        var currencyRate = '<?= /* @noEscape */ __($currency_rate); ?>';
+                                        var originalPrice = jQuery("#gift-prices").val();;
+                                        var convertedPrice = originalPrice * currencyRate;
+                                        var selectedValue = priceUtils.formatPrice(convertedPrice);
+
+                                        var msg = $("#message-content").val();
+                                        var img = jQuery(".fotorama__img").attr('src');
+                                        /*var img=$('.mt-thumb-switcher.active-selector.mz-thumb-selected.mz-thumb').attr('href');*/
+                                        var template = " <?= /* @noEscape */ $block->isallowimageupload(); ?>";
+                                        var gift_type = " <?= /* @noEscape */ $optionText->getText(); ?>";
+                                        gift_type = gift_type.trim();
+                                        var selected_type = $('#gift-types').find(":selected").text();
+                                        $('.sender_name').html("<b>" + "Sender Name: " + "</b>" +
+                                            sender_name + "<br/>" + "<br/>" + "<br/>");
+
+                                        $('.sender_email').html("<b>" + "Sender Email: " +
+                                            "</b>" + sender_email + "<br/>" + "<br/>" + "<br/>");
+                                        if (gift_type == "Combined") {
+                                            if (selected_type == "Both Virtual & Printed" || selected_type == "Virtual") {
+                                                $('.recpt_name').html("<b>" + "Recipient Name: " +
+                                                    "</b>" + recipient_name + "<br/>" + "<br/>" +
+                                                    "<br/>");
+                                                $('.recpt_email').html("<b>" + "Recipient Email: " +
+                                                    "</b>" + recipient_email + "<br/>" + "<br/>" +
+                                                    "<br/>");
+                                            }
+                                        } else if (gift_type == "Virtual") {
+                                            $('.recpt_name').html("<b>" + "Recipient Name: " + "</b>" +
+                                                recipient_name + "<br/>" + "<br/>" + "<br/>");
+                                            $('.recpt_email').html("<b>" + "Recipient Email: " +
+                                                "</b>" + recipient_email + "<br/>" + "<br/>" + "<br/>");
+                                        }
+                                        if (gift_prices) {
+                                            $('.g_price').html("<b>" + "Value: " + "</b>" + gift_prices + "<br/>" + "<br/>" + "<br/>");
+                                        } else {
+                                            $('.g_price').html(
+                                                "<b>" + "Value: " + "</b>" + selectedValue + "<br/>" + "<br/>" + "<br/>"
+                                            );
+                                        }
+
+                                        if (msg != null) {
+                                            $('.msg').html("<b>" + "Message: " + "</b>" + msg + "<br/>" + "<br/>" + "<br/>");
+                                        }
+
+                                        $(".img").html('<img src="' + img + '" />');
+                                    }
+                                });
+                            });
+                    </script>
+                </div>
+
+
+
+
+                <div class="querieswrap"><p>FOR QUERIES OR ASSISTANCE</p>
+            <p><a href="mailTo:concierge@thehouseoftings.com">concierge@thehouseoftings.com</a></p>
+        <p><a href="tel:918003011110">+918003011110</a></p>
+        <p>Mon - sat | 10am-7pm IST</p>
+        
+        </div>
+
+<div class="preview-wrap">
+
+<div class="preview-wrapinner">
+<span class="closeipreview">x</span>
+<div class="preview-wrap-in">
+<h6>PREVIEW</h6>
+
+<div class="preview-wrap-img">
+<img src="https://stage.thehouseofthings.com/media/templates/giftcard-2.png">
+</div>
+<div class="receiverwrap">
+<p>Dear [Receiver's Name]</p>
+<p>You have received a THE HOUSE OF THINGS eGift card worth</p>
+<p>FROM [Sender's Name]</p>
+</div>
+<div class="messgewrap">
+<p>Their Message:</p>
+<p>Here is gift for you!</p>
+<p>Apply this code during checkout:</p>
+</div>
+
+<div class="codeimg">
+    <p><em>XXXX</em></p>
+    <span><b>Please Note</b>: All our gift cards are valid for a<br> period of 11months from date of purchase.</span>
+</div>
+
+</div>
+</div>
+</div>
+
+
+                <script>
+                    require(
+                        [
+                            'jquery',
+                            'Magento_Ui/js/modal/modal'
+                        ],
+                        function(
+                            $,
+                            modal
+                        ) {
+                            var options = {
+                                type: 'popup',
+                                responsive: true,
+                                innerScroll: true,
+                                title: 'Your details',
+                                buttons: [{
+                                    text: $.mage.__('Ok'),
+                                    class: '',
+                                    click: function() {
+                                        this.closeModal();
+                                        $(".pre_error").css("display", "none");
+                                    }
+                                }],
+                            };
+
+                            var popup = modal(options, $('#popup-modal'));
+                            $("#click-me").on('click', function() {
+
+                                $(".pre_error").css("display", "none");
+                                var txt = $('#sender-name');
+
+                                if (txt.val() != null && txt.val() != '') {
+                                    $(".pre_error").css("display", "none");
+                                    $("#popup-modal").modal("openModal");
+                                    $(".pre_error").css("display", "none");
+                                } else {
+                                    $(".pre_error").css("display", "block");
+                                }
+                            });
+
+                        }
+                    );
+                </script>
+                <!-- preview code end -->
+
+                <?php /*if ($block->isallowimageupload()): ?>
+                    <div class="gift-label" id="gift-template-label">
+                        <label class="giftcertificate-label" id="custom-upload-label"
+                            for="custom_upload"> <?php echo __('Upload Template'); ?></label>
+                    </div>
+
+                    <div class="gift-content" id="gift-template-content">
+                        <input type="file" name="file" id="file" />
+                        <div class="upload-wrapper" data-bind="scope: 'uploader'">
+
+                        </div>
+                    </div>
+                <?php endif;*/ ?>
+            </div>
+        </div>
+        <style type="text/css">
+            form#product_addtocart_form div.row div.quantity {
+                display: none !important;
+            }
+
+            form#product_addtocart_form div.row button#product-addtocart-button {
+                position: relative;
+                right: 110px;
+            }
+        </style>
+        <?php if (!$block->availibilityProduct()): ?>
+            <span class="error-msg"> <?= /* @noEscape */ __("Out Of Stock"); ?> </span>
+            <style>
+                .box-tocart {
+                    display: none !important;
+                }
+            </style>
+            <style>
+                form#product_addtocart_form div.row div.quantity,
+                form#product_addtocart_form div.row button#product-addtocart-button {
+                    display: none !important;
+                }
+            </style>
+        <?php endif; ?>
+    <?php } else { ?>
+        <h2><span class="error-msg" style="display: block !important; ">
+                <?= /* @noEscape */ __("Already Added in Cart."); ?> </span></h2>
+        <style>
+            .box-tocart {
+                display: none !important;
+            }
+        </style>
+        <style>
+            form#product_addtocart_form div.row div.quantity,
+            form#product_addtocart_form div.row button#product-addtocart-button {
+                display: none !important;
+            }
+        </style>
+    <?php } ?>
+    <script type="text/x-magento-init">
+        {
+        "#product_addtocart_form": {
+            "Magento_Catalog/product/view/validation": {
+                "bindSubmit": true,
+                "radioCheckboxClosest": ".nested"
+            }
+        }
+    }
+    </script>
+    <?php $uniqid = uniqid(); ?>
+    <script>
+        var form<?= /* @noEscape */ $uniqid; ?> = document.getElementById('product_addtocart_form');
+
+        form<?= /* @noEscape */ $uniqid; ?>.addEventListener('submit', function(e) {
+            var isValid = true;
+
+            var requiredFields = form<?= /* @noEscape */ $uniqid; ?>.querySelectorAll('input[required],select[required],textarea[required]');
+            requiredFields.forEach(function(field) {
+                var displayValue = window.getComputedStyle(field).getPropertyValue('display');
+                if (!field.value.trim() && displayValue !== 'none') {
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                var addButton = form<?= /* @noEscape */ $uniqid; ?>.querySelector('#product-addtocart-button');
+                if (addButton) {
+                    var originalText = addButton.textContent;
+                    addButton.disabled = true;
+                    addButton.textContent = 'Adding...';
+
+                    setTimeout(function() {
+                        addButton.disabled = false;
+                        addButton.textContent = originalText;
+                    }, 3000);
+                }
+            }
+        });
+    </script>
+
+<style>
+.topgift-banner img{width:100%}
+.page-content.product-page-supporting-images{background-color:rgb(184 208 186)}
+.banner-dec{background:#b8d0ba;text-align:center;padding:60px 0 70px 0}
+h1.pgktitle{font-size:30px}
+form#product_addtocart_form div.row button#product-addtocart-button{letter-spacing:0}
+.single-product-summery .product-add-form form .row a.btn{font-weight:400}
+.single-product-summery{position:relative;padding-bottom:50vh}
+section.bg-white.product.single-product-summery:after{background:url(https://stage.thehouseofthings.com/media/wysiwyg/background-footer.png);background-size:cover;width:100%;z-index:9;content:'';display:block;position:absolute;bottom:-10vh;height:68vh}
+.brand{display:none}
+.column.main{padding-bottom:0!important}
+.topdec{position:absolute;top:29%;left:50%;transform:translate(-50%,-50%)}
+.topgift-banner{position:relative}
+.topdec h1{font-family:"Cormorant Garamond",serif;font-size:66px;color:#fff;font-weight:400;line-height:64px;    text-align: center;}
+.topdec h1 span{font-style:italic;font-weight:400}
+.banner-dec h1{font-family:"Cormorant Garamond",serif;font-size:66px;font-weight:500;font-style: italic;}
+.banner-dec p{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:500}
+h1.pgktitle{font-size:30px;font-family:'Cormorant Garamond'}
+.single-product-summery .container .col-md-8,.single-product-summery .product-info{width:50%}
+.product-info-stock-validity{display:none}
+div#gift-card-type-content,div#gift-template-content{display:flex}
+div#gift-card-type-content label{border:1px solid #000;text-transform:uppercase;padding:7px 20px;margin-right:10px;font-family:'Work Sans';font-size:12px;height:34px;line-height:21px;cursor:pointer}
+div#gift-card-type-content label:hover{background:#000;color:#fff}
+div#gift-card-type-content input{display:none}
+select#gift-prices{width:100%;font-size:12px;height:34px;line-height:21px;background:0 0;border:1px solid #000}
+a.switch-prices{border:1px solid #000;text-transform:uppercase;padding:6px 20px;margin-right:10px;font-family:'Work Sans';min-width:39%;background:0 0;border:1px solid #000;border-radius:0;font-size:12px;height:34px;line-height:21px;text-transform:uppercase;text-align:center}
+a.switch-prices:hover{background:#000;color:#fff}
+.gift-label label{text-transform:uppercase;font-size:12px}
+.template-image{border-radius:10px}
+div#gift-price-content{display:flex;gap:10px}
+div#gift-template-content{padding-top:0;padding-bottom:0}
+.labelwrap{margin-bottom:30px}
+body .more_info_btn_bottom,div#description{display:none}
+input#manual-price{width:100%}
+.giftcard-block input[type=datetime],.giftcard-block input[type=email],.giftcard-block input[type=number],.giftcard-block input[type=password],.giftcard-block input[type=search],.giftcard-block input[type=tel],.giftcard-block input[type=text],.giftcard-block input[type=url],.giftcard-block select,.giftcard-block textarea{background:0 0;border:1px solid;font-size:12px;font-family:'Work Sans';height:auto}
+.labelwrap input[type=checkbox]{display:none}
+.labelwrap input[type=checkbox]+span{position:relative;padding-left:28px;cursor:pointer;line-height:20px;display:inline-block}
+.labelwrap input[type=checkbox]+span::before{content:"";position:absolute;left:0;top:2px;width:14px;height:14px;border:1px solid #333;background:0 0;transition:all .2s ease}
+.labelwrap input[type=checkbox]:checked+span::before{background:#000;border-color:#fff}
+.single-product-summery .product-add-form form a.btn.more_info_btn_bottom{display:none}
+.single-product-summery .product-add-form form .row .col-md-9{width:100%}
+form#product_addtocart_form div.row button#product-addtocart-button{max-width:100%!important;position:static}
+.brand+.related,.product-info-main .price-row{display:none}
+h1.pgktitle{font-weight:500;margin-bottom:30px}
+.breadcrumbs{display:none}
+.single-product-summery .product-info{border-left:1px solid #ffffff4f;padding-left:60px}
+.single-product-summery .container .col-md-8{padding-right:60px;position:sticky;top:145px;z-index:99}
+section.bg-white.product.single-product-summery:after{bottom:0}
+.giftcard-preview-title span{text-transform:uppercase;letter-spacing:1px;text-decoration:underline;cursor: pointer;font-size: 16px;}
+.querieswrap{padding-left:10px;clear:both}
+div#gift-price-label,label#card-types-label,label#gift-template-label{margin-bottom:10px;display:block}
+.single-product-summery{margin-bottom:0}
+form#product_addtocart_form div.row button#product-addtocart-button:hover{background:0 0;color:#000}
+.notuse-outside,body .product-add-form .btn-group.col-md-3{display:none!important}
+.custompopup-wrap,.preview-wrap{position:fixed;left:0;right:0;width:100%;top:0;z-index:9999999999999;background:#ffffffad;bottom:0;display:none}
+.custompopup-inner{max-width:560px;transform:translate(-50%,-50%);top:50%;left:50%;position:relative;background:#b8d0ba;padding:50px;border:5px solid;border-radius:15px}
+.custompopup-in input{height:35px}
+.custompopup-in input,.custompopup-in textarea{font-size:12px;background:0 0;border:1px solid;margin-bottom:12px;box-shadow:none;padding:8px 10px;box-shadow:none}
+.custompopup-in h6{font-size:12px;font-family:'Work Sans';font-weight:500;margin-bottom:15px}
+.custompopup-in textarea{height:140px}
+#product-submit-button{font-size:14px;font-family:'Work Sans';font-weight:400;width:100%;text-transform:uppercase}
+span.closecustom-popup{right:10px;font-size:38px;font-family:'Work Sans';width:40px;height:40px;position:absolute;top:10px;cursor:pointer}
+.popuplabelwrap{position:relative}
+.popuplabelwrap label{display:none}
+.popuplabelwrap input+.mage-error{position:absolute;bottom:0;font-size:10px}
+.preview-wrapinner{max-width:550px;transform:translate(-50%,-50%);top:50%;left:50%;position:absolute;padding: 50px;
+    background:url(https://stage.thehouseofthings.com/media/wysiwyg/bggreen-min.png);background-size:cover;display:block;border-radius: 25px;width:550px;}
+.preview-wrap-in { text-align: center;background: #b8d0ba;padding: 40px 35px;border-radius: 16px;font-size: 12px;}
+.preview-wrap-in h6 {     margin-top: 0px; text-align: center;font-size: 13px;font-weight: 500;font-family: 'Work Sans';}
+.preview-wrap-img { margin-bottom: 20px;}
+.codeimg span {font-size: 9px;line-height: 14px;display: block;}.messgewrap p:first-child, .messgewrap p:last-child {font-size: 9px;}
+.messgewrap p:first-child {margin-bottom: 3px;}
+.codeimg p em { border: 0.05em dashed #868b86;padding: 15px 10px; width: 50%; display: block;margin: auto;font-weight: 600;background: transparent;letter-spacing: 0.06em;} 
+.codeimg span b {font-weight: 600;}
+span.closeipreview{
+    color: #fff;font-size: 31px;font-family: 'Work Sans';font-weight: 300;position: absolute; right: 9px;top: 8px;width: 50px; text-align: center;cursor: pointer;
+}
+
+
+@media screen and (max-width:767px){
+.topgift-banner img {
+width: 100%;
+height: 370px;
+object-fit: cover;
+}
+
+.topdec h1 {
+
+font-size: 39px;
+line-height: 39px;
+}
+.banner-dec{
+padding: 40px 10px;
+}
+.banner-dec h1{
+font-size: 26px;
+}
+.banner-dec p{
+font-size: 20px;
+}
+.single-product-summery .container .col-md-8{
+position: static;
+width: 100%;
+padding-right: 0px;
+order: 2;
+}
+.single-product-summery .product-info{
+width: 100%;
+padding-left: 0px;
+}
+section.bg-white.product.single-product-summery:after{
+height: 18vh;
+}
+.single-product-summery{
+padding-bottom: 22vh;
+}
+section.bg-white.product.single-product-summery .container .row {
+display: grid;
+}
+.single-product-summery .product-info{
+border: none;
+}
+a.switch-prices{
+min-width: 52%;
+}
+.preview-wrapinner{
+width: 90%;
+padding: 20px;
+}
+.preview-wrap-in{
+padding: 30px 30px;
+}
+.custompopup-inner{
+width: 90%;
+}
+.banner-dec p br {
+display: none;
+}
+span.closeipreview{
+right: 14px;
+top: 21px;
+font-size: 25px;
+}
+.codeimg p em{
+padding: 10px;
+}
+.custompopup-in textarea {
+height: 90px;
+}
+.giftcard-preview-title span{
+    font-size: 26px;
+}
+.giftcard-preview-title{
+position: absolute;
+top: 39%;
+width: 100%;
+color: #fff;
+font-weight: 600;
+margin-top: 0px;
+}
+}
+</style>
+ 
+
+<?php endif; ?>
+<script>
+    require(['jquery', 'giftcertificate'], function($) {
+        jQuery(document).ready(function() {
+
+            if (jQuery('div').hasClass('giftcard-block')) {
+                $('.field.qty').css('display', 'none');
+            }
+
+            jQuery("input[type=file]").change(function() {
+                var file_data = jQuery("#file").prop("files")[0];
+                var form_data = new FormData();
+                form_data.append("file", file_data)
+                form_data.append("user_id", 123)
+                $.ajax({
+                    url: " <?= /* @noEscape */ $block->getUrl('giftcertificate/index/upload'); ?>",
+                    type: "POST",
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        var path = " <?= /* @noEscape */ $block->getUrl('pub/media/giftcertificate'); ?>";
+                        var img = path + data['file'];
+                        jQuery(".fotorama__img").attr('src', img);
+                        jQuery(".fotorama__img--full").attr('src', img);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<script>
+    require([
+        "jquery",
+        "mage/calendar"
+    ], function($) {
+        $("#del-date").calendar({
+            buttonText: " <?= /* @noEscape */ __('Select Date') ?>",
+            minDate: new Date(),
+            dateFormat: 'yy-mm-dd',
+        });
+    });
+
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    var today = yyyy + '/' + mm + '/' + dd;
+
+    function validateDate() {
+        var pickedDate = document.getElementById("del-date").value;
+        if (pickedDate != '') {
+            if ((new Date(pickedDate).getTime() < new Date(today).getTime())) {
+                document.getElementById("del-date").value = '';
+                document.getElementById("dateerror").innerHTML = 'You cannot select date from past';
+                return false;
+            }
+            var timestamp = Date.parse(pickedDate)
+
+            if (isNaN(timestamp) == true) {
+                document.getElementById("del-date").value = '';
+                document.getElementById("dateerror").innerHTML = 'Invalid Date';
+                return;
+
+            }
+            document.getElementById("dateerror").innerHTML = '';
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+    {
+   ".upload-wrapper": {
+       "Magento_Ui/js/core/app": {
+           "components": {
+               "uploader": {
+                   "component": "Magento_Ui/js/form/element/file-uploader",
+                   "template": "ui/form/element/uploader/uploader",
+                   "inputName": "file",
+                   "isMultipleFiles":false,
+                   "allowedExtensions": "jpg png gif bmp jpeg",
+                   "uploaderConfig": {
+                           "url": " <?= /* @noEscape */ $block->getUrl(
+                                        'giftcertificate/index/upload'
+                                    ); ?>"
+                   }
+               }
+           }
+       }
+   }
+}
+ 
+</script>
+
+<script type="text/javascript">
+    window.giftproductType = "<?= $block->getProductTypeId() ?>";
+</script>
+
+<script>
+    require(['jquery', 'Magento_Catalog/js/price-utils'], function($, priceUtils) {
+        $(document).ready(function() {
+           // jQuery(document).find(".switch-prices").css("display", "none");
+
+ 
+            $('.gift-swatch-options .swatch-option').on('click', function() {
+                $('.gift-swatch-options .swatch-option').removeClass('selected');
+                $(this).addClass('selected');
+                $(document).find('#manual-price').css("display", "none");
+                if ($(this).data('price') != "") {
+                    $('#gift-prices').val($(this).data('price')).trigger('change');
+                    $(document).find('#manual-price').val($(this).data('price'));
+                    $(document).find('.product-info-main .price-wrapper .price').text($(this).data('pricewithcurrency'));
+                    $(document).find(".giftcard-amount .preview_amount").html($(this).data('pricewithcurrency'));
+                } else {
+                    $(document).find(".giftcard-amount .preview_amount").html('');
+                    $(document).find('#manual-price').val('');
+                    jQuery(".switch-prices").trigger("click");
+                    $(document).find('#manual-price').css("display", "inline-block");
+                }
+            });
+            $('#manual-price').on('input', function() {
+                var value = $(this).val();
+                var currencyRate = '<?= /* @noEscape */ __($currency_rate); ?>';
+                var originalPrice = value = $(this).val();;
+                var convertedPrice = originalPrice * currencyRate;
+                var selectedValue = priceUtils.formatPrice(convertedPrice);
+                $(document).find(".giftcard-amount .preview_amount").html(selectedValue);
+
+            });
+
+            $(document).on('input', '[data-binds]', function() {
+                const key = $(this).data('binds');
+                const value = $(this).val();
+
+                const selector = $('.' + key);
+                if (selector.length) {
+                    selector.html(value);
+                }
+            });
+
+
+
+            jQuery(document).find('.querieswrap').insertAfter('.product-info-main');
+            jQuery('#sendAsGift').on('change', function(){
+            if(jQuery(this).is(':checked')){
+            jQuery('.custompopup-wrap').fadeIn(); 
+            } else {
+            jQuery('.custompopup-wrap').fadeOut();
+            }
+            });
+
+            jQuery('.closecustom-popup').on('click', function(){
+            jQuery('.custompopup-wrap').fadeOut();
+
+            })
+
+
+            jQuery('.giftcard-preview-title').on('click', function(){
+            jQuery('.preview-wrap').fadeIn();
+            });
+            jQuery('.closeipreview').on('click', function(){
+            jQuery('.preview-wrap').fadeOut();
+            });
+
+
+
+
+
+        });
+    });
+    document.querySelectorAll('.template-image').forEach(function(thumbnail) {
+        thumbnail.addEventListener('click', function() {
+            // Clicked image ka src lena
+            let newSrc = this.getAttribute('src');
+
+            // Main image ka src change karna
+            document.querySelector('.template-image-single').setAttribute('src', newSrc);
+        });
+    });
+
+
+    
+</script>

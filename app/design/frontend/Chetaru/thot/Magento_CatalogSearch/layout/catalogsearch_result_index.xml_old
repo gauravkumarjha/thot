@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+      <referenceBlock name="search_result_list">
+            <action method="setData">
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="swatchRenderer" xsi:type="array">
+                            <item name="component" xsi:type="string">Magento_Swatches/js/swatch-renderer</item>
+                        </item>
+                    </item>
+                </argument>
+            </action>
+        </referenceBlock>
+        
+        <attribute name="class" value="page-products"/>
+        <referenceContainer name="content">
+			<container name="journal.search.desk.title.container" before="-" htmlClass="pro-list-header-fixed2-desktop tagged search-results-desktop" htmlTag="div">
+				<container name="journal.search.container" htmlTag="div">
+					<container name="journal.search.row" htmlClass="row" htmlTag="div">
+						<block class="Magento\Theme\Block\Html\Title" name="search.title" template="Magento_Theme::html/search_title.phtml"/>
+					</container>
+				</container>
+				<container name="div.sidebar.main" htmlTag="div" htmlClass="sidebar sidebar-main" after="journal.search.container">
+					<container name="div.sidebar.row" htmlClass="row" htmlTag="div">
+						<container name="sidebar.main" as="sidebar_main" label="Sidebar Main"/>
+					</container>
+				</container>
+			</container> 
+            <block class="Magento\CatalogSearch\Block\Result" name="search.result" template="result.phtml" cacheable="false">
+                <block class="Magento\CatalogSearch\Block\SearchResult\ListProduct" name="search_result_list" template="product/list.phtml" cacheable="false">
+                    <arguments>
+                        <!-- If argument's position depends on image size changeable in VDE:
+                        positions:list-secondary,grid-secondary,list-actions,grid-actions,list-primary,grid-primary
+                    -->
+                        <argument name="positioned" xsi:type="string">positions:list-secondary</argument>
+                    </arguments>
+                    <block class="Magento\Catalog\Block\Product\ProductList\Toolbar" name="product_list_toolbar" template="product/list/toolbar.phtml" cacheable="false">
+                        <block class="Magento\Theme\Block\Html\Pager" name="product_list_toolbar_pager" cacheable="false"/>
+                    </block>
+                    <action method="setToolbarBlockName">
+                        <argument name="name" xsi:type="string">product_list_toolbar</argument>
+                    </action>
+                    <block class="Magento\Framework\View\Element\RendererList" name="category.product.type.details.renderers" as="details.renderers">
+                        <block class="Magento\Framework\View\Element\Template" name="category.product.type.details.renderers.default" as="default"/>
+                    </block>
+                    <block class="Magento\Catalog\Block\Product\ProductList\Item\Container" name="catalogsearch.product.addto" as="addto">
+                        <block class="Magento\Catalog\Block\Product\ProductList\Item\AddTo\Compare"
+                               name="catalogsearch.product.addto.compare" as="compare"
+                               template="Magento_Catalog::product/list/addto/compare.phtml"/>
+                    </block>
+                </block>
+                <action method="setListOrders"/>
+                <action method="setListModes"/>
+                <action method="setListCollection"/>
+            </block>
+        </referenceContainer>
+		<referenceContainer name="main">
+			<container name="search.page.main.container" label="Main Content container" htmlClass="page-content bg-white product-listing-page-content" htmlTag="div">
+			<container name="search.page.container" label="Main Content Top" htmlClass="bg-white journal-page" htmlTag="section">
+				<container name="search.container" label="Main Content Top" htmlClass="container bg-white" htmlTag="div">
+					<container name="content.top" label="Main Content Top"/>
+					<container name="content" label="Main Content Area"/>
+					<container name="content.aside" label="Main Content Aside"/>
+					<container name="content.bottom" label="Main Content Bottom"/>
+				</container>
+			</container>
+			</container>
+		</referenceContainer>
+		<move element="breadcrumbs" destination="search.page.main.container"  before="-" />
+		<referenceBlock name="page.main.title" remove="true"/>
+    </body>
+</page>

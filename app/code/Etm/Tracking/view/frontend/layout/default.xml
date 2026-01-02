@@ -1,0 +1,12 @@
+<?xml version="1.0"?>  
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">  
+    <body>  
+    <!--referenceContainer name="header.panel">  
+    <block class="Magento\Framework\View\Element\Template" name="custom.header" template="Etm_Tracking::customscript.phtml" />  
+    </referenceContainer-->
+        
+        <referenceContainer name="content">  
+            <block class="Etm\Tracking\Block\RequestInfo" name="request.info" template="Etm_Tracking::request_info.phtml"/>   
+        </referenceContainer>  
+    </body>  
+</page>  

@@ -1,0 +1,18 @@
+<?php 
+$_product = $block->getProduct();
+
+?>
+<?php if($_product->getData('exclusive')==true or $_product->getData('vintage')==true):?>
+<div class="tag-btns marB20">
+	<?php if($_product->getData('exclusive')==true):?>
+	<span  class=" btn-grey">
+		<span class="btn-label">
+		<span class="icon-thot"></span>
+		</span><?php /* @escapeNotVerified */ echo __('EXCLUSIVE') ?>
+	</span>
+	<?php endif;?>
+	<?php if($_product->getData('vintage')==true):?>
+	<span  class=" btn-grey no-icon"><?php /* @escapeNotVerified */ echo __('VINTAGE') ?></span>
+	<?php endif;?>
+</div>
+<?php endif;?>

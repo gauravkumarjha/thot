@@ -1,0 +1,50 @@
+<div id="v4u-accordion-checkout" data-bind="scope:'v4uAccordionCheckout'">
+
+    <!-- Shipping Accordion -->
+    <div class="accordion-section" id="accordion-shipping" data-bind="scope:'v4uShipping'">
+        <h3>Shipping</h3>
+        <!-- Shipping form -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+
+        <!-- Shipping methods -->
+        <div data-bind="scope:'v4uShipMethods'">
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        </div>
+
+        <!-- Next button -->
+        <button type="button" data-bind="click:$parent.openPayment">Next</button>
+    </div>
+
+    <!-- Payment Accordion -->
+    <div class="accordion-section" id="accordion-payment" data-bind="scope:'v4uPayment'">
+        <h3>Payment</h3>
+        <!-- Payment methods -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+
+        <!-- Place order button -->
+        <button type="button" data-bind="click:placeOrder">Place Order</button>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="accordion-summary" id="accordion-summary">
+        <h3>Order Summary</h3>
+
+        <!-- Cart items -->
+        <div data-bind="scope:'cartItems'">
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        </div>
+
+        <!-- Totals -->
+        <div data-bind="scope:'totals'">
+            <!-- ko foreach: getTotals() -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!-- /ko -->
+        </div>
+
+        <!-- Shipping information preview -->
+        <div data-bind="scope:'shippingInformation'">
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        </div>
+    </div>
+
+</div>

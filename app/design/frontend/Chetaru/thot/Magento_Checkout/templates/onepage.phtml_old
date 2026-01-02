@@ -1,0 +1,27 @@
+<div class="checkout-tabs-wrapper">
+
+    <div class="checkout-tab shipping-tab is-active" id="shippingTab">
+        <h3 onclick="openShippingTab()">Shipping</h3>
+    </div>
+
+    <div class="checkout-tab payment-tab" id="paymentTab">
+        <h3 onclick="openPaymentTab()">Payment</h3>
+    </div>
+
+</div>
+
+<script>
+    function openShippingTab() {
+        document.getElementById("shippingTab").classList.add("is-active");
+        document.getElementById("paymentTab").classList.remove("is-active");
+
+        document.querySelector(".opc-wrapper").classList.remove("show-payment");
+    }
+
+    function openPaymentTab() {
+        document.getElementById("paymentTab").classList.add("is-active");
+        document.getElementById("shippingTab").classList.remove("is-active");
+
+        document.querySelector(".opc-wrapper").classList.add("show-payment");
+    }
+</script>

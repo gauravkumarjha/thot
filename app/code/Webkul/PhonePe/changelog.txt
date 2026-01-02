@@ -1,0 +1,14 @@
++ Features
+- Bugs
+
+-------------------------------- Version 4.0.1 --------------------------------------
+    + Created a command to add the phonepe repository in the magento core composer file.
+
+-------------------------------- Version 4.0.0 --------------------------------------
+    + Admin can enable or disable the Phonepe payment method.
+    + Admin can refund online payment through Phonepe.
+    + Customers can use Phonepe as a payment method.
+    + Multiple options such as UPI Payment, QR Code, Credit/Debit Card or Net Banking available.
+    + It can be used in both Sandbox and Production modes.
+    + Title of the payment gateway can be edited by Admin.
+    + Compatible with multi address checkout.

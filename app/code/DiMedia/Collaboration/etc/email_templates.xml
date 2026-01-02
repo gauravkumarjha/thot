@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="collaboration_email_template" label="collaboration Form" file="collaboration_form.html" type="html" module="DiMedia_Collaboration" area="frontend"/>
+     <template id="collaboration_user_email_template" label="collaboration user Form" file="collaboration_user_repsonse.html" type="html" module="DiMedia_Collaboration" area="frontend"/>
+</config>

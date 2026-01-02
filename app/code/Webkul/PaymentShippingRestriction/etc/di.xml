@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_PaymentShippingRestriction
+ * @author    Webkul
+ * @copyright Copyright (c)Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- plugin  to restrict shipping based on category/product in quote -->
+    <type name="Magento\Shipping\Model\Shipping">
+        <plugin name="Webkul_PaymentShippingRestriction::afterShipping" type="Webkul\PaymentShippingRestriction\Plugin\ShippingPlugin" sortOrder="1" />
+    </type>
+     <!-- plugin to restrict payment method on checkout -->
+    <type name="Magento\Payment\Model\PaymentMethodList">
+        <plugin name="Webkul_PaymentShippingRestriction::afterPayment" type="Webkul\PaymentShippingRestriction\Plugin\Payment\Model\PaymentMethodList" sortOrder="1" />
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                 <item name="shippingrestriction_shippingmapping_list_data_source" xsi:type="string">Webkul\PaymentShippingRestriction\Model\ResourceModel\ShippingMapping\Grid\Collection</item> 
+            </argument>
+        </arguments>
+    </type> 
+     <type name="Webkul\PaymentShippingRestriction\Model\ResourceModel\ShippingMapping\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">payment_shipping_mapping</argument>
+            <argument name="eventPrefix" xsi:type="string">shippingrestriction_shippingmapping_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">shippingrestriction_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\PaymentShippingRestriction\Model\ResourceModel\ShippingMapping</argument>
+        </arguments>
+    </type>
+</config>

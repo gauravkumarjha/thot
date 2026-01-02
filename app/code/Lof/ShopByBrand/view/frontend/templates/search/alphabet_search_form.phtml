@@ -1,0 +1,29 @@
+<?php
+/**
+ * Landofcoder
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Landofcoder.com license that is
+ * available through the world-wide-web at this URL:
+ * https://landofcoder.com/terms
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category   Landofcoder
+ * @package    Lof_ShopByBrand
+ * @copyright  Copyright (c) 2021 Landofcoder (https://www.landofcoder.com/)
+ * @license    https://landofcoder.com/terms
+ */
+
+$helper = $this->helper("Lof\ShopByBrand\Helper\Data");
+$filter_text = $helper->getConfig('general/filter_text');
+$filter_text = $filter_text?$filter_text:__("Filter Brand");
+?>
+<form method="get" class="search-form" action="<?php echo $helper->getSearchFormUrl(); ?>" data-mage-init='{"validation":{}}'>
+    <input type="text" class="input-text lofbrands-search-input" placeholder="<?php echo $filter_text; ?>" value="<?php echo $helper->getSearchKey() ?>" name="s" title="<?php echo __('Filter Brand'); ?>" id="lofbrands-search-input"/>
+    <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+</form>

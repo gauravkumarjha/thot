@@ -1,0 +1,108 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\App\Action\Action;
+
+//$_product = $this->getProduct();
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+/** @var $block \Magento\Catalog\Block\Product\View */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$blockObj= $block->getLayout()->createBlock('Magento\Catalog\Block\Product\View');
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+$_helper  = $this->helper(Magento\Catalog\Helper\Output::class);
+$ids = $block->getData('product-id');
+$ids_arr = explode(',', (string)$ids);
+?>
+
+    <?php
+    $type = 'widget-product-grid';
+
+    $mode = 'grid';
+
+    $image = 'product_page_related_images';
+    
+
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    $description = false;
+    ?>
+<?php 
+
+    $_item = $objectManager->create('Magento\Catalog\Model\Product')->load($ids);
+    if (!empty($_item->getName()) && $_item->getStatus() == 1) {
+        $link = $_item->getProductUrl();?>
+
+        <div class="popup-hotspot">
+            <div class="popup-hotspot-top">
+                <h4><?php echo $block->escapeHtml($_item->getName());?></h4>
+                <?php
+                $brands = $_item->getData("product_brand");
+                if( $brands ){
+                $sql = "SELECT name, url_key FROM ves_brand WHERE brand_id IN (".$brands.")";
+                    $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+                    $connection = $resource->getConnection();
+                    $results = $connection->fetchAll($sql);          
+                    if( !empty($results) ){?>
+                        <p>By <a href="/makers/<?php echo $results[0]['url_key']; ?>"><?php echo $results[0]['name']; ?></a></p><?php
+                                     } 
+                                }?> 
+                </div>
+                <?php 
+                    if($_item->getAttributeText('price_on_request')=='Yes'){?>
+                        <span class="price price_request grid_section_price"><?php /* @escapeNotVerified */ echo __('Price on request') ?></span>
+                         <?php
+                    }else{?>
+                        <span class="price"><?php echo $blockObj->getProductPrice($_item) ?></span>
+                        <?php } ?>
+                <div class="popup-icon">
+                    <a href="#" data-post='<?php  echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($_item) ?>' class="action towishlist" data-action="add-to-wishlist"><span>Add to WishList</span></a>
+                    <!-- <img src="">
+                    <img src=""> -->
+             <?php
+                $listBlock = $objectManager->get('\Magento\Catalog\Block\Product\ListProduct');
+                $addToCartUrl =  $listBlock->getAddToCartUrl($_item);
+                ?>
+                <a href="/apollo-greek-sculpture.html/" target="_blank">
+
+                <form data-role="tocart-form" action="<?php echo $addToCartUrl; ?>" method="post"> 
+                    <?php echo $block->getBlockHtml('formkey')?>
+                    <div class="btn">
+                        <button type="submit" title="Add to Cart" class="action tocart primary">
+                            <span>Add to Cart</span>
+                        </button>
+
+                    </div>   
+                 </form>
+             </a>
+                </div>
+            </div>
+            <div class="hotspot-img">
+                <div class="col-md-8">
+                <?php        
+                    $images = $_item->getMediaGalleryImages();
+                    $i = 0;
+                    foreach($images as $image){ ?>
+                        <?php if ($i++ > 2) break; ?>
+                        <img src="<?php echo $image->getUrl(); ?>"/>
+                <?php } ?>
+                </div>
+                <!-- <div class="col-md-4">
+                    <img src="">
+                    <img src="">
+                </div> -->
+            </div>
+
+            <a href="/apollo-greek-sculpture.html" target="_blank"> More Details </a>
+
+        </div>
+    <?php }
+?>
+

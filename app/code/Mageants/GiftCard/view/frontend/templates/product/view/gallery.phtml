@@ -1,0 +1,234 @@
+<?php
+
+/**
+ * @category Mageants GiftCard
+ * @package Mageants_GiftCard
+ * @copyright Copyright (c) 2016 Mageants
+ * @author Mageants Team <support@mageants.com>
+ */
+
+/**
+ * Product media data template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+$viewModel = $block->getData("viewModel");
+$registry = $viewModel->getRegister();
+$product = $block->getProduct();
+if ($product->getTypeId() == 'giftcertificate'):
+    $giftCardBlock = $block->getLayout()->createBlock(\Mageants\GiftCard\Block\GiftCard::class);
+    $prdId = $giftCardBlock->getProduct()->getId();
+    $count = $giftCardBlock->getCartQuoteById($prdId);
+    $giftimage = "";
+
+
+?>
+
+    <?php
+    /** @var \Magento\Framework\View\Element\Template $block */
+
+    // Replace these with actual data passed from block or viewModel
+    $recipientName = $block->escapeHtml($block->getData('recipient_name') ?? 'Recipient');
+    $senderName = $block->escapeHtml($block->getData('sender_name') ?? 'Sender');
+    $amount = $block->escapeHtml($block->getData('gift_amount') ?? '₹ 0');
+    $message = $block->escapeHtml($block->getData('message') ?? 'Here is a gift for you!');
+    $code = $block->escapeHtml($block->getData('gift_code') ?? 'XXXXXX');
+    $cartPrice = "";
+    $cartItem = $giftCardBlock->getCartQuoteByIdToInformation($prdId);
+    if ($cartItem) {
+        // print_r($cartItem->getData());
+        // echo 'Product Name: ' . $cartItem->getName();
+        // echo 'Qty: ' . $cartItem->getQty();
+        // echo 'Price: ' .  $giftCardBlock->convertPrice()->format(
+        //     $cartItem->getPrice(),
+        //     false, // includeContainer
+        //     2      // precision
+        // );
+        $cartPrice = $giftCardBlock->convertPrice()->format(
+            $cartItem->getPrice(),
+            false, // includeContainer
+            2      // precision
+        );
+
+        $buyRequest = $cartItem->getBuyRequest();
+        // echo "<pre>";
+        // print_r($buyRequest->getData()); // show all custom values like sender_name
+        // echo "</pre>"; 
+        $senderName = $buyRequest->getData('sender-email');
+        $recipientName = $buyRequest->getData('recipient-name');
+        $message = $buyRequest->getData('giftmessage');
+        $giftimage = $buyRequest->getData('giftimage');
+        // if ($senderName) {
+        //     echo 'Sender Name: ' . $senderName;
+        // } else {
+        //     echo 'Sender Name not found';
+        // }
+    }
+
+    ?>
+    <div class="giftcard-preview-container">
+
+        <div class="giftcard-preview-image-container">
+            <div class="giftcard-gift-wrapper">
+                <!-- <img src="https://d3qn6cjsz7zlnp.cloudfront.net/media/giftcard/gcnew2.png" alt="Giftcard Preview"> -->
+                <?php if ($giftimage != "") { ?>
+                    <?= $giftimage ?>
+                <?php } else { ?>
+                    <?= /* @noEscape */ $giftCardBlock->getTemplateImagesSingle(); ?>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="giftcard-preview-title"><span>Preview</span></div>
+
+
+<!--         
+        <div class="giftcard-salutation">Dear <span class="preview_recipientName"><?= $recipientName ?></span></div>
+        <div class="giftcard-static-msg">You have received a The house of things eGift card worth</div>
+        <div class="giftcard-amount"><span class="preview_amount"><?= $cartPrice ?></span></div>
+        <div class="giftcard-sender-name">From <span class="preview_senderName"><?= $senderName ?></span></div>
+
+        <div class="giftcard-their-message">Their Message:</div>
+        <div class="giftcard-message"><span class="preview_message"><?= $message ?></span></div>
+
+        <div class="giftcard-their-message">Apply this code during checkout :</div>
+        <div class="giftcard-code"><span>XXXXXX</span></div> -->
+
+        <!-- <div class="giftcard-note">
+            Please Note: All our gift cards are valid for a period of 11 months from date of purchase.
+        </div> -->
+    </div>
+
+
+<?php
+else:
+?>
+    <div class="gallery-placeholder _block-content-loading" data-gallery-role="gallery-placeholder">
+        <div data-role="loader" class="loading-mask">
+            <div class="loader">
+                <img src="<?=  /* @noEscape */ $block->getViewFileUrl('images/loader-1.gif'); ?>"
+                    alt="<?=  /* @noEscape */ __('Loading...') ?>">
+            </div>
+        </div>
+    </div>
+    <script>
+        var config = {
+                "width": <?=  /* @noEscape */ $block->getImageAttribute('product_page_image_medium', 'width'); ?>,
+                "thumbheight": <?=  /* @noEscape */ $block->getImageAttribute('product_page_image_small', 'height')
+                                    ?: $block->getImageAttribute('product_page_image_small', 'width'); ?>,
+                "navtype": "<?= /* @noEscape */ $block->getVar("gallery/navtype"); ?>",
+                "height": <?=  /* @noEscape */ $block->getImageAttribute('product_page_image_medium', 'height'); ?>
+            },
+            thumbBarHeight = 0,
+            loader = document.querySelectorAll('[data-gallery-role="gallery-placeholder"] [data-role="loader"]')[0];
+
+        if (config.navtype === 'horizontal') {
+            thumbBarHeight = config.thumbheight;
+        }
+        loader.style.paddingBottom = (config.height / config.width * 100) + "%";
+        loader.style.display = 'none';
+    </script>
+    <script type="text/x-magento-init">
+        {
+        "[data-gallery-role=gallery-placeholder]": {
+            "mage/gallery/gallery": {
+                "mixins":["magnifier/magnify"],
+                "magnifierOpts": <?=  /* @noEscape */ $block->getMagnifier(); ?>,
+                "data": <?=  /* @noEscape */ $block->getGalleryImagesJson(); ?>,
+                "options": {
+                    "nav": "<?=  /* @noEscape */ $block->getVar("gallery/nav"); ?>",
+                    <?php if (($block->getVar("gallery/loop"))): ?>
+                        "loop": <?=  /* @noEscape */ $block->getVar("gallery/loop"); ?>,
+                    <?php endif; ?>
+                    <?php if (($block->getVar("gallery/keyboard"))): ?>
+                        "keyboard": <?=  /* @noEscape */ $block->getVar("gallery/keyboard"); ?>,
+                    <?php endif; ?>
+                    <?php if (($block->getVar("gallery/arrows"))): ?>
+                        "arrows": <?=  /* @noEscape */ $block->getVar("gallery/arrows"); ?>,
+                    <?php endif; ?>
+                    <?php if (($block->getVar("gallery/allowfullscreen"))): ?>
+                        "allowfullscreen": <?=  /* @noEscape */ $block->getVar("gallery/allowfullscreen"); ?>,
+                    <?php endif; ?>
+                    <?php if (($block->getVar("gallery/caption"))): ?>
+                        "showCaption": <?=  /* @noEscape */ $block->getVar("gallery/caption"); ?>,
+                    <?php endif; ?>
+                    "width": "<?=  /* @noEscape */ $block->getImageAttribute('product_page_image_medium', 'width'); ?>",
+                    "thumbwidth":
+                    "<?=  /* @noEscape */ $block->getImageAttribute('product_page_image_small', 'width'); ?>",
+                    <?php
+                    if (
+                        $block->getImageAttribute('product_page_image_small', 'height')
+                        || $block->getImageAttribute('product_page_image_small', 'width')
+                    ): ?>
+                        "thumbheight":
+                            <?=  /* @noEscape */ $block->getImageAttribute('product_page_image_small', 'height')
+                                ?: $block->getImageAttribute('product_page_image_small', 'width'); ?>,
+                    <?php endif; ?>
+                    <?php
+                    if (
+                        $block->getImageAttribute('product_page_image_medium', 'height')
+                        || $block->getImageAttribute('product_page_image_medium', 'width')
+                    ): ?>
+                        "height": <?=  /* @noEscape */ $block->getImageAttribute('product_page_image_medium', 'height')
+                                        ?: $block->getImageAttribute('product_page_image_medium', 'width'); ?>,
+                    <?php endif; ?>
+                    <?php if ($block->getVar("gallery/transition/duration")): ?>
+                        "transitionduration": <?= /* @noEscape */ $block->getVar("gallery/transition/duration"); ?>,
+                    <?php endif; ?>
+                    "transition": "<?= /* @noEscape */ $block->getVar("gallery/transition/effect"); ?>",
+                    <?php if (($block->getVar("gallery/navarrows"))): ?>
+                        "navarrows": <?= /* @noEscape */ $block->getVar("gallery/navarrows"); ?>,
+                    <?php endif; ?>
+                    "navtype": "<?= /* @noEscape */ $block->getVar("gallery/navtype"); ?>",
+                    "navdir": "<?= /* @noEscape */ $block->getVar("gallery/navdir"); ?>"
+                },
+                "fullscreen": {
+                    "nav": "<?= /* @noEscape */ $block->getVar("gallery/fullscreen/nav"); ?>",
+                    <?php if ($block->getVar("gallery/fullscreen/loop")): ?>
+                        "loop": <?= /* @noEscape */ $block->getVar("gallery/fullscreen/loop"); ?>,
+                    <?php endif; ?>
+                    "navdir": "<?= /* @noEscape */ $block->getVar("gallery/fullscreen/navdir"); ?>",
+                    <?php if ($block->getVar("gallery/transition/navarrows")): ?>
+                        "navarrows": <?= /* @noEscape */ $block->getVar("gallery/fullscreen/navarrows"); ?>,
+                    <?php endif; ?>
+                    "navtype": "<?= /* @noEscape */ $block->getVar("gallery/fullscreen/navtype"); ?>",
+                    <?php if ($block->getVar("gallery/fullscreen/arrows")): ?>
+                        "arrows": <?= /* @noEscape */ $block->getVar("gallery/fullscreen/arrows"); ?>,
+                    <?php endif; ?>
+                    <?php if ($block->getVar("gallery/fullscreen/caption")): ?>
+                        "showCaption": <?= /* @noEscape */ $block->getVar("gallery/fullscreen/caption"); ?>,
+                    <?php endif; ?>
+                    <?php if ($block->getVar("gallery/fullscreen/transition/duration")): ?>
+                        "transitionduration": 
+                        <?= /* @noEscape */ $block->getVar("gallery/fullscreen/transition/duration"); ?>,
+                    <?php endif; ?>
+                    "transition": "<?= /* @noEscape */ $block->getVar("gallery/fullscreen/transition/effect"); ?>"
+                },
+                "breakpoints": <?= json_encode([
+                                    'mobile' => [
+                                        'conditions' => ['max-width' => '767px'],
+                                        'options' => [
+                                            'options' => [
+                                                // additional mobile-specific options
+                                            ]
+                                        ]
+                                    ],
+                                    // other breakpoints...
+                                ]); ?>
+            }
+        }
+    }
+</script>
+<?php endif; ?>
+
+
+<style>
+.giftcard-preview-title {
+text-align: center;
+margin-top: 20px;
+}
+.giftcard-preview-title a{
+text-transform: uppercase;
+text-align: center;
+margin-top: 20px;
+}
+</style>

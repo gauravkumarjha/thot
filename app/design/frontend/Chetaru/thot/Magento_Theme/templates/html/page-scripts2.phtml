@@ -1,0 +1,637 @@
+<!-- Popup -->
+<style type="text/css">
+    /* Display none for coding */
+    form.quickrfq .form-group.col-md-3.field.code {
+        display: none;
+    }
+
+    @media (min-width: 1020px) {
+        body .ves-megamenu.ves-dvertical-right .navigation .level0.nav-2.submenu-left.subhover>.submenu {
+            left: 50% !important;
+        }
+
+        .ves-megamenu .nav-item.active>a {
+            color: #000;
+        }
+
+        .nav-4 .dropdown-menu {
+            max-width: 665px;
+            float: right;
+            right: 0;
+            margin: 0;
+        }
+
+        .nav-4 .dropdown-menu .pagebuilder-column {
+            width: 40% !important;
+            padding-right: 40px;
+        }
+
+        .nav-4 .dropdown-menu .pagebuilder-column:last-child {
+            width: 60% !important;
+        }
+
+        body .page-wrapper {
+            padding-top: 155px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .ves-megamenu>.navigation .nav-item.active>a {
+            color: #000;
+        }
+
+    }
+</style>
+
+
+
+<div class="popup_newsletter">
+
+
+    <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <div class="col-md-6 col-xs-12 subscribeImage">
+
+            <div class="row">
+                <p>
+                    <img src="/pub/media/wysiwyg/sign-up-pop-up.jpg" alt="">
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 subscribe-form">
+
+            <h2>STAY UPDATED</h2>
+            <hr class="hr--small">
+            <h2 class="newsletterSubhead">The House of Things is a curated online destination to discover and shop for
+                luxury interiors.</h2>
+
+            <?php
+            echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('popup-newsletter')
+                ->toHtml();
+            ?>
+            <p> Sign up and be the first to know about new arrivals and latest offers, delivered straight to your inbox.
+            </p>
+        </div>
+    </div>
+
+</div>
+<style>
+    @media screen and (max-width: 769px) {
+        .fine-prints-slider .pagebuilder-mobile-hidden {
+            display: none !important;
+        }
+
+        .fine-prints-slider .pagebuilder-mobile-only {
+            display: block !important;
+        }
+    }
+</style>
+<script>
+    function httpGetAsync(url, callback) {
+        const xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", url, true); // true for asynchronous
+        xmlHttp.send(null);
+    }
+
+    function getDomainFromEmail(email) {
+        var regex = /@([^\s@]+)/;
+        var matches = email.match(regex);
+        if (matches && matches.length > 1) {
+            return matches[1];
+        }
+        return null;
+    }
+
+    function isEmailValid(email) {
+        // Regular expression for basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        return emailRegex.test(email);
+    }
+
+    function isEmailDomainBanned(email) {
+        // Define your list of banned domains
+        const bannedDomains = ['example.com', 'example.org', 'example.net', 'yopmail.com'];
+
+        // Check if the email is valid
+        if (!isEmailValid(email)) {
+            return false; // Invalid email format
+        }
+
+        // Extract the domain from the email
+        const emailParts = email.split('@');
+        const domain = emailParts[1];
+
+        // Check if the domain is in the list of banned domains
+        return bannedDomains.includes(domain);
+    }
+
+
+    const phoneInput = document.querySelector("#phone");
+    const emailInput = document.querySelector("#email");
+    const phoneFull = document.querySelector("#phone_full");
+
+    const iti = window.intlTelInput(phoneInput, {
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.4/js/utils.min.js",
+        preferredCountries: ["in", "us"],
+        separateDialCode: true,
+        nationalMode: false,
+    });
+
+    const resetPhone = () => {
+        phoneInput.classList.remove("mage-error");
+        document.getElementById("RMIPopupSubmitBtn").disabled = false;
+    };
+
+
+    const errorPhone = () => {
+        document.getElementById("RMIPopupSubmitBtn").disabled = true;
+        phoneInput.classList.add("mage-error");
+    };
+
+    const resetEmail = () => {
+        emailInput.classList.remove("mage-error");
+        document.getElementById("RMIPopupSubmitBtn").disabled = false;
+    };
+
+    const errorEmail = () => {
+        document.getElementById("RMIPopupSubmitBtn").disabled = true;
+        emailInput.classList.add("mage-error");
+    };
+
+    // on click button: validate
+    phoneInput.addEventListener("input", () => {
+        let phone_num = phoneInput.value.trim();
+        if (phone_num) {
+            if (iti.isValidNumber()) {
+                let countryData = iti.getSelectedCountryData();
+                let number = iti.getNumber();
+                //  $.getJSON("https://phonevalidation.abstractapi.com/v1/?api_key=b9501a608fbc4d38982ca84e3a0d7c13&phone=14152007986", function(data) {
+                //      console.log(data);
+                //  })
+                //  countryCode.value = countryData.priority + countryData.dialCode; 
+                //  console.log(countryData);
+                //  console.log(countryCode.value);
+                //  console.log(number);
+                phoneFull.value = number;
+
+                let combine_value = '+' + countryData.dialCode + phone_num;
+                if (combine_value == number) {
+                    resetPhone();
+                } else {
+                    errorPhone();
+                }
+            } else {
+                errorPhone();
+            }
+        } else {
+            resetPhone();
+        }
+    });
+    phoneInput.addEventListener("countrychange", function() {
+        phoneInput.value = "";
+        phoneInput.classList.remove("mage-error");
+    });
+
+
+    // on click button: validate
+    emailInput.addEventListener("input", () => {
+        let emailValue = emailInput.value.trim();
+        if (isEmailValid(emailValue)) {
+            let isBanned = isEmailDomainBanned(emailValue);
+            if (isBanned) {
+                errorEmail();
+
+            } else {
+                resetEmail();
+            }
+        } else {
+            errorEmail();
+        }
+    });
+    // phoneInput.on("countrychange", function() {
+    //     phoneInput.val('')
+    // });
+
+    // on keyup / change flag: reset
+    //phoneInput.addEventListener('change', reset);
+    //phoneInput.addEventListener('keyup', reset);
+
+    function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function checkCookie() {
+        let user = getCookie("username");
+        if (user != "") {
+            alert("Welcome again " + user);
+        } else {
+            user = prompt("Please enter your name:", "");
+            if (user != "" && user != null) {
+                setCookie("username", user, 365);
+            }
+        }
+    }
+    requirejs(['jquery', 'slick'], function($) {
+        if (getCookie('popup_newsletter_closed')) {
+
+        } else {
+            setTimeout(function() {
+                $('.popup_newsletter').addClass('active');
+            }, 15000);
+        }
+
+        $('.popup_newsletter .close').click(function() {
+            setCookie('popup_newsletter_closed', 'yes', 30);
+            $('.popup_newsletter').removeClass('active');
+        });
+        $(".popup_newsletter form").submit(function() {
+            setCookie('popup_newsletter_closed', 'yes', 30);
+        });
+        $('.popup_newsletterform .input').keypress(function(e) {
+            if (e.which == 13) {
+                setCookie('popup_newsletter_closed', 'yes', 30);
+            }
+        });
+
+
+        $('.home-page-slider').slick({
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            autoplay: true,
+        });
+        if ($(window).width() < 1024) {
+            $('.fine-items-slider').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: true,
+                autoplay: false,
+                infinite: false,
+            });
+        }
+        $("a.more_info_btn").click(function() {
+            var header_h = $('.page-header').outerHeight(true);
+            $('html,body').animate({
+                scrollTop: $(".product-info-detail").offset().top - header_h
+            }, 'slow');
+        });
+
+        $(".popup_anchor").click(function() {
+            $('.custom-theme-popup').addClass('active');
+            $('body').addClass('popup-active');
+        });
+        $(".custom-theme-popup .close").click(function() {
+            $('.custom-theme-popup').removeClass('active');
+            $('body').removeClass('popup-active');
+        });
+
+        $("#RMIPopup #prefer_contact").change(function() {
+            if ($(this).val() == 'Email') {
+                $("#RMIPopup #email").addClass('required-entry');
+                $("#RMIPopup #phone").removeClass('required-entry');
+                $("#RMIPopup #phone").removeClass('mage-error');
+
+            } else if (($(this).val() == 'WhatsApp') || ($(this).val() == 'Call')) {
+                $("#RMIPopup #phone").addClass('required-entry');
+                $("#RMIPopup #email").removeClass('required-entry');
+            } else {
+                $("#RMIPopup #email").removeClass('required-entry');
+                $("#RMIPopup #phone").removeClass('required-entry');
+            }
+        });
+    });
+</script>
+<!-- End Popup -->
+<!--Start of Tawk.to Script-->
+<!-- <script type="text/javascript">
+var Tawk_API = Tawk_API || {},
+    Tawk_LoadStart = new Date();
+(function() {
+    var s1 = document.createElement("script"),
+        s0 = document.getElementsByTagName("script")[0];
+    s1.async = true;
+    s1.src = 'https://embed.tawk.to/59a92a00c28eca75e461d7ea/default';
+    s1.charset = 'UTF-8';
+    s1.setAttribute('crossorigin', '*');
+    s0.parentNode.insertBefore(s1, s0);
+})();
+</script> -->
+<!--End of Tawk.to Script-->
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API = Tawk_API || {},
+        Tawk_LoadStart = new Date();
+    (function() {
+        var s1 = document.createElement("script"),
+            s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/6641d0409a809f19fb3039c9/1htohaves';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+    })();
+</script>
+<!--End of Tawk.to Script-->
+
+<script>
+    require(['jquery'], function($) {
+        jQuery(document).ready(function() {
+            var takelihref = jQuery('.header-right-section > .header.links > li.authorization-link > a')
+                .attr('href');
+            var takelitxt = jQuery('.header-right-section > .header.links > li.authorization-link > a')
+                .text();
+            jQuery('.navigation .nav-item.customer-account a').attr("href", takelihref);
+            //console.log(takelitxt, takelihref);
+            jQuery('.navigation .nav-item.customer-account a span').text(takelitxt);
+            jQuery('.desktop-nav-toggle').click(function() {
+                jQuery("body").addClass("open-desktop-menu");
+            });
+            //alert(jQuery(window).width());
+            if (jQuery(window).width() < 1000) {
+                jQuery("#switcher-currency").insertAfter(".ves-megamenu nav.navigation");
+            } else {
+                jQuery('.account-menu-toggle').click(function() {
+                    jQuery(".header-right-section ul.header.links").toggle();
+                    return false;
+                });
+            }
+
+
+            if (jQuery('body').hasClass('cms-collaboration-rhea-kapoor')) {
+                jQuery(".play-image").on("click", function() {
+                    jQuery("#yt-video").attr("src", jQuery("#yt-video").attr('data-src'));
+                    jQuery("#yt-video").show();
+                    jQuery(".play-image").hide();
+                });
+                var twoColumnText = jQuery('.two-column-text');
+                var offset = twoColumnText.offset().top - 100; // Adjust the offset value as needed
+
+                jQuery(document).on('scroll', function() {
+                    var scrollPosition = jQuery(document).scrollTop();
+                    if (scrollPosition > offset) {
+                        twoColumnText.addClass('fixed-menu');
+                    } else {
+                        twoColumnText.removeClass('fixed-menu');
+                    }
+                });
+
+                jQuery('.two-column-text a').click(function() {
+                    jQuery(".two-column-text a").removeClass('active');
+                    jQuery(this).addClass('active');
+                    var href = jQuery(this).attr('href');
+                    href = href.replace("#", ".");
+                    var maincont = jQuery(".page-header").outerHeight(true);
+                    // if( href == '#shop-section'){
+                    var scrolldiv = $(href).offset().top
+                    var res = scrolldiv - maincont - maincont;
+                    $('html,body').animate({
+                        scrollTop: res
+                    }, 'slow');
+                    //}
+                })
+
+                // $(window).scroll(function() {
+                //     var video_off = $('.single-full-video.intro-section').offset.top;
+                //     var video_h = $('.single-full-video.intro-section').outerHeight(true);
+                //     ///alert(video_off + ' ' + video_h );
+                // });
+            }
+        });
+    });
+</script>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+$customerSession = $objectManager->get('Magento\Customer\Model\Session');
+if ($customerSession->isLoggedIn()) {
+    // customer login action
+?>
+    <script>
+        require(['jquery'], function($) {
+            jQuery(document).ready(function() {
+                jQuery("body").addClass("customer-loggedin");
+            });
+        });
+    </script>
+<?php
+} else {
+?>
+    <script>
+        require(['jquery'], function($) {
+            jQuery(document).ready(function() {
+                jQuery("body").addClass("customer-loggedout");
+            });
+        });
+    </script>
+<?php
+}
+
+$urlInterface = $objectManager->create('Magento\Framework\UrlInterface');
+//echo $urlInterface->getCurrentUrl();
+
+if ((strpos($urlInterface->getCurrentUrl(), '/checkout') !== false)) {
+?>
+    <script>
+        // require(['jquery'], function($) {
+        //     // $( document ).ajaxComplete(function( event, xhr, settings) {
+        //     //         console.log(event);
+        //     //         console.log(xhr);
+        //     //         console.log(settings);
+        //     // });
+        //     $('#table-checkout-shipping-method input.radio').prop('checked', false);
+        // });   
+        requirejs([
+            'Magento_Checkout/js/model/quote',
+            'Magento_Checkout/js/model/shipping-rate-registry'
+        ], function(mainQuote, rateReg) {
+            ///$('#table-checkout-shipping-method input.radio').prop('checked', false);
+            //  var address = mainQuote.shippingAddress();
+            //     rateReg.set(address.getKey(), null);
+            //     rateReg.set(address.getCacheKey(), null);
+            //     mainQuote.shippingAddress(address);
+        });
+    </script>
+    <style>
+        .hem2top .minicart-wrapper,
+        #block-shipping,
+        #cart-totals tr.totals.sub,
+        #cart-totals tr.totals.shipping {
+            display: none
+        }
+
+        .hem2top .minicart-wrapper.onlyforcheckout {
+            display: block !important;
+        }
+
+        #cart-totals {
+            border-top: none;
+        }
+
+        .table-checkout-shipping-method .col-carrier {
+            display: none;
+        }
+
+        .opc-block-summary .totals.shipping.excl .mark .value {
+            display: none
+        }
+
+        .opc-block-summary .totals.shipping.excl .amount .price {
+            font-size: 0;
+        }
+
+        .opc-block-summary .totals.shipping.excl .amount .price:after {
+            font-size: 14px;
+        }
+
+        .opc-block-shipping-information .shipping-information-content span.value {
+            font-size: 0;
+        }
+
+        .opc-block-shipping-information .shipping-information-content span.value:after {
+            font-size: 14px;
+        }
+    </style>
+    <?php
+    $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+
+    // get quote items collection
+    $itemsCollection = $cart->getQuote()->getItemsCollection();
+
+    // get array of all items what can be display directly
+    $itemsVisible = $cart->getQuote()->getAllVisibleItems();
+
+    // get quote items array
+    $items = $cart->getQuote()->getAllItems();
+    if (!empty($items)) {
+        $remove_free = false;
+        $i = 1;
+        foreach ($items as $item) {
+            // echo 'ID: '.$item->getProductId().'<br />';
+            //echo 'Name: '.$item->getName().'<br />';
+            // echo 'Sku: '.$item->getSku().'<br />';
+            // echo 'Weight: '.$item->getWeight().'<br />';
+            // echo 'Quantity: '.$item->getQty().'<br />';
+            // echo 'Price: '.$item->getPrice().'<br />';
+            //echo "<br />";   
+            if ($item->getWeight() > 0) {
+                $remove_free = true;
+                //break;
+    ?>
+                <style>
+                    .minicart-items-wrapper .product-item:nth-child(<?php echo $i; ?>) .product-item-name-block:after {
+                        content: "Shipping: To Be Quoted";
+                        font-weight: bold;
+                    }
+
+                    #shopping-cart-table>.col-sm-12:nth-child(<?php echo $i; ?>) .cart-item-info .transparent-select-button:before {
+                        content: "Shipping: To Be Quoted";
+                        font-weight: bold;
+                        width: 200px;
+                        display: inline-block;
+                    }
+                </style>
+            <?php
+            } else {
+            ?>
+                <style>
+                    .minicart-items-wrapper .product-item:nth-child(<?php echo $i; ?>) .product-item-name-block:after {
+                        content: "Shipping: Free";
+                        font-weight: bold;
+                    }
+
+                    #shopping-cart-table>.col-sm-12:nth-child(<?php echo $i; ?>) .cart-item-info .transparent-select-button:before {
+                        content: "Shipping: Free";
+                        font-weight: bold;
+                        width: 200px;
+                        display: inline-block;
+                    }
+                </style>
+            <?php
+
+            }
+            $i++;
+        }
+        if ($remove_free) {
+            //echo 'remove free';
+            ?>
+            <style>
+                /* #checkout-step-shipping_method #checkout-shipping-method-load tr:nth-child(2){
+                    display:none
+                }  */
+
+                .opc-block-summary .totals.shipping.excl .amount .price:after {
+                    content: "To Be Quoted";
+                }
+
+                .table-checkout-shipping-method td.col-price {
+                    display: none;
+                }
+
+                .opc-block-shipping-information .shipping-information-content span.value:after {
+                    content: "Shipping: To Be Quoted (We will contact you in 48 hours)";
+                }
+            </style>
+        <?php
+        } else {
+        ?>
+            <style>
+                /* #checkout-step-shipping_method #checkout-shipping-method-load tr:nth-child(1){
+                    display:none
+                } */
+                .opc-block-summary .totals.shipping.excl .amount .price:after {
+                    content: "Free";
+                }
+
+                .opc-block-shipping-information .shipping-information-content span.value:after {
+                    content: "Shipping: Free";
+                }
+            </style>
+<?php
+        }
+    }
+}
+
+?>
+
+<style>
+    /* remove configuration product more information */
+    body.page-product-configurable .page-main.page-main-details {
+        display: none !important;
+    }
+</style>
+<div class="refreh-button-hard" style="display:none">
+
+    <button onclick="location.reload(true);">Refresh</button>
+</div>
+
+<!-- add Css here  -->
+<style>
+
+
+
+</style>

@@ -1,0 +1,41 @@
+<?php
+$_brand = $block->getCurrentBrand();
+$_img_one = '';
+$_img_two = '';
+$_img_three = '';
+?>
+<section class="bg-white shareImg">
+	<div class="container">
+		<div class="col-md-8 col-md-offset-2">
+			<?php if ($_img_one = $_brand->getImageOne()) { ?>
+				<div class="col-md-12">
+					<img src="/media/<?php echo $_img_one ?>" alt="<?= $_brand->getName(); ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_two = $_brand->getImageTwo()) { ?>
+				<div class="col-md-6">
+					<img src="/media/<?php echo $_img_two ?>" alt="<?= $_brand->getName(); ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_three = $_brand->getImageThree()) { ?>
+				<div class="col-md-6">
+					<img src="/media/<?php echo $_img_three ?>" alt="<?= $_brand->getName(); ?>" class="img-responsive" />
+				</div>
+			<?php } ?>
+		</div>
+		<div class="col-md-12">
+			<div class="row">
+				<p class="spImgShare">
+					Follow <?php echo $_brand->getName(); ?></p>
+				<p class="spImgShare">
+					<a class="social-icon" href="<?php echo $_brand->getFacebookUri(); ?>" target="_blank">
+						<img src="/pub/media/wysiwyg/facebook.png" alt="facebook"></a>
+					<a class="social-icon" href="<?php echo $_brand->getInstagramUri(); ?>" target="_blank">
+						<img src="/pub/media/wysiwyg/instagram.png" alt="instagram"></a>
+				</p>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div class="clearfix"><!-- --></div>
+	</div>
+</section>

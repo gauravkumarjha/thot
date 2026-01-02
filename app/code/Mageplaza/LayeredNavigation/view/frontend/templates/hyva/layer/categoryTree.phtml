@@ -1,0 +1,58 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     ${MODULENAME}
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+$isAutoExpand = $block->isAutoExpand();
+?>
+<ol class="items" <?= $isAutoExpand ? 'style="max-height:300px;overflow-y:auto;overflow-x:hidden;"' : '' ?>>
+    <?= /** @noEscape */ $categoryTreeHtml ?>
+</ol>
+<style>
+    .filter-content .category-items {
+        margin: 0;
+        padding-left: 30px;
+        list-style: none;
+    }
+    .filter-content .active.icon-expand:after {
+        content: '\e622';
+    }
+    .filter-content .icon-expand:after {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 20px;
+        line-height: 30px;
+        color: inherit;
+        content: '\203A';
+        vertical-align: center;
+        display: inline-block;
+        font-weight: bold;
+        text-align: center;
+        padding-right: 5px;
+        cursor: pointer;
+    }
+
+     .filter-content .active.icon-expand:after {
+         content: '\203A';
+         transform: rotate(90deg);
+     }
+     .filter-options-content .item input[disabled] {
+         opacity: 0.2;
+     }
+</style>

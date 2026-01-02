@@ -1,0 +1,28 @@
+<?php
+$metaTitle = $block->getMetaTitle();
+$metaDescription = $block->getMetaDescription();
+$imageUrl = $block->getImageUrl();
+$currentUrl = $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+?>
+<meta property="og:title" content="<?php echo $this->escapeHtml($metaTitle); ?>" />
+<meta property="og:description" content="<?php echo $this->escapeHtml($metaDescription); ?>" />
+<meta property="og:image" content="<?php echo $this->escapeUrl($imageUrl); ?>" />
+<meta property="og:url" content="<?php echo $this->escapeUrl($currentUrl); ?>" />
+<meta property="og:type" content="website" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<?php echo $this->escapeHtml($metaTitle); ?>" />
+<meta name="twitter:description" content="<?php echo $this->escapeHtml($metaDescription); ?>" />
+<meta name="twitter:image" content="<?php echo $this->escapeUrl($imageUrl); ?>" />
+<meta name="twitter:url" content="<?php echo $this->escapeUrl($currentUrl); ?>" />
+
+<?php if ($block->getRequest()->getFullActionName() == 'catalog_product_view') : ?>
+    <?php $schemaTags = json_decode($block->getProductSchemaJson(), true) ?>
+    <?php //print_r(json_decode($block->getProductSchemaJson(),true)) ?>
+    <script type="application/ld+json">
+        <?php  echo json_encode($schemaTags['script']); 
+?>
+    </script>
+    <?php echo $schemaTags['metaTag']; 
+?>
+<?php endif; ?>

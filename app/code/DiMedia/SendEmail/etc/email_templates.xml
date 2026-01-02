@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:Magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="custom_product_save_template_sandeep" label="use and default Custom Product Save Notification" file="custom_product_save_template_sandeep.html" type="html" module="DiMedia_SendEmail" area="adminhtml"/>
+</config>

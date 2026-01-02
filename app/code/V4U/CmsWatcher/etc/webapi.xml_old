@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <!-- ===== Disable CMS Block write/delete ===== -->
+    <route url="/V1/cmsBlock" method="POST">
+        <service class="Magento\Cms\Api\BlockRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Backend::denied"/>
+        </resources>
+    </route>
+
+    <route url="/V1/cmsBlock/:id" method="PUT">
+        <service class="Magento\Cms\Api\BlockRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Backend::denied"/>
+        </resources>
+    </route>
+
+    <route url="/V1/cmsBlock/:blockId" method="DELETE">
+        <service class="Magento\Cms\Api\BlockRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Magento_Backend::denied"/>
+        </resources>
+    </route>
+
+    <!-- ===== Disable CMS Page write/delete ===== -->
+    <route url="/V1/cmsPage" method="POST">
+        <service class="Magento\Cms\Api\PageRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Backend::denied"/>
+        </resources>
+    </route>
+
+    <route url="/V1/cmsPage/:id" method="PUT">
+        <service class="Magento\Cms\Api\PageRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Backend::denied"/>
+        </resources>
+    </route>
+
+    <route url="/V1/cmsPage/:pageId" method="DELETE">
+        <service class="Magento\Cms\Api\PageRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Magento_Backend::denied"/>
+        </resources>
+    </route>
+
+</routes>

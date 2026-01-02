@@ -1,0 +1,51 @@
+<!--
+    Accordion UI with KO bindings.
+    Requirements:
+    - Smooth slide animations handled by view model.
+    - Auto-open Payment after valid shipping + shipping method selected.
+    - Keep Magento default components unmodified and within #checkout root.
+-->
+<div class="v4u-accordion">
+
+    <div class="v4u-accordion-section">
+        <div class="v4u-accordion-header" data-bind="click: toggleShipping">
+            <span class="v4u-accordion-title">Shipping information</span>
+            <span class="v4u-accordion-state" data-bind="text: isShippingOpen() ? '+' : '+'"></span>
+        </div>
+
+        <div id="v4u-shipping-pane" class="v4u-accordion-pane" data-bind="css: {open: isShippingOpen}">
+            <!-- Shipping Address + Address List + Shipping Methods -->
+            <div class="v4u-pane-inner">
+                <div class="v4u-shipping-block" data-bind="scope: 'v4uShipping'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+
+                <div class="v4u-shipmethods-block" data-bind="scope: 'v4uShipMethods'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+
+                <div class="v4u-validation">
+                    <!-- Simple inline validation message driven by our computed -->
+                    <div class="message warning" data-bind="visible: !isShippingAddressValid()">
+                        Please complete your shipping address to continue.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="v4u-accordion-section">
+        <div class="v4u-accordion-header" data-bind="click: togglePayment">
+            <span class="v4u-accordion-title">Payment information</span>
+            <span class="v4u-accordion-state" data-bind="text: isPaymentOpen() ? '+' : '+'"></span>
+        </div>
+
+        <div id="v4u-payment-pane" class="v4u-accordion-pane" data-bind="css: {open: isPaymentOpen}">
+            <div class="v4u-pane-inner">
+                <div class="v4u-payment-block" data-bind="scope: 'v4uPayment'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

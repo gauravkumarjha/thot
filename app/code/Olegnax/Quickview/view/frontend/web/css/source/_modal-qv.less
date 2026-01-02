@@ -1,0 +1,82 @@
+& when (@media-common = true) {
+    body.ox_hotspot-index-index .page-wrapper{
+        padding:@ox-qv-cms-padding;
+        box-sizing: border-box;
+    }
+    .ox-modal.ox-qv-modal{
+        > div,
+        .ox-modal-content{
+            width:100%;
+            max-width: @ox-qv-modal-width;
+            height: @ox-qv-modal-height;
+            background: @ox-qv-modal-bg;
+            box-shadow: @ox-qv-modal-shadow;
+            border-radius: @ox-qv-modal-border-radius;
+        }
+    }
+    
+    /* fix quickview scroll focus ios */
+    /*.touch {
+        .ox-modal{
+            #ox_quickview_wrapper{
+                 -webkit-overflow-scrolling: touch;
+                 overflow-y: auto;
+            }
+        }
+    }*/
+    #ox_quickview_wrapper{
+        .ox-overlay-close-btn{
+            width: @ox-qv-close-btn-size;
+            height: @ox-qv-close-btn-size;
+            background:@ox-qv-close-btn-bg;
+/*            border: @ox-qv-close-btn-border solid;
+            border-color: @ox-qv-close-btn-border-color;*/
+            border-radius:@ox-qv-close-btn-border-radius;
+            transition: background .3s ease;
+            span{
+                vertical-align: unset;
+                &:before,
+                &:after{
+                    background:@ox-qv-close-btn-color;
+                }
+            }
+            &:hover{
+                /*border-color: @ox-qv-close-btn-border-color-hover;*/
+                background: @ox-qv-close-btn-bg-hover;
+                span{
+                    &:before,
+                    &:after{
+                        background:@ox-qv-close-btn-color-hover;
+                    }
+                }
+            }
+        }
+    }
+}
+/*
+@media (max-width: 1024px){
+    .ox-modal{
+        #ox_quickview_wrapper{
+             -webkit-overflow-scrolling: touch;
+             overflow-y: auto;
+        }
+    }
+}*/
+@media (max-width: (@ox-modal-width - 1)){
+    .ox-modal.ox-qv-modal{
+        > div,
+        .ox-modal-content{
+            width:90%;
+            height:90%;
+        }
+    }
+    body.ox_hotspot-index-index .page-wrapper{
+        padding:@ox-qv-cms-padding-m;
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__xs) {
+    body.ox_hotspot-index-index .page-wrapper{
+        padding:@ox-qv-cms-padding-xs;
+    }
+}

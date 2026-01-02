@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Venustheme
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Venustheme.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.venustheme.com/license-agreement.html
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category   Venustheme
+ * @package    Ves_Megamenu
+ * @copyright  Copyright (c) 2017 Venustheme (http://www.venustheme.com/)
+ * @license    http://www.venustheme.com/LICENSE-1.0.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<vesmegamenu>
+			<general_settings>
+                <enabled>1</enabled>
+                <show_menu_block_title>0</show_menu_block_title>
+                <default_alias>top-menu</default_alias>
+                <pwa_menu_alias>top-menu-pwa</pwa_menu_alias>
+				<enable_backup>1</enable_backup>
+				<backup_version>10</backup_version>
+				<enable_cache>0</enable_cache>
+				<enable_minify>0</enable_minify>
+				<enable_cache_file>0</enable_cache_file>
+                <enable_check_mobile>0</enable_check_mobile>
+                <cache_time>86400</cache_time>
+                <drilldown_speed>300</drilldown_speed>
+                <enable_mobile_menu>1</enable_mobile_menu>
+                <enable_admin_ajax>0</enable_admin_ajax>
+                <disable_menu_title>0</disable_menu_title>
+                <number_of_category_search>5</number_of_category_search>
+			</general_settings>
+		</vesmegamenu>
+	</default>
+</config>

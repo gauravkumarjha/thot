@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+    <router id="standard">
+        <route id="singlecheckout" frontName="singlecheckout">
+            <module name="DiMedia_SingleCheckout"/>
+        </route>
+    </router>
+</config>

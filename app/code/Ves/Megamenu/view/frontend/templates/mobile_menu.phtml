@@ -1,0 +1,31 @@
+<?php
+/**
+ * Mobile Menu template
+ *
+ * @var \Ves\Megamenu\Block\MobileMenu $block
+ */
+?>
+<?php
+if ($menu = $this->getMenu()) {
+	$data      = $this->helper("\Ves\Megamenu\Helper\Data");
+	$menuItems = $menu->getData('menuItems');
+    $structure = $block->decodeJson($menu->getStructure());
+    $html = '';
+    $categories = [];
+    foreach ($menuItems as $item) {
+        if (isset($item['link_type']) && $item['link_type'] == 'category_link' && isset($item['category']) && !in_array($item['category'], $categories)) {
+            $categories[] = $item['category'];
+        }
+    }
+    $data->setMenuCategories($categories);
+    if(is_array($structure)){
+        $i = 1;
+        foreach ($structure as $k => $v) {
+            $itemData = $data->renderMenuItemData($v, [], $menuItems);
+            $html .= $data->drawItem($itemData, 0, 1, true, $i);
+            $i++;
+        }
+    }
+	$html = $data->filter($html);
+	echo $html;
+}

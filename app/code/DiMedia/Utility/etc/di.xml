@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+ <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+
+    <arguments>
+
+      <argument name="collections" xsi:type="array">
+
+        <item name="dimedia_utility_data_source" xsi:type="string">DiMedia\Utility\Model\ResourceModel\Abandoned\Grid\Collection</item>
+
+      </argument>
+
+    </arguments>
+
+  </type>
+
+  <virtualType name="DiMedia\Utility\Model\ResourceModel\Abandoned\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+
+    <arguments>
+
+      <argument name="mainTable" xsi:type="string">abandoned_cart</argument>
+
+      <argument name="resourceModel" xsi:type="string">DiMedia\Utility\Model\ResourceModel\Abandoned</argument>
+
+    </arguments>
+
+  </virtualType>
+
+   <preference for="Magento\Catalog\Model\Layer\Filter\AbstractFilter" type="DiMedia\Utility\Model\Layer\Filter\AllFilters"/>
+   
+     <type name="Magento\Wishlist\Model\ResourceModel\Item\Collection">
+        <plugin name="wishlist_order_plugin" type="DiMedia\Utility\Plugin\WishlistOrderPlugin" />
+    </type>
+
+    <type name="Magento\ConfigurableProduct\Pricing\Price\ConfigurablePriceResolver">
+        <plugin name="v4u_custom_price_plugin"
+                type="DiMedia\Utility\Plugin\ConfigurablePriceResolverPlugin" />
+    </type>
+
+</config>
+

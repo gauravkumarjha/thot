@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+           <block class="Mageants\GiftCard\Block\Adminhtml\Account\Account" name="addaccount" />
+        </referenceContainer>
+		
+        <referenceContainer name="left">
+		    <block class="Mageants\GiftCard\Block\Adminhtml\Account\Edit\Tabs" name="codeset_tabs" >
+				<block class="Mageants\GiftCard\Block\Adminhtml\Account\Edit\Tabs\General" name="account"/>
+				<action method="addTab">
+                    <argument name="name" xsi:type="string">account_section</argument>
+                    <argument name="block" xsi:type="string">account</argument>
+                </action>
+				<block class="Mageants\GiftCard\Block\Adminhtml\Account\Edit\Tabs\Resend" name="resend_email"/>
+				<action method="addTab">
+                    <argument name="name" xsi:type="string">resend</argument>
+                    <argument name="block" xsi:type="string">resend_email</argument>
+                </action>
+			</block>
+		</referenceContainer>
+    </body>	 
+</page>

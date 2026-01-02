@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category   Webkul
+ * @package    Webkul_PhonePe
+ * @author     Webkul Software Private Limited
+ * @copyright  Webkul Software Private Limited (https://webkul.com)
+ * @license    https://store.webkul.com/license.html
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+                <resource>Webkul_PhonePe::config_phonepe</resource>
+                <group id="phonepe" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>PhonePe Payment Method</label>
+                    <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="title" translate="label comment" sortOrder="2" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="environment" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                            <depends>
+                                <field id="active">1</field>
+                            </depends>
+                        <source_model>Webkul\PhonePe\Model\Source\Environment</source_model>
+                   </field>
+                    <field id="client_id" translate="label comment" sortOrder="4" type="obscure" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Client Id</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <depends>
+                                <field id="active">1</field>
+                            </depends>
+                    </field>
+                    <field id="client_secret" translate="label comment" sortOrder="5" type="obscure" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Client Secret</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="client_version" translate="label comment" sortOrder="6" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Client Version</label>
+                            <depends>
+                                <field id="active">1</field>
+                            </depends>
+                    </field>
+                    <field id="callback_username" translate="label comment" sortOrder="7" type="obscure" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Callback Username</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <depends>
+                                <field id="active">1</field>
+                            </depends>
+                    </field>
+                    <field id="callback_password" translate="label comment" sortOrder="8" type="obscure" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Callback Password</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment from Applicable Countries</label>
+                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                    </field>
+                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment from Specific Countries</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                        <depends><field id="allowspecific">1</field></depends>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Sort Order</label>
+                    </field>
+                    <group id="phonepe_support" translate="label comment" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Show product information</label>
+                        <field id="version" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <frontend_model>Webkul\PhonePe\Block\Config\Source\Version</frontend_model>
+                        </field>
+                    </group>
+                </group>
+        </section>
+    </system>
+</config>

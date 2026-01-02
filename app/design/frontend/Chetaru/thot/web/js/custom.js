@@ -1,0 +1,39 @@
+var requireQueue = function (modules, callback) {
+    function load(queue, results) {
+        if (queue.length) {
+            require([queue.shift()], function (result) {
+                results.push(result);
+                load(queue, results);
+            });
+        } else {
+            callback.apply(null, results);
+        }
+    }
+
+    load(modules, []);
+};
+requireQueue(["jquery"], function (jQuery) {
+    jQuery(document).ready(function () {
+        var base_url = window.location.origin;
+
+        jQuery("body").on("blur	", '#customer-email, input[name="telephone"], input[name="firstname"], input[name="lastname"]', function (e) {
+            var customerName = "";
+            if (typeof jQuery("input[name='firstname']").val() !== "undefined") {
+                customerName += jQuery("input[name='firstname']").val();
+            }
+
+            if (typeof jQuery("input[name='lastname']").val() !== "undefined") {
+                customerName += " " + jQuery("input[name='lastname']").val();
+            }
+
+            //return false;
+            //console.log('email: ' + jQuery("#customer-email").val() + ', telephone: ' + jQuery("input[name='telephone']").val());
+            jQuery.ajax({
+                url: "/di_abandoned/checkout/abandoned",
+                type: "POST",
+                data: { email: jQuery("#customer-email").val(), telephone: jQuery("input[name='telephone']").val(), customerName: customerName },
+                success: function (data, textStatus, jqXHR) { },
+            });
+        });         
+    }); //Document Ready End
+}); //requireQueue end

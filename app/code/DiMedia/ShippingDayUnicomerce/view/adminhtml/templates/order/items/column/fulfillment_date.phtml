@@ -1,0 +1,9 @@
+<?php
+
+/** @var $block \DiMedia\ShippingDayUnicomerce\Block\Adminhtml\Sales\Order\View\Items\Column\FulfillmentDate */ ?>
+<?php if ($block->getFulfillmentDate()): ?>
+    <div class="admin__field field">
+        <strong><?= __('Fulfillment Date:') ?></strong>
+        <?= $block->escapeHtml($block->getFulfillmentDate()) ?>
+    </div>
+<?php endif; ?>

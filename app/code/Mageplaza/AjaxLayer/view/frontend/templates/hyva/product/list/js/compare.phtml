@@ -1,0 +1,77 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_AjaxLayer
+ * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Hyva\Theme\ViewModel\ProductCompare;
+
+/** @var \Hyva\Theme\Model\ViewModelRegistry $viewModels */
+/** @var \Magento\Framework\Escaper $escaper */
+
+/** @var ProductCompare $compareViewModel */
+$compareViewModel = $viewModels->require(ProductCompare::class);
+?>
+<?php if ($compareViewModel->showInProductList()): ?>
+    <script>
+        function initCompareOnProductList() {
+            return {
+                addToCompare(productId) {
+                    const formKey = hyva.getFormKey();
+                    const postUrl = `${BASE_URL}catalog/product_compare/add/`;
+                    showLoader();
+                    fetch(postUrl, {
+                        "headers": {
+                            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        },
+                        "body": `form_key=${formKey}&product=${productId}&uenc=${hyva.getUenc()}`,
+                        "method": "POST",
+                        "mode": "cors",
+                        "credentials": "include"
+                    }).then(function (response) {
+                        if (response.redirected) {
+                            window.dispatchEvent(new CustomEvent("reload-customer-section-data"));
+                        }
+                        hideLoader();
+                    }).catch(function (error) {
+                        typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                            [{
+                                type: "error",
+                                text: error
+                            }], 5000
+                        );
+                        hideLoader();
+                    });
+                }
+            };
+        }
+        function showLoader() {
+            const loader = document.querySelector('.mplayer-loader');
+            if (loader) {
+                loader.style.display='';
+            }
+        }
+
+        function hideLoader() {
+            const loader = document.querySelector('.mplayer-loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+<?php endif; ?>

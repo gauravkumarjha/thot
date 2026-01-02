@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Chetaru_Article::js/lightbox.js"></script>
+        <link href="Chetaru_Article::css/lightbox.css" rel="stylesheet" />
+    </head>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument name="title" translate="true" xsi:type="string">Blog</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="content">
+            <block template="Chetaru_Article::posts.phtml" as="posts">
+                <arguments>
+                    <argument name="posts_view_model" xsi:type="object">Chetaru\Article\ViewModel\Posts</argument>
+                </arguments>
+                <block class="Magento\Theme\Block\Html\Pager" name="article_pager"/>
+                <block template="Chetaru_Article::post.phtml" as="post">
+                    <arguments>
+                        <argument name="post_view_model" xsi:type="object">Chetaru\Article\ViewModel\PostViewModel</argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceBlock>
+         <referenceContainer name="sidebar.main" remove="true" />
+         <referenceBlock name="catalogsearch.leftnav" remove="true" />
+         <referenceContainer name="sidebar.additional" remove="true" />
+    </body>
+</page>

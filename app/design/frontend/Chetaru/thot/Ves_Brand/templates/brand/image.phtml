@@ -1,0 +1,12 @@
+<?php
+$_brand = $block->getCurrentBrand();
+$_img = '';
+$webpImageDataHelper = $this->helper('DiMedia\WebpImage\Helper\Data');
+if(!$block->getCurrentBrand()->getData('is_profile_layout')){
+	if($_img = $_brand->getImageUrl()){ ?>
+	<?php $_img = $webpImageDataHelper->getWebpUrl($_img); ?>
+	<div class="brand-image">
+		<img src="<?php echo $_img ?>" alt="<?php echo $_brand->getName(); ?>" class="image"/>
+	</div>
+<?php }
+ }

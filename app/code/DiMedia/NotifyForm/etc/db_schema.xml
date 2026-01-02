@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="notify_form" resource="default" engine="innodb" comment="Customer Form Table">
+        <column xsi:type="int" name="entity_id" nullable="false" identity="true" unsigned="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="notify_name" nullable="false" length="255" comment="Name"/>
+        <column xsi:type="varchar" name="notify_number" nullable="false" length="20" comment="Mobile Number"/>
+        <column xsi:type="varchar" name="notify_email" nullable="false" length="255" comment="Email Address"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>

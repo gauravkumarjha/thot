@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="v4u_comingsoon_notify" resource="default" engine="innodb" comment="Coming Soon Notify">
+        <column name="id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="ID"/>
+        <column name="name" xsi:type="text" nullable="false" comment="Name"/>
+        <column name="email" xsi:type="text" nullable="false" comment="Email"/>
+        <column name="phone" xsi:type="text" nullable="true" comment="Phone"/>
+        <column name="message" xsi:type="text" nullable="true" comment="Message"/>
+        <!-- Hidden field captured -->
+        <column name="page_url" xsi:type="text" nullable="true" comment="Page URL"/>
+        <column name="created_at" xsi:type="timestamp" default="CURRENT_TIMESTAMP" on_update="false" nullable="false" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="V4U_COMINGSOON_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+    </table>
+</schema>

@@ -1,0 +1,27 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+?>
+<?php if (!$block->isContentMode() || $block->isMixedMode()) :?>
+    <?= $block->getProductListHtml() ?>
+<?php endif; ?>
+<?php
+$new_layout = array(137);
+if( in_array( $block->getCurrentCategory()->getId() , $new_layout )  ){ ?>
+    <div class="art_enquiry">   
+                <div class="col-md-12">
+                    <div class="row">
+                        <a class="btn btn-transparent-border btn100 popup_anchor"><?php /* @escapeNotVerified */ echo __('Enquire Now') ?></a>
+                    </div>
+                </div>
+            </div>
+<?php  } ?>

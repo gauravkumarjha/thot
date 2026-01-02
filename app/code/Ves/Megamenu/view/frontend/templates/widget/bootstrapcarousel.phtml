@@ -1,0 +1,260 @@
+<?php
+/**
+ * Products template
+ *
+ * @var \Ves\Megamenu\Block\Widget\Products $block
+ */
+?>
+<?php
+use Magento\Catalog\Block\Product\ReviewRendererInterface;
+$_productCollection = [];
+$helper = $this->helper("Ves\Megamenu\Helper\Data");
+$collection = [];
+$exit = [];
+$imgHelper = $this->helper("Ves\Megamenu\Helper\Image");
+if ($exit = ($collection = $block->getProductCollection() && $block->getProductCollection()->getSize())) {
+	$mode = 'grid';
+	//$type = '-ves-megamenu-list-' . time().rand();
+    $type = 'ves-megamenu-bootstrap-list';
+	$image = 'new_products_content_widget_grid';
+	$title = $this->getConfig("widget_title");
+	$collection = $block->getProductCollection();
+	$showWishlist    = $this->getConfig("show_wishlist");
+	$showCompare     = $this->getConfig("show_compare");
+	$showCart        = $this->getConfig("show_addtocart");
+	$templateType    = ReviewRendererInterface::SHORT_VIEW;
+	$description     = $this->getConfig("show_short_description");
+	$show_name       = $this->getConfig("show_name");
+	$show_price      = $this->getConfig("show_price");
+	$show_review     = $this->getConfig("show_review");
+	$show_image      = $this->getConfig("show_image");
+	$show_new_label  = $this->getConfig("show_new_label");
+	$show_sale_label = $this->getConfig("show_sale_label");
+	$image_width     = $this->getConfig('image_width',150);
+	$image_height    = $this->getConfig('image_height');
+
+	//If image width is not specified, use default values
+	if ($image_width <= 0){
+		$image_width = 150;
+		$image_height = 150;
+	}
+	$catViewKeepFrame = TRUE;
+
+	if ($helper->getCoreRegistry()->registry('catViewKeepFrame') === NULL){
+		$helper->getCoreRegistry()->register('catViewKeepFrame', $catViewKeepFrame);
+	}
+	$column = $this->getConfig('large_items', 4);
+	$xs = 12/$column;
+}
+$blockId = time().rand();
+
+// Bootstrap Carousel
+$itemsperpage   = $this->getConfig('number_item_perpage',6);
+$lg_column_item = $this->getConfig('lg_column_item',4);
+$lg_column      = 12/$lg_column_item;
+$md_column_item = $this->getConfig('md_column_item',3);
+$md_column      = 12/$md_column_item;
+$sm_column_item = $this->getConfig('sm_column_item',2);
+$sm_column      = 12/$sm_column_item;
+$xs_column_item = $this->getConfig('xs_column_item',2);
+$xs_column      = 12/$xs_column_item;
+$bnav           = $this->getConfig('bnav');
+$bdots          = $this->getConfig('bdots');
+$wrap           = $this->getConfig('wrap');
+$keyboard       = $this->getConfig('keyboard');
+$short_max_char = (int)$this->getConfig('short_max_char',100);
+$show_learnmore = $this->getConfig('show_learnmore');
+$_helper        = $this->helper('Magento\Catalog\Helper\Output');
+$show_sku		= $this->getConfig('show_sku');
+?>
+<?php if ($exit): ?>
+	<?php $total = $collection->count(); ?>
+	<div class="megamenu-widget products-widget block-products-list block widget grid <?= $this->getData('addition_class') ?>">
+		<?php if ($title!='') : ?>
+		<div class="block-title">
+			<strong role="heading" aria-level="2"><?= $title; ?></strong>
+		</div>
+		<?php endif; ?>
+		<div id="mcarousel<?= $blockId ?>" class="block-content carousel slide" data-interval="false" data-wrap="<?= $wrap?'true':'false' ?>" data-keyboard="<?= $keyboard?'true':'false' ?>" data-ride="carousel">
+			<?php
+			$i = 1;
+			$x = 0;
+			?>
+			<div class="product-items megamenu-products<?= $blockId ?> <?= $type; ?> carousel-inner products-grid">
+				<?php $iterator = 1; ?>
+				<?php foreach ($collection as $_item) : ?>
+				<?php if( $itemsperpage == 1 || $i % $itemsperpage == 1) : ?>
+				<div class="item <?php if ($i==1) : ?>active<?php endif; ?>">
+				<?php endif; ?>
+					<?php if( $lg_column_item == 1 || $x%$lg_column_item == 0 || $x%$itemsperpage == 0) : ?>
+					<div class="row">
+					<?php endif; ?>
+
+						<div class="col-lg-<?= $lg_column; ?> col-md-<?= $md_column; ?> col-sm-<?= $sm_column ?> col-xs-<?= $xs_column; ?> <?php if($x==0) : echo "first"; endif; ?> <?php if($x==$total) : echo "last"; endif; ?> carousel-item">
+							<div class="product-item">
+								<div class="product-item-info">
+									<?php // Sale Icon, New Icon Block ?>
+									<?php if($show_new_label || $show_sale_label) : ?>
+									<div class="icon">
+										<?php
+										if ($show_sale_label) :
+											$specialprice = $_item->getSpecialPrice();
+											$specialPriceFromDate = $_item->getSpecialFromDate();
+											$specialPriceToDate = $_item->getSpecialToDate();
+											$today =  time();
+											if ($specialprice && $specialprice != $_item->getPrice()) :
+                                                $specialPriceToDateTime = !empty($specialPriceToDate) ? strtotime($specialPriceToDate) : strtotime("+1 day");
+                                                $specialPriceFromDateTime = !empty($specialPriceFromDate) ? strtotime($specialPriceFromDate) : strtotime("-1 day");
+												if(($today >= $specialPriceFromDateTime && $today <= $specialPriceToDateTime) || ($today >= $specialPriceFromDateTime && is_null($specialPriceToDate))) :
+												?>
+													<span class="onsale"><?= __("Sale");?></span>
+												<?php
+												endif;
+											endif;
+										endif;;
+										if ($show_new_label) :
+											$is_new = $block->checkProductIsNew( $_item );
+											if($is_new) : ?>
+											<span class="new-icon"><?= __("New");?></span>
+											<?php
+                                            endif;
+									    endif;
+								?>
+								</div>
+								<?php endif; ?>
+
+								<?php if($show_image) : ?>
+								<?php $_image = $imgHelper->getImg($_item, $image_width, $image_height, 'category_page_grid'); ?>
+								<?php if($_image) : ?>
+								<a href="<?= $block->getProductUrl($_item) ?>" class="product-item-photo">
+									<img src="<?= $_image->getUrl(); ?>" alt="<?= $_image->getLabel() ?>" width="<?= $image_width ?>" height="<?= $image_height ?>"/>
+								</a>
+								<?php endif; ?>
+								<?php endif; ?>
+
+								<div class="product-item-details">
+									<?php if($show_name) : ?>
+									<strong class="product-item-name">
+										<a title="<?= $block->escapeHtml($_item->getName()) ?>"
+											href="<?= $block->getProductUrl($_item) ?>"
+											class="product-item-link">
+											<?= $block->escapeHtml($_item->getName()) ?>
+										</a>
+									</strong>
+									<?php endif; ?>
+									<?php if($show_sku) : ?>
+										<span><?= __("Sku: ").$_item->getSku(); ?></span>
+                                    <?php endif; ?>
+									<?php // Short Description ?>
+									<?php $shortDescription = $_helper->productAttribute($_item, $_item->getShortDescription(), 'short_description'); ?>
+									<?php if ($description && $shortDescription) : ?>
+									<div class="product-item-inner">
+										<div class="product-item-description">
+											<?php $short_description = $helper->subString($shortDescription, $short_max_char, '...'); ?>
+											<?= $short_description; ?>
+											<?php if($show_learnmore && $shortDescription != '') : ?>
+											<a href="<?= $_item->getProductUrl() ?>" title="<?= $_item->getName() ?>" class="action more">
+												<?= __('Learn More') ?>
+											</a>
+											<?php endif; ?>
+										</div>
+									</div>
+									<?php endif; ?>
+
+									<?php // Price ?>
+									<?php if ($show_price) : ?>
+									<?= $block->getVesProductPriceHtml($_item, $type) ?>
+									<?php endif; ?>
+
+									<?php // Preview ?>
+									<?php if ($show_review && $templateType): ?>
+										<?= $block->getReviewsSummaryHtml($_item, $templateType, true); ?>
+									<?php endif; ?>
+
+									<?php if ($showWishlist || $showCompare || $showCart): ?>
+										<div class="product-item-actions">
+											<?php if ($showCart): ?>
+												<div class="actions-primary">
+													<?php if ($_item->isSaleable()): ?>
+														<?php if ($_item->getTypeInstance()->hasRequiredOptions($_item)): ?>
+															<button class="action tocart primary"
+															data-mage-init='{"redirectUrl":{"url":"<?= $block->getAddToCartUrl($_item) ?>"}}'
+															type="button" title="<?= __('Add to Cart') ?>">
+															<span><?= __('Add to Cart') ?></span>
+														</button>
+													<?php else: ?>
+														<?php
+														$postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
+														$postData = $postDataHelper->getPostData($block->getAddToCartUrl($_item), ['product' => $_item->getEntityId()])
+														?>
+														<button class="action tocart primary"
+														data-post='<?= $postData; ?>'
+														type="button" title="<?= __('Add to Cart') ?>">
+														<span><?= __('Add to Cart') ?></span>
+													</button>
+												<?php endif; ?>
+											<?php else: ?>
+												<?php if ($_item->getIsSalable()): ?>
+													<div class="stock available"><span><?= __('In stock') ?></span></div>
+												<?php else: ?>
+													<div class="stock unavailable"><span><?= __('Out of stock') ?></span></div>
+												<?php endif; ?>
+											<?php endif; ?>
+										</div>
+									<?php endif; ?>
+									<?php if ($showWishlist || $showCompare): ?>
+										<div class="actions-secondary" data-role="add-to-links">
+											<?php if ($this->helper('Magento\Wishlist\Helper\Data')->isAllow() && $showWishlist): ?>
+												<a href="#"
+												data-post='<?= $block->getAddToWishlistParams($_item); ?>'
+												class="action towishlist" data-action="add-to-wishlist"
+												title="<?= __('Add to Wish List') ?>">
+												<span><?= __('Add to Wish List') ?></span>
+											</a>
+										<?php endif; ?>
+										<?php if ($block->getAddToCompareUrl() && $showCompare): ?>
+											<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
+											<a href="#" class="action tocompare"
+											data-post='<?= $compareHelper->getPostDataParams($_item);?>'
+											title="<?= __('Add to Compare') ?>">
+											<span><?= __('Add to Compare') ?></span>
+										</a>
+									<?php endif; ?>
+								</div>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php if( $lg_column_item == 1 || ($x+1)%$lg_column_item == 0 || $i == $total || ($x>0 && ($x+1)%$itemsperpage == 0) ) :  ?>
+</div>
+<?php endif; ?>
+<?php if( $itemsperpage == 1 || ($i+1)%$itemsperpage == 1 || $i == $total ) : $x = -1; ?>
+</div>
+<?php $iterator++; ?>
+<?php endif; ?>
+<?php $i++; $x++; ?>
+<?php endforeach; ?>
+</div>
+<?php if($bnav && $total > $itemsperpage) : ?>
+<div class="carousel-controls">
+	<a class="left carousel-control fa fa-angle-left" href="#mcarousel<?= $blockId ?>" role="button" data-slide="prev"></a>
+	<a class="right carousel-control fa fa-angle-right" href="#mcarousel<?= $blockId ?>" role="button" data-slide="next"></a>
+</div>
+<?php endif; ?>
+
+<?php if($bdots && $total > $itemsperpage) : ?>
+<?php if( $iterator > 2) : ?>
+<ol class="carousel-indicators">
+	<?php for ($i=0; $i < ($iterator-1); $i++) :  ?>
+	<li data-target="#mcarousel<?= $blockId ?>" data-slide-to="<?= $i ?>" <?php if ($i==0) : ?>class="active"<?php endif; ?>></li>
+	<?php endfor; ?>
+</ol>
+<?php endif; ?>
+<?php endif; ?>
+</div>
+</div>
+<?php endif; ?>

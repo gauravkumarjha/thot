@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceContainer name="content">
+			<container name="main.brand.page.container" htmlClass="bg-white product-listing brand-main-section" htmlTag="section">
+            <container name="main.brand.allbrand.container" htmlClass="container bg-white" htmlTag="div">
+                <container name="allbrand.mobile.container" htmlClass="row" htmlTag="div">
+                    <container name="allbrand.imgtext.container" htmlClass="col-md-12 products-host-image-container-mobile" htmlTag="div">
+                        <container name="allbrand.img.container" htmlClass="col-md-12 col-sm-12 col-xs-12" htmlTag="div">
+                            <container name="allbrand.img.row.container" htmlClass="row" htmlTag="div">
+                                <block class="Magento\Framework\View\Element\Template" name="brandpage.image.block.container" 
+                                    template="Magento_Theme::html/allbrandimageblock.phtml">
+                                     <arguments>
+                                        <argument name="text" xsi:type="string"><![CDATA[<!--sss -->]]></argument>
+                                      </arguments>
+                                </block>
+                                <block class="Magento\Framework\View\Element\Text" name="comment.placeholder">
+                                </block>
+                            </container>
+                        </container>
+                        <container name="allbrand.desc.block.container" htmlTag="div" 
+                            htmlClass="col-md-12 col-sm-12 col-xs-12 product-host-image-content makers-host">
+                            <block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="html/brandtitle.phtml"/>
+                            <block class="Magento\Framework\View\Element\Template" name="brandpage.descp.block.container" 
+                                template="Magento_Theme::html/allbranddescpblock.phtml">
+                            </block>
+                        </container>
+                    </container>
+                </container>
+                <container name="allbrand.desktop.container" htmlTag="div" htmlClass="branddesktop">
+                <block class="Magento\Theme\Block\Html\Title" name="page.main.desktop.title" template="html/brandtitledesktop.phtml"/>
+                    <block class="Ves\Brand\Block\Brandpage" name="vesbrand.list">
+                        <block class="Ves\Brand\Block\Toolbar" name="vesbrand_toolbar" template="Ves_Brand::toolbar.phtml">
+                            <block class="Magento\Theme\Block\Html\Pager" name="brand_list_toolbar_pager"/>
+                        </block>
+                    </block>
+                </container>
+                <container name="allbrandlist.mobile.container" htmlClass="makers-col-mobile" htmlTag="div">
+                    <container name="allbrandlist.main.container" htmlClass="container" htmlTag="div">
+                        <container name="allbrandlist.main.row.container" htmlClass="row" htmlTag="div">
+                            <container name="allbrandlist.main.col12.container" htmlClass="col-md-12" htmlTag="div">
+                            <container name="allbrandlist.main.col12.row.container" htmlClass="row" htmlTag="div">
+                                <block class="Ves\Brand\Block\Brandpage" name="vesbrand.list.mobile" template="Ves_Brand::mobilebrandlist.phtml">
+                                    <block class="Ves\Brand\Block\Toolbar" name="vesbrand_toolbar" template="Ves_Brand::toolbar.phtml">
+                                        <block class="Magento\Theme\Block\Html\Pager" name="brand_list_toolbar_pager"/>
+                                    </block>
+                                </block>
+                            </container>
+                            </container>
+                        </container>
+                    </container>
+                </container>
+            </container>
+        </container>
+		</referenceContainer>
+
+        <move element="breadcrumbs" destination="main.brand.page.container"  before="-" />
+        <move element="page.main.desktop.title" destination="allbrand.desktop.container"  before="-" />
+        <move element="allbrand.img.container" destination="allbrand.imgtext.container"  before="-" />
+        <referenceContainer name="sidebar.main" remove="true"/>
+	</body>
+</page>

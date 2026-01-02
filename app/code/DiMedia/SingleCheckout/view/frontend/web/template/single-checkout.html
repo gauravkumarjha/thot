@@ -1,0 +1,41 @@
+<div class="single-checkout-layout">
+    <div class="checkout-main-sections">
+        <div class="single-checkout-accordion-item" data-bind="css: {'_active': isSectionActive('shipping')}">
+            <h2 class="single-checkout-accordion-title" data-bind="click: function() { toggleSection('shipping') }">
+                <span>1. Shipping Information & Method</span>
+            </h2>
+            <div class="single-checkout-accordion-content" data-bind="visible: isSectionActive('shipping')">
+                <div id="shipping-information">
+                    <each args="getRegion('shipping-address')" render=""></each>
+                </div>
+
+                <div id="shipping-method">
+                    <each args="getRegion('shipping-method')" render=""></each>
+                </div>
+
+                <div class="actions-toolbar">
+                    <button type="submit" class="button action continue primary" data-bind="click: moveToPayment">
+                        <span>Continue to Payment</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="single-checkout-accordion-item" data-bind="css: {'_active': isSectionActive('payment')}">
+            <h2 class="single-checkout-accordion-title" data-bind="click: function() { toggleSection('payment') }">
+                <span>2. Payment Method</span>
+            </h2>
+            <div class="single-checkout-accordion-content" data-bind="visible: isSectionActive('payment')">
+                <div id="checkout-payment-method">
+                   <each args="getRegion('sidebar')" render=""></each>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-sidebar-summary">
+        <div id="checkout-sidebar-summary">
+            <each args="getRegion('sidebar')" render=""></each>
+        </div>
+    </div>
+</div>

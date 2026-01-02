@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+
+    <event name="cms_block_save_before">
+        <observer name="v4u_cmswatcher_save_before" instance="V4U\CmsWatcher\Observer\CmsBlockSaveBefore" />
+    </event>
+
+
+    <event name="cms_block_save_after">
+        <observer name="v4u_cmswatcher_save_after" instance="V4U\CmsWatcher\Observer\CmsBlockSaveAfter" />
+    </event>
+
+
+</config>

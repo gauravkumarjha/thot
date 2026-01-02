@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_PhonePe
+ * @author    Webkul Software Private Limited
+ * @copyright  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    	<add id="Webkul_PhonePe::phonepe" title="PhonePe" translate="title" module="Webkul_PhonePe" sortOrder="10" resource="Webkul_PhonePe::phonepe" dependsOnConfig="payment/phonepe/active"/>
+        <add id="Webkul_PhonePe::details" title="Configuration Settings" translate="title" module="Webkul_PhonePe" sortOrder="20" parent="Webkul_PhonePe::phonepe" dependsOnModule="Webkul_PhonePe" action="adminhtml/system_config/edit/section/payment" resource="Webkul_PhonePe::details"/>
+    </menu>
+</config>

@@ -1,0 +1,21 @@
+<div class="single-checkout-wrapper">
+
+    <div class="single-shipping">
+        <!-- ko template: getRegion('shippingAddress') --><!-- /ko -->
+    </div>
+
+    <div class="single-payment">
+        <!-- ko if: !isAddressValid() -->
+        <div class="payment-locked">Complete shipping address to unlock payment methods.</div>
+        <!-- /ko -->
+
+        <!-- ko if: isAddressValid() -->
+        <!-- ko template: getRegion('payment') --><!-- /ko -->
+        <!-- /ko -->
+    </div>
+
+    <div class="single-summary">
+        <!-- ko template: getRegion('sidebar') --><!-- /ko -->
+    </div>
+
+</div>

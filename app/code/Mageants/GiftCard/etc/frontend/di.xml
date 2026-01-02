@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="checkout_giftcard_block" xsi:type="object">Mageants\GiftCard\Model\GiftCardConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Directory\Controller\Currency\SwitchAction">
+        <plugin name="custom_price_fix"
+                type="Mageants\GiftCard\Plugin\SwitchAction"
+                sortOrder="10"/>
+    </type>
+    <preference for="Magento\Checkout\Model\Cart" type="Mageants\GiftCard\Model\Cart" />
+</config>

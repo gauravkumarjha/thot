@@ -1,0 +1,96 @@
+<?php
+$_brand = $block->getCurrentBrand();
+$_img_one = '';
+$_img_two = '';
+$_img_three = '';
+$_img_four = '';
+$_img_five = '';
+$_img_six = '';
+$_img_seven = '';
+$_img_eight = '';
+$webpImageDataHelper = $this->helper('DiMedia\WebpImage\Helper\Data');
+?>
+<section class="bg-white shareImg">
+	<div class="container">
+		<div class="col-md-8">
+			<?php if ($_img_one = $_brand->getImageOne()) { ?>
+				<div class="col-md-12">
+					<?php $_img_one = $webpImageDataHelper->getWebpUrl("/media/" . $_img_one); ?>
+					<img src="<?php echo $_img_one ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_two = $_brand->getImageTwo()) { ?>
+				<?php $_img_two = $webpImageDataHelper->getWebpUrl("/media/" . $_img_two); ?>
+				<div class="col-md-6">
+					<img src="<?php echo $_img_two; ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_three = $_brand->getImageThree()) { ?>
+				<?php $_img_three = $webpImageDataHelper->getWebpUrl("/media/" . $_img_three); ?>
+				<div class="col-md-6">
+					<img src="<?php echo $_img_three; ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_four = $_brand->getImageFour()) { ?>
+				<?php $_img_four = $webpImageDataHelper->getWebpUrl("/media/" . $_img_four); ?>
+				<div class="col-md-12">
+					<img src="<?php echo $_img_four; ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_five = $_brand->getImageFive()) { ?>
+				<?php $_img_five = $webpImageDataHelper->getWebpUrl("/media/" . $_img_five); ?>
+				<div class="col-md-12">
+					<img src="<?php echo $_img_five; ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_six = $_brand->getImageSix()) { ?>
+				<?php $_img_six = $webpImageDataHelper->getWebpUrl("/media/" . $_img_six); ?>
+				<div class="col-md-12">
+					<img src="<?php echo $_img_six; ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_seven = $_brand->getImageSeven()) { ?>
+				<?php $_img_seven = $webpImageDataHelper->getWebpUrl("/media/" . $_img_seven); ?>
+				<div class="col-md-6">
+					<img src="<?php echo $_img_seven; ?>" class="img-responsive" />
+				</div>
+			<?php }
+			if ($_img_eight = $_brand->getImageEight()) { ?>
+				<?php $_img_eight = $webpImageDataHelper->getWebpUrl("/media/" . $_img_eight); ?>
+				<div class="col-md-6">
+					<img src="<?php echo $_img_eight; ?>" class="img-responsive" />
+				</div>
+			<?php } ?>
+		</div>
+		<div class="col-md-12">
+			<div class="row">
+				<?php if ($_name = $block->getCurrentBrand()->getName()): ?>
+					<?php
+					if (
+						!empty($block->getCurrentBrand()->getData('facebook_uri')) ||
+						!empty($block->getCurrentBrand()->getData('instagram_uri')) ||
+						!empty($block->getCurrentBrand()->getData('twitter_uri'))
+					) { ?>
+						<p class="spImgShare">
+							<?php /* @escapeNotVerified */ echo __('Follow ' . $this->helper('Ves\Brand\Helper\Data')->filter($_name)); ?>
+						</p>
+					<?php } ?>
+				<?php endif; ?>
+				<p class="spImgShare">
+					<?php if ($block->getCurrentBrand()->getData('facebook_uri')) { ?>
+						<a class="social-icon facebook" href="<?php echo $block->getCurrentBrand()->getData('facebook_uri') ?>" target="_blank">Facebook</a>
+					<?php
+					}
+					if ($block->getCurrentBrand()->getData('instagram_uri')) {
+					?>
+						<a class="social-icon instagram" href="<?php echo $block->getCurrentBrand()->getData('instagram_uri') ?>" target="_blank">Instagram</a>
+					<?php  }
+					if ($block->getCurrentBrand()->getData('twitter_uri')) {
+					?>
+						<a class="social-icon twitter" href="<?php echo $block->getCurrentBrand()->getData('twitter_uri') ?>" target="_blank">Twitter</a>
+				</p><?php } ?>
+			<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</section>

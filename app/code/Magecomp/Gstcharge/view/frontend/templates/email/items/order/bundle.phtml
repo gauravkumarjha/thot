@@ -1,0 +1,157 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+?>
+<?php /** @var $block \Magento\Bundle\Block\Sales\Order\Items\Renderer */ ?>
+<?php $_item = $block->getItem() ?>
+<?php $_order = $block->getOrder() ?>
+
+<?php $parentItem = $block->getItem() ?>
+<?php $items = array_merge([$parentItem], $parentItem->getChildrenItems()); ?>
+
+<?php if ($block->getItemOptions() || $_item->getDescription() || $this->helper(Magento\GiftMessage\Helper\Message::class)->isMessagesAllowed('order_item', $_item) && $_item->getGiftMessageId()) : ?>
+    <?php $_showlastRow = true ?>
+<?php else : ?>
+    <?php $_showlastRow = false ?>
+<?php endif; ?>
+
+<?php $_prevOptionId = '' ?>
+
+<?php foreach ($items as $_item) : ?>
+
+    <?php if ($_item->getParentItem()) : ?>
+        <?php $attributes = $block->getSelectionAttributes($_item) ?>
+        <?php if ($_prevOptionId != $attributes['option_id']) : ?>
+            <tr class="bundle-option-label">
+                <td colspan="3">
+                    <strong><em><?= $block->escapeHtml($attributes['option_label']) ?></em></strong>
+                </td>
+            </tr>
+            <?php $_prevOptionId = $attributes['option_id'] ?>
+        <?php endif; ?>
+    <?php endif; ?>
+     <?php if (!$_item->getParentItem()):
+            $checkdynamicprice = $this->helper('Magecomp\Gstcharge\Helper\Data')->getProductgstdata($_item->getProductId());    
+    endif; ?>
+
+    <?php if (!$_item->getParentItem()) : ?>
+        <tr class="bundle-item bundle-parent">
+            <td class="item-info">
+                <p class="product-name"><?= $block->escapeHtml($_item->getName()) ?></p>
+                <p class="sku"><?= $block->escapeHtml(__('SKU')) ?>: <?= $block->escapeHtml($block->getSku($_item)) ?></p>
+            </td>
+            <!-- magecomp start -->
+        <?php $checkParentDynamicPrice = $this->helper('Magecomp\Gstcharge\Helper\Data')->getProductgstdata($_item->getProductId()); ?>
+         <td colspan="2" class="col subtotal" data-th="<?php echo $block->escapeHtml(__('CGST')); ?>">
+            <table class="gsttable" style="width: 100%">
+                <tbody style="background:none;text-align:center">
+                <tr>
+                    <td><span><?php echo ($checkParentDynamicPrice) ? $_item->getcgst_percent() : '&nbsp;';?></span></td>
+                    <td><span><?php echo  ($checkParentDynamicPrice) ? $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_item->getCgstCharge(), true, false) : '&nbsp;' ; ?></span></td>
+                </tr>
+            </table>
+
+        </td>
+        <td colspan="2" class="col subtotal" data-th="<?php echo $block->escapeHtml(__('SGST')); ?>">
+            <table class="gsttable" style="width: 100%">
+                <tbody style="background:none;text-align:center">
+                <tr>
+                    <td><span><?php echo ($checkParentDynamicPrice) ? $_item->getsgst_percent() : '&nbsp;';?></span></td>
+                    <td><span><?php echo ($checkParentDynamicPrice) ? $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_item->getSgstCharge(), true, false) : '&nbsp;';  ?></span></td>
+                </tr>
+            </table>
+        </td>
+        <td colspan="2" class="col subtotal" data-th="<?php echo $block->escapeHtml(__('IGST')); ?>">
+            <table class="gsttable" style="width: 100%">
+                <tbody style="background:none;text-align:center">
+                <tr>
+                    <td><span><?php echo ($checkParentDynamicPrice) ?$_item->getigst_percent() : '&nbsp;';?></span></td>
+                    <td><span><?php echo ($checkParentDynamicPrice) ?$this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_item->getIgstCharge(), true, false) : '&nbsp;' ;  ?></span></td>
+                </tr>
+            </table>
+        </td>
+    <!-- magecomp End -->
+        <td class="item-qty">
+                <?= (float)$_item->getQtyOrdered() * 1 ?>
+        </td>
+        <td class="item-price">
+                <?= /* @noEscape */ $block->getItemPrice($_item) ?>
+        </td>
+        </tr>
+    <?php else : ?>
+        <tr class="bundle-item bundle-option-value">
+            <td class="item-info">
+                <p><?= $block->getValueHtml($_item) ?></p>
+            </td>
+             <!-- magecomp start -->
+            <?php  if ((!$checkdynamicprice)  && $_item->getParentItem()): ?>
+            <td colspan="2" class="col subtotal" data-th="<?php echo $block->escapeHtml(__('CGST')); ?>">
+                <table style="width: 100%">
+                      <tbody style="background:none;text-align:center">
+                         <tr>
+                             <td><?php echo round($_item->getcgst_percent(),2)."%";?></span></td>
+                             <td><?php echo $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_item->getCgstCharge(),true,false);  ?></span></td>
+                         </tr>
+                   </table>
+               
+            </td>
+             <td colspan="2" class="col subtotal" data-th="<?php echo $block->escapeHtml(__('SGST')); ?>">
+                <table style="width: 100%">
+                    <tbody style="background:none;text-align:center">
+                        <tr>
+                            <td><?php echo round($_item->getsgst_percent(),2)."%";?></span></td>
+                            <td><?php echo $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_item->getSgstCharge(),true,false);  ?></span></td>
+                        </tr>
+                </table>
+            </td>
+             <td colspan="2" class="col subtotal" data-th="<?php echo $block->escapeHtml(__('IGST')); ?>">
+               <table style="width: 100%">
+                                  <tbody style="background:none;text-align:center">
+                                    <tr>
+                                        <td><?php echo round($_item->getigst_percent(),2)."%";?></span></td>
+                                        <td><?php echo $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_item->getIgstCharge(),true,false);  ?></span></td>
+                                    </tr>
+                                </table>
+            </td>
+            <?php endif; ?>
+            <!-- magecomp End -->
+
+            </tr>
+
+     <?php endif; ?>
+
+       
+        
+
+<?php endforeach; ?>
+
+<?php if ($_showlastRow) : ?>
+    <tr>
+        <td colspan="3" class="item-extra">
+            <?php if ($block->getItemOptions()) : ?>
+            <dl>
+                <?php foreach ($block->getItemOptions() as $option) : ?>
+                <dt><strong><em><?= $block->escapeHtml($option['label']) ?></em></strong></dt>
+                            <dd><?= $block->escapeHtml($option['value']) ?></dd>
+                <?php endforeach; ?>
+            </dl>
+            <?php endif; ?>
+            <?php if ($_item->getGiftMessageId() && $_giftMessage = $this->helper(Magento\GiftMessage\Helper\Message::class)->getGiftMessage($_item->getGiftMessageId())) : ?>
+                <table class="message-gift">
+                    <tr>
+                        <td>
+                            <h3><?= $block->escapeHtml(__('Gift Message')) ?></h3>
+                            <strong><?= $block->escapeHtml(__('From:')) ?></strong> <?= $block->escapeHtml($_giftMessage->getSender()) ?>
+                            <br /><strong><?= $block->escapeHtml(__('To:')) ?></strong> <?= $block->escapeHtml($_giftMessage->getRecipient()) ?>
+                            <br /><strong><?= $block->escapeHtml(__('Message:')) ?></strong>
+                            <br /><?= $block->escapeHtml($_giftMessage->getMessage()) ?>
+                        </td>
+                    </tr>
+                </table>
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endif; ?>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/Event/etc/events.xsd">
+
+<event name="controller_action_predispatch_catalog_product_view">
+        <observer name="redirect_disabled_product_to_category" instance="DiMedia\Utility\Observer\ProductRedirect"/>
+    </event>
+ <event name="controller_action_predispatch_cms_noroute_index">
+        <observer name="v4u_redirect_product_404" instance="DiMedia\Utility\Observer\RedirectProductFrom404" />
+    </event>
+</config>

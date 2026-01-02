@@ -1,0 +1,41 @@
+<div id="v4u-custom-checkout" data-bind="scope:'checkout'">
+
+    <!-- SHIPPING SECTION -->
+    <div class="v4u-section">
+        <h3>Shipping Information</h3>
+        <!-- ko template: 'Magento_Checkout/shipping' --><!-- /ko -->
+        <!-- ko template: 'Magento_Checkout/shipping-method/list' --><!-- /ko -->
+    </div>
+
+    <!-- PAYMENT SECTION -->
+    <div class="v4u-section">
+        <h3>Payment Method</h3>
+        <!-- ko template: 'Magento_Checkout/payment' --><!-- /ko -->
+    </div>
+
+</div>
+
+<script type="text/x-magento-init">
+    {
+    "#v4u-custom-checkout": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "checkout": {
+                    "component": "uiComponent",
+                    "config": {
+                        "template": "ui/form/components/fieldset"
+                    },
+                    "children": {
+                        "shipping": {
+                            "component": "Magento_Checkout/js/view/shipping"
+                        },
+                        "payment": {
+                            "component": "Magento_Checkout/js/view/payment"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</script>

@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	  <head>
+        <script src="YourVendor_YourModule::js/ajaxscroll.js" />
+    </head>
+	<body>
+        <referenceContainer name="content">
+			<container name="inedit.main.container" htmlClass="page-content bg-white" htmlTag="div">
+            <block class="Chetaru\Edit\Block\Index\Index" name="index.index" template="Chetaru_Edit::view.phtml"/>
+			</container>
+        </referenceContainer>
+		<move element="breadcrumbs" destination="inedit.main.container"  before="-" />
+		<referenceContainer name="page.main.title" remove="true"/>
+		<move element="page.messages" destination="inedit.main.container"  after="breadcrumbs" />
+    </body>
+</page>
+
+
+
+
+

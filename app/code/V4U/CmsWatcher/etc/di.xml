@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Disable CMS Block Add/Update/Delete -->
+    <type name="Magento\Cms\Api\BlockRepositoryInterface">
+        <plugin name="v4u_disable_cms_block_api"
+                type="V4U\CmsWatcher\Plugin\DisableCmsBlockApi"/>
+    </type>
+
+    <!-- Disable CMS Page Add/Update/Delete -->
+    <type name="Magento\Cms\Api\PageRepositoryInterface">
+        <plugin name="v4u_disable_cms_page_api"
+                type="V4U\CmsWatcher\Plugin\DisableCmsPageApi"/>
+    </type>
+
+</config>

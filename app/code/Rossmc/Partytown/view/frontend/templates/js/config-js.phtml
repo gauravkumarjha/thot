@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+use Rossmc\Partytown\ViewModel\Settings;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var Settings $settingsVM */
+
+$settingsVM = $block->getSettingsViewModel();
+$forwarding = $settingsVM->getForwarding();
+?>
+<script>
+  partytown = {
+    debug: <?= $settingsVM->isDebugEnabled() ? 'true' : 'false' ?>,
+    loadScriptsOnMainThread: <?= $settingsVM->getMainThreadScripts() ?? '[]' ?>,
+    lib: '<?= $escaper->escapeUrl($block->getViewFileUrl("Rossmc_Partytown::js/public/~partytown")) ?>/'.replace(window.location.origin, ''),
+    forward: <?= $settingsVM->getForwarding() ?? '[]' ?>
+  };
+</script>

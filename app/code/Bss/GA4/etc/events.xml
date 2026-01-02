@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at thisURL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2018 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_cart_product_add_after">
+        <observer name="bss_event_add_to_cart" instance="Bss\GA4\Observer\AddToCart" />
+    </event>
+    <event name="checkout_cart_product_add_before">
+        <observer name="bss_before_add_to_cart" instance="Bss\GA4\Observer\AddGroupedToCart" />
+    </event>
+    <event name="wishlist_add_product">
+        <observer name="bss_event_add_to_wishlist" instance="Bss\GA4\Observer\AddToWishlist" />
+    </event>
+    <event name="sales_quote_remove_item">
+        <observer name="bss_event_remove_item" instance="Bss\GA4\Observer\RemoveItem" />
+    </event>
+    <event name="sales_order_creditmemo_refund">
+        <observer name="bss_event_refund" instance="Bss\GA4\Observer\Refund" />
+    </event>
+    <event name="checkout_controller_multishipping_shipping_post">
+        <observer name="bss_event_multishipping_shipping_post" instance="Bss\GA4\Observer\MultiShipping\SelectShippingMethod" />
+    </event>
+    <event name="wishlist_product_add_after">
+        <observer name="bss_add_to_wishlist_from_cart" instance="Bss\GA4\Observer\AddToWishlistFromCart"/>
+    </event>
+</config>

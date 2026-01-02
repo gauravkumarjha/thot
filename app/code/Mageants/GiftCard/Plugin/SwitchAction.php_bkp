@@ -1,0 +1,180 @@
+<?php
+/**
+ * @category Mageants GiftCard
+ * @package Mageants_GiftCard
+ * @copyright Copyright (c) 2016  Mageants
+ * @author Mageants Team <support@mageants.com>
+ */
+
+namespace Mageants\GiftCard\Plugin;
+
+use Magento\Directory\Controller\Currency\SwitchAction as SwitchActionParent;
+
+/**
+ * Plugin SwitchAction
+ */
+class SwitchAction
+{
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    private $_checkoutSession;
+
+    /**
+     * @var \Magento\Framework\App\Action\Contex
+     */
+    protected $context;
+
+    /**
+     * @var Cart
+     */
+    protected $cart;
+
+    /**
+     * @var CurrencyFactory
+     */
+    protected $currencyFactory;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var \Magento\Framework\Session\SessionManagerInterface
+     */
+    private $_sessionManagerInterface;
+
+    /**
+     * @var \Mageants\GiftCard\Helper\CurrencyData
+     */
+    protected $_currencyData;
+
+    /**
+     * @var \Mageants\GiftCard\Model\ResourceModel\Giftquote\CollectionFactory
+     */
+    protected $_giftQuoteCollectionFactory;
+
+    /**
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Checkout\Model\Cart $cart
+     * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Session\SessionManagerInterface $sessionManagerInterface
+     * @param \Mageants\GiftCard\Helper\CurrencyData $currencyData
+     * @param \Mageants\GiftCard\Model\ResourceModel\Giftquote\CollectionFactory $giftQuoteCollectionFactory
+     */
+    public function __construct(
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Checkout\Model\Cart $cart,
+        \Magento\Directory\Model\CurrencyFactory $currencyFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Session\SessionManagerInterface $sessionManagerInterface,
+        \Mageants\GiftCard\Helper\CurrencyData $currencyData,   
+        \Mageants\GiftCard\Model\ResourceModel\Giftquote\CollectionFactory $giftQuoteCollectionFactory
+    ) {
+        $this->_checkoutSession  = $checkoutSession;
+        $this->cart              = $cart;
+        $this->currencyFactory   = $currencyFactory;
+        $this->storeManager      = $storeManager;
+        $this->_sessionManagerInterface = $sessionManagerInterface;
+        $this->_currencyData = $currencyData;
+        $this->_giftQuoteCollectionFactory = $giftQuoteCollectionFactory;
+    }
+
+    /**
+     * Currency switcher before plugin
+     *
+     * @param SwitchActionParent $subject
+     *
+     * @return void
+     */
+    public function beforeExecute(SwitchActionParent $subject)
+    {  
+        $items = $this->cart->getQuote()->getItemsCollection();
+
+        $currencyObj = $this->currencyFactory->create();
+        $baseCurrency = $this->_currencyData->getBaseCurrency();
+        $newCurrency = (string) $subject->getRequest()->getParam('currency');
+        $this->_sessionManagerInterface->start();
+
+        $giftValue = $this->_checkoutSession->getGifts();
+
+        /*Coupon Code price convert start*/
+        if ($newCurrency != $baseCurrency) {
+            /* Update Price for Other Currency */
+            $rate = $currencyObj->load($baseCurrency)->getAnyRate($newCurrency);
+            $giftValue *= $rate;
+            $giftValue = (float) $currencyObj
+                                        ->format(
+                                            $giftValue,
+                                            ['display' => 1],
+                                            false
+                                        );
+            $this->_checkoutSession->setGift($giftValue);
+        } else {
+            $this->_checkoutSession->setGift($giftValue);
+        }
+        
+        /*Coupon Code price convert end*/
+        foreach ($items as $item) {
+            $quoteId = $this->_checkoutSession->getQuote()->getId();
+            $giftQuoteCollection = $this->_giftQuoteCollectionFactory->create()
+                                        ->addFieldToFilter('quote_id', $quoteId)
+                                        ->addFieldToFilter('product_id',$item->getProduct()->getId());
+            $price_type = '';
+            foreach ($giftQuoteCollection as $key => $giftQuoteCollectionValue) {
+                $price_type = $giftQuoteCollectionValue['price_type'];
+            }   
+
+            if ($item->getProductType() == "giftcertificate" && empty($price_type)) {
+                $session_array = $_SESSION['session_array']; // @codingStandardsIgnoreLine
+                foreach ($session_array as $session_item) {
+                    foreach ($session_item as $session_product) {
+                        $item_sku = $item->getsku();
+                        if ($item->getProductType() == "giftcertificate" && $item_sku == $session_product['sku']) {
+                            $this->checkCurrency($newCurrency, $baseCurrency, $currencyObj, $session_product, $item);
+                        }
+                    }
+                }
+            } else {
+                $item->setCustomPrice($item->getCustomPrice());
+                $item->setOriginalCustomPrice($item->getCustomPrice());
+                $item->save();
+            }
+        }
+    }
+
+    /**
+     * Check Currency
+     *
+     * @param string $newCurrency
+     * @param string $baseCurrency
+     * @param object $currencyObj
+     * @param array  $session_product
+     * @param object $item
+     */
+    public function checkCurrency($newCurrency, $baseCurrency, $currencyObj, $session_product, $item)
+    {  
+        if ($newCurrency != $baseCurrency) {
+            /* Update Price for Other Currency */
+            $rate = $currencyObj->load($baseCurrency)->getAnyRate($newCurrency);
+            $session_product['price'] *= $rate;
+            $session_product['price'] = $currencyObj
+                                        ->format(
+                                            $session_product['price'],
+                                            ['display' => 1],
+                                            false
+                                        );
+            $item->setCustomPrice($session_product['price']);
+            $item->setOriginalCustomPrice($session_product['price']);
+            $item->save();
+        } else {
+            /* Update Price for Base Currency */
+            $item->setCustomPrice($session_product['price']);
+            $item->setOriginalCustomPrice($session_product['price']);
+            $item->getProduct()->setIsSuperMode(true);
+            $item->save();
+        }
+    }
+}

@@ -1,0 +1,15 @@
+<li class="dd-item" data-bind="attr: {'data-id': item_id, 'id': $data.item_id, class: 'dd-item parent-align' + $data.align() }" >
+    <div class="btn-wrapper">
+        <div class="editor-btns">
+            <div class="editor-btn btn-edit" data-bind="click: $parents[$parents.length-2].btnSelectItem"><i class="fa fa-pencil" aria-hidden="true"></i></div>
+            <div class="editor-btn btn-remove" data-bind="click: $parents[$parents.length-2].removeItem"><i class="fa fa-trash" aria-hidden="true"></i></div>
+            <div class="editor-btn btn1 btn-add" data-bind="attr: {title: $t('Append New Item')}, click: $parents[$parents.length-2].addAppendChild, bootstrapTooltip: 'vesTooltip'"><i class="fa fa-sort-numeric-desc"></i></div>
+            <div class="editor-btn btn2 btn-add" data-bind="attr: {title: $t('Prepend New Item')},click: $parents[$parents.length-2].addPrependChild, bootstrapTooltip: 'vesTooltip'"><i class="fa fa-sort-numeric-asc"></i></div>
+            <div class="editor-btn btn3 btn-add" data-bind="attr: {title: $t('Duplicate Item')},click: $parents[$parents.length-2].duplicateItem, bootstrapTooltip: 'vesTooltip'"><i class="fa fa-copy"></i></div>
+        </div>
+    </div>
+    <div class="dd-handle"><span class="item-name" data-bind="html: name"></span></div>
+    <ol class="dd-list" data-bind="style: { width: 'horizontal' == $parents[$parents.length-2].modeClass() ? sub_width : '' }, attr: {class: 'dd-list ' + $data.content_type() + ' ves-column' + $data.child_col() + ' level' + $parents.length + ' ' + ($data.is_group() == 1 ? 'subgroup':'subhover') + ' dropdown-align' + $data.align() }, foreach: children">
+        <!-- ko template: 'Ves_Megamenu/menuItem' --><!-- /ko -->
+    </ol>
+</li>

@@ -1,0 +1,220 @@
+// /**
+//  * Copyright © Magento, Inc. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+@keyframes ox-modal-active-overlay {
+    0%{
+        opacity: 0;
+    }
+    20%{
+        opacity: 1;
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes ox-modal-close-overlay {
+    0%{
+        opacity: 1;
+        visibility:visible;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    100%{
+        opacity: 0;
+        visibility:hidden;
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+    }
+}
+@keyframes ox-modal-active-modal {
+    to {
+        opacity:1;
+    }
+}
+
+@keyframes ox-modal-close-modal {
+    from{
+        opacity:1;
+    }
+    to {
+        opacity:0;
+    }
+}
+& when (@media-common = true) {
+
+    .ox-modal{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 880;
+        overflow: hidden;
+        opacity: 0;
+        display: flex;
+        background: none;
+        align-items: center;
+        justify-content: center;
+        box-sizing:border-box;
+        * {
+            box-sizing:inherit;
+        }
+        > div,
+        .ox-modal-content{
+            background-color: #ffffff;
+            width:100%;
+            max-width: @ox-modal-width;
+            height: 550px;
+            overflow: hidden;
+            max-height:100vh;
+            box-shadow: 0px 5px 30px -5px rgba(0,0,0,0.11); 
+            -webkit-transition: transform 0.3s;
+            transition: transform 0.3s;
+            -webkit-transform: scale(0.95);
+            transform: scale(0.95);
+        }
+        &.ox-modal-active{
+            opacity: 1;
+            -webkit-transition: opacity 0.5s;
+            transition: opacity 0.5s;
+            animation: ox-modal-active-modal 0.5s;
+            animation-fill-mode: forwards;
+            > div,
+            .ox-modal-content{
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                -webkit-transition: transform 0.5s;
+                transition: transform 0.5s;                
+            }
+        }
+        &.ox-modal-close{
+            animation: ox-modal-close-modal 0.3s;
+            animation-fill-mode: forwards;
+        }
+    }
+
+    .ox-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: @ox-modal-overlay;
+        visibility: hidden;
+        opacity: 0;
+        z-index: @ox-modal-overlay-zindex;
+        transition: .3s opacity,.4s visibility;
+        -webkit-transition: .3s opacity,.4s visibility;
+        will-change: opacity, visibility;
+    }
+    .ox-fixed-slideout,
+    .ox-fixed-modal {
+        .ox-modal-overlay{
+            opacity: .8;
+            visibility: visible;
+        }
+    }
+    .ox-fixed-overlay{
+        .ox-modal-overlay{
+            display:none!important;
+        }
+    }
+        html,
+        body{
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+    html.ox-fixed{
+        overflow: hidden;
+    }
+    .ox-overlay {
+        background: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: @ox-modal-zindex;
+        opacity: 0;
+        visibility: hidden;
+        overflow: auto;
+        overflow-y: hidden;
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+        > div,
+        .ox-modal-content{
+            height: 100%;
+            margin: 0;
+            overflow-y: auto;
+        }
+        &.ox-overlay-active{
+            visibility: visible;
+            animation: ox-modal-active-overlay 0.5s;
+            animation-fill-mode: forwards;
+        }
+        &.ox-overlay-close{
+            animation: ox-modal-close-overlay 0.5s;
+            animation-fill-mode: forwards;
+        }
+    }
+    /* close button */
+    .ox-overlay-close-btn {
+        cursor:pointer;
+        position: absolute;        
+        top: 0px;
+        right: 0px;
+        padding: 10px;
+        z-index: 90;
+        transition: transform .3s ease .3s;
+        transition-property: transform, -webkit-transform, opacity;
+        span {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            vertical-align: middle;
+            position:relative;
+            overflow: hidden;
+            &:before, 
+            &:after {
+                content: '';
+                position: absolute;
+                height: 2px;
+                width: 100%;
+                top: 50%;
+                left: 0;
+                margin-top: -1px;
+                background-color: @ox-qv-close-btn-color;
+                transform-origin: 50% 50%;
+                opacity:1;
+                transition: transform ease 0.3s;
+            }
+            &:before{
+                transform: rotate(45deg);
+            }
+            &:after{
+                transform: rotate(-45deg);
+            }
+        }
+    }
+
+    .no-touch{
+        .ox-overlay-close-btn {
+            &:hover{
+                span {
+                    &:before,
+                    &:after{
+                        transform: rotate(0);
+                    }
+                }
+            }
+        }
+    }
+}

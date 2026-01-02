@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="jquery/ui-modules/widgets/sortable.js"/>
+        <remove src="Magento_Captcha::js/model/captcha.js" />
+        <remove src="Magento_Ui/js/lib/knockout/bindings/datepicker.js"/>
+        
+    </head>
+    <body>
+     <referenceBlock name="breadcrumbs" remove="true"/>
+    </body>
+</page>

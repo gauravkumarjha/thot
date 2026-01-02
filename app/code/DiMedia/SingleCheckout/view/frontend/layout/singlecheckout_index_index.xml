@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="DiMedia_SingleCheckout::css/single-checkout.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Checkout\Block\Onepage" name="singlecheckout.root" template="DiMedia_SingleCheckout::singlecheckout.phtml" cacheable="false">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="checkout" xsi:type="array">
+                                <item name="component" xsi:type="string">DiMedia_SingleCheckout/js/view/single-checkout</item>
+                                <item name="children" xsi:type="array">
+                                    </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

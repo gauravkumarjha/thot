@@ -1,0 +1,51 @@
+<?php
+/**
+ * @category Mageants GiftCard
+ * @package Mageants_GiftCard
+ * @copyright Copyright (c) 2016 Mageants
+ * @author Mageants Team <support@mageants.com>
+ */
+namespace Mageants\GiftCard\Observer;
+
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Checkout\Model\Session;
+
+/**
+ * Configure product when update from cart
+ */
+class CheckShoppingCartObserver implements ObserverInterface
+{
+    /**
+     * @var Magento\Checkout\Model\Session
+     */
+    protected $_checkoutSession;
+
+    /**
+     * @param Session $checkoutSession
+     */
+    public function __construct(
+        Session $checkoutSession
+    ) {
+        $this->_checkoutSession = $checkoutSession;
+    }
+
+    /**
+     * Configure product and update cart
+     *
+     * @param Observer $observer
+     */
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        $items = $this->_checkoutSession->getQuote()->getItems();
+        if ($this->_checkoutSession->getGiftquote()=='') {
+            if ($items) {
+                foreach ($items as $item) {
+                    if ($item->getProductType()=="giftcertificate") {
+                        $this->_checkoutSession->setGiftquote($item->getQuoteId());
+                    }
+
+                }
+            }
+        }
+    }
+}

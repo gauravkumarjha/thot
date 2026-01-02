@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="content">
+            <block template="Chetaru_Edit::posts.phtml" as="posts">
+                <arguments>
+                    <argument name="posts_view_model" xsi:type="object">Chetaru\Edit\ViewModel\Posts</argument>
+                </arguments>
+                <block class="Magento\Theme\Block\Html\Pager" name="edit_pager"/>
+                <block template="Chetaru_Edit::post.phtml" as="post">
+                    <arguments>
+                        <argument name="post_view_model" xsi:type="object">Chetaru\Edit\ViewModel\PostViewModel</argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="page.main.title" remove="true" />
+    </body>
+</page>

@@ -1,0 +1,74 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ *
+ * Glory to Ukraine! Glory to the heroes!
+ */
+?>
+<?php
+/**
+ * Blog related posts template
+ *
+ * @var $block \Magefan\Blog\Block\Post\View\RelatedPosts
+ * @var $block \Magefan\Blog\Block\Catalog\Product\RelatedPosts
+ */
+$_post = $block->getPost();
+?>
+
+<?php if ($block->displayPosts()) { ?>
+    <?php $postCollection = $block->getPostCollection(); ?>
+    <?php if (count($postCollection)) { ?>
+    <div class="mfblog-related-posts-block block related">
+        <?php if (!$block->getHideTitle()) { ?>
+        <div class="block-title title">
+            <strong id="block-relatedposts-heading" role="heading" aria-level="2">
+                <?= $block->escapeHtml(__('Read Similar')) ?>
+            </strong>
+        </div>
+        <?php } ?>
+        <?php $cnt=0;?>
+        <div class="block-content">
+            <?php foreach ($postCollection as $post) { ?>
+                <div class="blogBlocks col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="item">
+                                <a class="post-item-link" title="<?= $block->escapeHtml($post->getTitle()) ?>"
+                                   href="<?= $block->escapeUrl($post->getPostUrl()) ?>">
+                                    <h4 class="rbHead"><?= $block->escapeHtml($post->getTitle()) ?></h4>
+                                </a>
+                                <?php if ($block->authorEnabled()) { ?>
+                                    <?php if ($_author = $_post->getAuthor()) { ?>
+                                            <?php if ($block->authorPageEnabled()) { ?>
+                                                <h6 class="rbSubHead"><?= $block->escapeHtml($_author->getTitle()." ".$post->getPublishDate()) ?></h6>
+                                            <?php } ?>
+                                    <?php } ?>
+                                <?php } ?>
+                                <a href="<?= $block->escapeUrl($post->getPostUrl()) ?>" title="<?= $block->escapeHtml($post->getTitle()) ?>">
+                                    <img src="<?php echo $post->getFeaturedImage(); ?>" class="img-responsive"></img>
+                                </a>
+                                <a class="post-read-more"
+                                   href="<?= /*@noEscape*/ $post->getPostUrl() ?>"
+                                   title="<?= /*@noEscape*/ $post->getTitle() ?>">
+                                    <?= $block->escapeHtml(__('Read Article')) ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php 
+                    $cnt++;
+                        if($cnt==2){
+                        ?>
+                        <div class="clearfix"></div>
+                        <?php
+                        $cnt=0;
+                        }
+                    ?>
+            <?php } ?>
+        </div>
+    </div>
+    <?php } ?>
+<?php } ?>
+

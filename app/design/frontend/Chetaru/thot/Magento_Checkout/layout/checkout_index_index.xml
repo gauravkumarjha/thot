@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <head>
+        <css src="Magento_Checkout::css/custom-checkout.css"/>
+    </head>
+
+    <body>
+    
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+
+                                <!-- Shipping Step -->
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shipping-address-fieldset" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+
+                                                                <!-- First Name -->
+                                                                <item name="firstname" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-half first-col</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.firstname</item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="sortOrder" xsi:type="number">10</item>
+                                                                </item>
+
+                                                                <!-- Last Name -->
+                                                                <item name="lastname" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-half last-col</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.lastname</item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="sortOrder" xsi:type="number">20</item>
+                                                                </item>
+
+                                                                <!-- Street -->
+                                                                <item name="street" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/components/group</item>
+                                                                    <item name="children" xsi:type="array">
+
+                                                                        <item name="0" xsi:type="array">
+                                                                            <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                            <item name="config" xsi:type="array">
+                                                                                <item name="additionalClasses" xsi:type="string">field-col field-col-full</item>
+                                                                            </item>
+                                                                            <item name="dataScope" xsi:type="string">shippingAddress.street.0</item>
+                                                                            <item name="sortOrder" xsi:type="number">30</item>
+                                                                        </item>
+
+                                                                        <item name="1" xsi:type="array">
+                                                                            <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                            <item name="config" xsi:type="array">
+                                                                                <item name="additionalClasses" xsi:type="string">field-col field-col-full</item>
+                                                                            </item>
+                                                                            <item name="dataScope" xsi:type="string">shippingAddress.street.1</item>
+                                                                            <item name="sortOrder" xsi:type="number">40</item>
+                                                                        </item>
+
+                                                                    </item>
+                                                                </item>
+
+                                                                <!-- City -->
+                                                                <item name="city" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-third</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.city</item>
+                                                                    <item name="sortOrder" xsi:type="number">100</item>
+                                                                </item>
+
+                                                                <!-- Region -->
+                                                                <item name="region_id" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-third</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.region_id</item>
+                                                                    <item name="sortOrder" xsi:type="number">180</item>
+                                                                </item>
+
+                                                                <!-- Postcode -->
+                                                                <item name="postcode" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-third</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.postcode</item>
+                                                                    <item name="sortOrder" xsi:type="number">200</item>
+                                                                </item>
+
+                                                                <!-- Telephone -->
+                                                                <item name="telephone" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="additionalClasses" xsi:type="string">field-col field-col-full phone-row</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.telephone</item>
+                                                                    <item name="sortOrder" xsi:type="number">205</item>
+                                                                </item>
+
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+
+                                            </item>
+                                            <!-- ================= BILLING ADDRESS (MOVED UNDER SHIPPING) ================= -->
+<item name="billing-address" xsi:type="array">
+    <item name="component" xsi:type="string">
+        Magento_Checkout/js/view/billing-address
+    </item>
+    <item name="sortOrder" xsi:type="number">300</item>
+
+   
+</item>
+<!-- ================= END BILLING ADDRESS ================= -->
+
+                                        </item>
+                                    </item>
+                                </item>
+
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+        <!-- 🔹 ADD THIS FOR ORDER SUMMARY -->
+        <referenceBlock name="checkout.summary.cart_items">
+            <arguments>
+                <argument name="sortOrder" xsi:type="number">10</argument>
+            </arguments>
+        </referenceBlock>
+<referenceBlock name="checkout.shipping.information">
+    <arguments>
+        <argument name="sortOrder" xsi:type="number">20</argument>
+    </arguments>
+</referenceBlock>
+
+        <referenceBlock name="checkout.summary.totals">
+            <arguments>
+                <argument name="sortOrder" xsi:type="number">30</argument>
+            </arguments>
+        </referenceBlock>
+
+     
+    </body>
+</page>

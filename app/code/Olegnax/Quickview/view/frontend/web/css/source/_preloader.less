@@ -1,0 +1,48 @@
+& when (@media-common = true) {
+    .ox_quickview-preloader{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            box-sizing: border-box;
+        &.-outline-rect{
+            width: 80px;
+            height: 30px;
+            content:url('../Olegnax_Quickview/images/preloader.svg'); 
+            margin-top: -15px;
+            margin-left: -40px;
+        }
+	&.-custom {
+            transform: translate3d(-50%, -50%, 0);
+	}
+	&.-magento {
+            .lib-loading();
+            position: absolute;
+            width: @loader-icon__width;
+            height: @loader-icon__height;
+            margin-top: 0;
+            transform: translate3d(-50%, -50%, 0);
+	}
+	&.-spinner {
+            display: block;
+            width: @ox-qv-preloader-spinner-size;
+            height: @ox-qv-preloader-spinner-size;
+            border: @ox-qv-preloader-spinner-border-size solid rgba(0, 0, 0, 0);
+            border-radius: @ox-qv-preloader-spinner-size;
+            border-left: @ox-qv-preloader-spinner-border-size solid @ox-qv-preloader-spinner-color;
+            border-right: @ox-qv-preloader-spinner-border-size solid @ox-qv-preloader-spinner-color;
+            border-top: @ox-qv-preloader-spinner-border-size solid @ox-qv-preloader-spinner-color;
+            animation: spin .65s infinite linear;
+            transition: all 600ms ease-in-out;
+            margin-left: -((@ox-qv-preloader-spinner-size/2) + (@ox-qv-preloader-spinner-border-size/2px));
+            margin-top: -((@ox-qv-preloader-spinner-size/2) + (@ox-qv-preloader-spinner-border-size/2px));
+        }
+    }
+    @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+    }
+}

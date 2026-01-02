@@ -1,0 +1,17 @@
+<?php
+/** @var $block Chetaru\Hotspot\Block\Hotspot */
+
+?>
+<div class="cd-product cd-container" style="top: <?php echo $block->getData('top_position') ?>%; left: <?php echo $block->getData('left_position') ?>%;">
+    <div class="cd-product-wrapper">
+        <div class="cd-single-point">
+                <a class="cd-img-replace" href="#0">More</a>
+                <div class="cd-more-info cd-top"> <!-- 4 classes available: cd-top, cd-bottom, cd-left, cd-right  -->
+                    <h2><?php echo $block->getData('title') ?></h2>
+                    <p><?php echo $block->getData('body') ?></p>
+                    <a href="<?php echo $block->getData('button_link') ?>" class="cd-more-link"><?php echo $block->getData('button_text') ?></a>
+                    <a href="#0" class="cd-close-info cd-img-replace">Close</a>
+                </div>
+            </div>
+    </div>
+</div>

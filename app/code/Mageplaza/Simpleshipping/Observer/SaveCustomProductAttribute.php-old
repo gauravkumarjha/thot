@@ -1,0 +1,81 @@
+<?php
+
+namespace Mageplaza\Simpleshipping\Observer;
+
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Model\Order;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Model\ProductRepository;
+use Zend_Log;
+use Zend_Log_Writer_Stream;
+
+class SaveCustomProductAttribute implements ObserverInterface
+{
+    protected $productFactory;
+    protected $productRepository;
+
+    public function __construct(ProductFactory $productFactory, ProductRepository $ProductRepository)
+    {
+        $this->productFactory = $productFactory;
+        $this->ProductRepository = $ProductRepository;
+    }
+
+    public function execute(Observer $observer)
+    {
+        // Initialize logger
+        $writer = new Zend_Log_Writer_Stream(BP . '/var/log/SaveCustomProductAttribute.log');
+        $logger = new Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info("Observer started");
+
+        $order = $observer->getEvent()->getOrder();
+        $billingAddress = $order->getBillingAddress();
+        $countryId = $billingAddress ? $billingAddress->getCountryId() : null;
+        $logger->info("Custom shipping price for country: {$countryId}");
+
+        foreach ($order->getAllItems() as $item) {
+                 $productId = $item->getProductId();
+                 $getQty = $item->getQtyOrdered();
+                 $logger->info("Processing item ID: {$item->getItemId()} with product ID: {$productId} and getQty {$getQty}");
+           
+               
+                $product = $this->productFactory->create()->load($productId);
+                 $products = $this->ProductRepository->create()->load($productId);
+                 $products->setData('timeline_1', 'New Value');
+
+            // Save the product
+                $this->ProductRepository->save($products);
+               
+                $shippingChargesFeatureEnabled  = $product->getData('shipping_charges_feature_enabl');
+                $WeightPrice = $product->getData('weight_price');
+
+                $logger->info("shippingChargesFeatureEnabled: {$shippingChargesFeatureEnabled}");
+
+                $logger->info("shippingChargesFeatureEnabled: {$shippingChargesFeatureEnabled}-{$WeightPrice}");
+
+
+            if ($shippingChargesFeatureEnabled == 1 && $WeightPrice != "" && $countryId == 'IN') {
+                $customAttributeValue = $WeightPrice * $getQty;
+            } elseif ($shippingChargesFeatureEnabled == 0) {
+                $customAttributeValue = "free";
+            } else {
+                $customAttributeValue = "To Be Quoted";
+            }
+
+
+                // if ($shippingChargesFeatureEnabled == 1 && $countryId == 'IN') {
+                //     $customAttributeValue = $WeightPrice * $getQty;
+                // } else {
+                //     $customAttributeValue = "To Be Quoted";
+                // }
+
+                $item->setData('custom_shipping_price', $customAttributeValue);
+                $logger->info("Custom shipping price for item ID {$item->getItemId()}: {$customAttributeValue}");
+            
+        }
+
+        // Save changes to the order items
+        $order->save();
+    }
+}

@@ -1,0 +1,7 @@
+var config = {
+    map: {
+        '*': {
+            'priceSlider': 'V4U_PriceSlider/js/price-slider'
+        }
+    }
+};

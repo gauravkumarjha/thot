@@ -1,0 +1,117 @@
+<?php
+$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+
+$product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');
+
+$blockObj= $block->getLayout()->createBlock('Magento\Catalog\Block\Product\View');
+
+$cat_arr = $product->getCategoryIds();
+
+$child =  0;
+
+if( !empty($cat_arr) ){
+	//foreach ($cat_arr as $key => $value) {
+		$sqlcat = "SELECT  `entity_id`, `level` FROM `catalog_category_entity` WHERE `entity_id` IN (" . implode(',', $cat_arr) . ") GROUP BY `entity_id`";
+		$resultcat = $connection->fetchAll($sqlcat);
+		//echo "<pre>";
+		//print_r($resultcat);
+		//echo "</pre>";
+		$col_arr = array_column($resultcat, 'level');
+		$key = array_search(max($col_arr), $col_arr); // $key = 2;
+		//echo "<pre>";
+		$child =  $resultcat[$key]['entity_id'];
+		//print_r($resultcat[$key]);
+		//echo "</pre>";
+	///}
+}
+
+	/// Related Products
+	$sql2 = "SELECT DISTINCT ccp.product_id FROM catalog_category_product ccp
+       left join catalog_product_entity_int as cpei1 on cpei1.entity_id=ccp.product_id and cpei1.attribute_id=97
+       left join catalog_product_entity_int as cpei2 on cpei2.entity_id=ccp.product_id and cpei2.attribute_id=99
+       WHERE ccp.category_id = " . $child . " AND cpei1.value = 1 AND cpei2.value = 4 AND ccp.product_id <> ".$product->getId(). " ORDER BY RAND() LIMIT 4";
+	if( !empty($connection->fetchAll($sql2)) ){
+		$results2 = $connection->fetchAll($sql2);
+		// print_r($results1 );
+		// die();
+		?>
+		<section class="bg-white similar-products custom-data">
+			<div class="container">
+			   <div class="row"> 
+				   <div class="section-header text-center">
+					  <div class="sectionTitle">Similar Products</div>
+					  <hr class="hr--small">
+				   </div>
+					   <?php
+						foreach ( $results2 as $key => $productid ) {
+							$_item = $objectManager->create('Magento\Catalog\Model\Product')->load($productid['product_id']);
+							$resizedImageUrl = $_imageHelper->init($_item, 'product_page_related_images')->getUrl();
+							?>
+							<div class="col-md-3 col-sm-3 col-xs-12">
+								  <div class="thumbnail" >
+									 <a href="<?php echo $_item->getProductUrl() ?>" class="">
+				                        <?php  echo '<img src="'.$resizedImageUrl.'" class="img-responsive">';
+										?>
+									</a>
+									 <div class="caption">
+										<div class="row">
+										   <div class="col-md-7 col-xs-7">
+											  <div class="custom-row">
+												 <h3 class="productName">
+													<a class="" title="<?php echo $block->escapeHtml($_item->getName()) ?>" href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>">
+													<?php echo $_item->getName(); ?></a>
+												</h3>
+											  </div>
+										   </div>
+										   <div class="col-md-5 col-xs-5 price">
+											  <div class="custom-row">
+												 <div class="productPrice"><?php echo $blockObj->getProductPrice($_item); ?></div>
+											  </div>
+										   </div>
+										</div>
+										<div class="custom-row">
+										   <p class="productDetail"> 
+												<?php 
+												$tableName = $resource->getTableName('ves_brand_product');
+												$sql = "select brand_id FROM " . $tableName." Where product_id =".$_item->getID();
+												$connection2 = $resource->getConnection();
+												if(!empty($connection2->fetchAll($sql))){
+													$brand_id = $connection2->fetchAll($sql)[0]['brand_id'];
+													$tableName = $resource->getTableName('ves_brand');
+													$sql = "select name,url_key FROM " . $tableName." Where brand_id =".$brand_id;
+													$brand_name = $connection2->query($sql);
+													$res = $connection2->fetchAll($sql);
+													echo 'By <a href='.$block->getBaseUrl().'makers/'.$res[0]['url_key'].'.html'.' title="'.$res[0]['name'].'">'.$res[0]['name'].'</a>';
+												}
+												?></p>
+										</div>
+										<div class="custom-row">
+											<?php 
+											// if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+											// echo '<span class="btnGrey">'.__('Options Available').'</span> ';
+											// } 
+											if($_item->getAttributeText('options_available')=='Yes'){
+												echo '<span class="btnGrey">'.__('Options Available').'</span>';
+											}
+											
+											if($_item->getAttributeText('is_customizable')=='Yes'){
+												echo '<span class="btnBlack">'.__('Customizable').'</span>';
+											}
+										 ?>
+											</div>
+									 </div>
+								  </div>
+							   </div>
+							<?php
+
+						}
+						?>
+		        </div>
+			</div>
+		</section>
+	<?php
+	}

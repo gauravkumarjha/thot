@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category   Webkul
+ * @package    Webkul_PhonePe
+ * @author     Webkul Software Private Limited
+ * @copyright  Webkul Software Private Limited (https://webkul.com)
+ * @license    https://store.webkul.com/license.html
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Webkul\PhonePe\Api\WebhookInterface" type="Webkul\PhonePe\Model\Payment\Webhook" />
+    <preference for="Webkul\PhonePe\Api\CreditMemoInterface" type="Webkul\PhonePe\Model\Payment\CreditMemo" />
+    <preference for="Magento\Sales\Controller\Adminhtml\Order\Creditmemo\Save" type="Webkul\PhonePe\Controller\Adminhtml\Order\Creditmemo\Save" />
+    <preference for="Magento\Multishipping\Controller\Checkout\OverviewPost" type="Webkul\PhonePe\Controller\Multishipping\Checkout\OverviewPosts" />
+    <type name="Webkul\PhonePe\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Webkul\PhonePe\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">PhonePe</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Webkul\PhonePe\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+<!-- <type name="Magento\Sales\Model\Order\Email\Sender\OrderSender">
+    <plugin name="webkul_phonepe_disable_order_email" type="Webkul\PhonePe\Plugin\DisableAllEmails" sortOrder="1"/>
+</type>
+
+<type name="Magento\Sales\Model\Order\Email\Sender\InvoiceSender">
+    <plugin name="webkul_phonepe_disable_invoice_email" type="Webkul\PhonePe\Plugin\DisableAllEmails" sortOrder="1"/>
+</type>
+
+<type name="Magento\Sales\Model\Order\Email\Sender\ShipmentSender">
+    <plugin name="webkul_phonepe_disable_shipment_email" type="Webkul\PhonePe\Plugin\DisableAllEmails" sortOrder="1"/>
+</type>
+
+
+<type name="Magento\Framework\Mail\TransportInterface">
+    <plugin name="webkul_phonepe_block_transport_email" type="Webkul\PhonePe\Plugin\BlockTransportEmail" sortOrder="1"/>
+</type> -->
+<type name="Magento\Sales\Model\Order\Email\Sender\OrderSender">
+    <plugin name="webkul_phonepe_order_sender_plugin" type="Webkul\PhonePe\Plugin\OrderSenderPlugin" sortOrder="10" />
+</type>
+
+</config>

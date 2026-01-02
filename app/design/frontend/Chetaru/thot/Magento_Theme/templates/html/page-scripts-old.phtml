@@ -1,0 +1,166 @@
+<script type="text/javascript">
+var lazyLoadAmdUrl = "https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.3.1/dist/lazyload.amd.min.js";
+var dependencies = ['jquery',lazyLoadAmdUrl];
+require(dependencies, function(_, LazyLoad) {
+    var lazyLoadInstance = new LazyLoad({
+        // Your custom settings go here
+    });
+});
+require(['jquery','Ves_All/lib/owl.carousel/owl.carousel.min'], function($){
+	$('.home-page-slider').owlCarousel({
+     items:1,
+     lazyLoad:true,
+     loop:true,
+     nav : true,
+     dots : false,
+     margin:0
+  });
+});
+</script>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$urlInterface=$objectManager->create('Magento\Framework\UrlInterface');
+//echo $urlInterface->getCurrentUrl();
+if ( (strpos($urlInterface->getCurrentUrl(),'/checkout') !== false) ) {
+    ?>
+    <script>
+    // require(['jquery'], function($) {
+    //     // $( document ).ajaxComplete(function( event, xhr, settings) {
+    //     //         console.log(event);
+    //     //         console.log(xhr);
+    //     //         console.log(settings);
+    //     // });
+    //     $('#table-checkout-shipping-method input.radio').prop('checked', false);
+    // });   
+    requirejs([
+    'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/model/shipping-rate-registry'
+], function(mainQuote, rateReg){
+    ///$('#table-checkout-shipping-method input.radio').prop('checked', false);
+//  var address = mainQuote.shippingAddress();
+//     rateReg.set(address.getKey(), null);
+//     rateReg.set(address.getCacheKey(), null);
+//     mainQuote.shippingAddress(address);
+});
+    </script>
+    <style>
+        .hem2top .minicart-wrapper, #block-shipping, #cart-totals tr.totals.sub,  #cart-totals tr.totals.shipping{
+            display:none
+        } 
+        .hem2top .minicart-wrapper.onlyforcheckout{
+            display:block !important;
+        } 
+        #cart-totals{
+            border-top: none;
+        } 
+        .table-checkout-shipping-method .col-carrier{display: none;}
+        .opc-block-summary .totals.shipping.excl .mark .value{ display:none } 
+        .opc-block-summary .totals.shipping.excl .amount .price{
+         font-size: 0;
+        } 
+        .opc-block-summary .totals.shipping.excl .amount .price:after{
+         font-size: 14px;
+        } 
+        .opc-block-shipping-information .shipping-information-content span.value{
+            font-size: 0;
+        }
+        .opc-block-shipping-information .shipping-information-content span.value:after{
+            font-size: 14px;
+        }
+    </style>
+    <?php
+    $cart = $objectManager->get('\Magento\Checkout\Model\Cart'); 
+ 
+    // get quote items collection
+    $itemsCollection = $cart->getQuote()->getItemsCollection();
+     
+    // get array of all items what can be display directly
+    $itemsVisible = $cart->getQuote()->getAllVisibleItems();
+     
+    // get quote items array
+    $items = $cart->getQuote()->getAllItems();
+    if( !empty($items) ){
+        $remove_free = false;
+        $i=1;
+        foreach($items as $item) {
+            // echo 'ID: '.$item->getProductId().'<br />';
+             //echo 'Name: '.$item->getName().'<br />';
+            // echo 'Sku: '.$item->getSku().'<br />';
+            // echo 'Weight: '.$item->getWeight().'<br />';
+            // echo 'Quantity: '.$item->getQty().'<br />';
+            // echo 'Price: '.$item->getPrice().'<br />';
+             //echo "<br />";   
+            if( $item->getWeight() > 0 ){
+                $remove_free = true;
+                //break;
+                ?>
+                <style>
+                    .minicart-items-wrapper .product-item:nth-child(<?php echo $i;?>) .product-item-name-block:after {
+                      content: "Shipping: To Be Quoted";
+                      font-weight: bold;
+                     }
+                     #shopping-cart-table > .col-sm-12:nth-child(<?php echo $i;?>) .cart-item-info .transparent-select-button:before{
+                        content: "Shipping: To Be Quoted";
+                        font-weight: bold;
+                        width: 200px;
+                        display: inline-block;
+                     }
+                </style>
+                <?php
+            } else{
+                ?>
+                <style>
+                    .minicart-items-wrapper .product-item:nth-child(<?php echo $i;?>) .product-item-name-block:after {
+                      content: "Shipping: Free";
+                      font-weight: bold;
+                     }
+                     #shopping-cart-table > .col-sm-12:nth-child(<?php echo $i;?>) .cart-item-info .transparent-select-button:before{
+                        content: "Shipping: Free";
+                        font-weight: bold;
+                        width: 200px;
+                        display: inline-block;
+                     }
+                </style>
+                <?php
+
+            }
+            $i++;
+        }
+        if( $remove_free ){
+            //echo 'remove free';
+            ?>
+            <style>
+                /* #checkout-step-shipping_method #checkout-shipping-method-load tr:nth-child(2){
+                    display:none
+                } 
+                 */
+                .opc-block-summary .totals.shipping.excl .amount .price:after{
+                    content: "To Be Quoted";
+                } 
+                .table-checkout-shipping-method td.col-price{
+                    display: none;
+                } 
+                .opc-block-shipping-information .shipping-information-content span.value:after{
+                    content: "Shipping: To Be Quoted (We will contact you in 48 hours)";
+                }
+            </style>
+            <?php
+        }else{
+            ?>
+            <style>
+                /* #checkout-step-shipping_method #checkout-shipping-method-load tr:nth-child(1){
+                    display:none
+                } */
+                .opc-block-summary .totals.shipping.excl .amount .price:after{
+                    content: "Free";
+                }
+                .opc-block-shipping-information .shipping-information-content span.value:after{
+                    content: "Shipping: Free";
+                }
+            </style>
+            <?php
+        }
+    }
+}
+
+

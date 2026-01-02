@@ -1,0 +1,30 @@
+(function(require){
+(function() {
+var config = {
+    paths: {
+        "jquery.bootstrap": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min"
+    },
+    shim: {
+        'jquery.bootstrap': {
+            'deps': ['jquery']
+        }
+    }
+};
+require.config(config);
+})();
+        var config = {
+             paths: {
+                'owlcarousel': "Vendor_Module/js/owlcarousel",
+                'fancybox': 'js/fancybox3/fancybox.min'
+            },   
+            shim: {
+                'owlcarousel': {
+                    deps: ['jquery']
+                }
+            }
+  
+    };
+
+    
+
+})(require);

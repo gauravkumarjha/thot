@@ -1,0 +1,19 @@
+{
+    "watchlog": {
+        "column": {
+            "id": true,
+            "ip": true,
+            "date": true,
+            "login": true,
+            "message": true,
+            "status": true,
+            "url": true
+        },
+        "index": {
+            "WATCHLOG_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

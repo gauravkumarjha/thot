@@ -1,0 +1,39 @@
+define([
+    'jquery',
+    'ko'
+], function ($, ko) {
+    'use strict';
+
+    return function (Component) {
+        return Component.extend({
+
+            isShippingOpen: ko.observable(true),
+            isPaymentOpen: ko.observable(false),
+            isPaymentEnabled: ko.observable(false),
+
+            toggleShipping: function () {
+                this.isShippingOpen(!this.isShippingOpen());
+                this.isPaymentOpen(false);
+            },
+
+            togglePayment: function () {
+               
+                this.isPaymentOpen(!this.isPaymentOpen());
+                this.isShippingOpen(false);
+            },
+          
+            setShippingInformation: function () {
+                var result = this._super(); // original Magento logic
+                this.isPaymentEnabled(true);
+                this.isPaymentOpen(!this.isPaymentOpen());
+                // ✅ After successful Next click
+                this.isShippingOpen(false);
+                
+
+              //  return result;
+            }
+
+
+        });
+    };
+});

@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+use Rossmc\Partytown\ViewModel\Settings;
+
+/** @var Template $block */
+/** @var Settings $settingsVM */
+
+$settingsVM = $block->getSettingsViewModel();
+?>
+<?php if (!$settingsVM->isEnabled()): ?>
+<script>
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let registration of registrations) {
+            if (registration && registration.active && registration.active.scriptURL.includes('partytown-sw')) {
+                registration.unregister();
+                console.log('Partytown Service Worker unregistered');
+            }
+        }
+    }).catch(function(err) {
+        console.log('Error unregistering Service Worker: ', err);
+    });
+</script>
+<?php endif ?>

@@ -1,0 +1,25 @@
+define([
+    'ko',
+    'Magento_Checkout/js/model/quote'
+], function (ko, quote) {
+    'use strict';
+
+    return function (Component) {
+        return Component.extend({
+
+            initialize: function () {
+                this._super();
+
+                this.isVisible = ko.observable(false);
+
+                quote.shippingMethod.subscribe(function (method) {
+                    if (method) {
+                        this.isVisible(true);
+                    }
+                }.bind(this));
+
+                return this;
+            }
+        });
+    };
+});

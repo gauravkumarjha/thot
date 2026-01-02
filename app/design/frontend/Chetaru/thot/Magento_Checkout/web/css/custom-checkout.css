@@ -1,0 +1,241 @@
+
+.page-main>.page-title-wrapper .page-title {
+    margin-top: 0px;
+}
+
+
+.checkout-index-index .page-title-wrapper h1.page-title span{
+  font-size: 16px;
+}
+
+.checkout-index-index .opc-progress-bar-item>span:after{
+  font-size: 14px; 
+      line-height: 30px;
+}
+.checkout-index-index .opc-progress-bar-item._active>span{
+      font-weight: 400;
+    text-transform: uppercase;
+        font-size: 14px;
+}
+
+.checkout-index-index li#payment {
+  display: block !important;
+}
+.checkout-index-index .opc-sidebar{
+      position: sticky;
+    top: 135px;
+        margin-top: 0px;
+
+}
+.checkout-index-index .form-shipping-address .fieldset .field .label{
+  font-weight: 400 !important;
+}
+.checkout-shipping-address input[type=datetime], input[type=email], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], select{
+      height: 48px !important;
+      font-size: 11px;
+      padding-top: 22px;
+}
+.checkout-index-index .opc-block-shipping-information, .checkout-index-index .opc-block-summary{
+  background: none !important;
+}
+
+.checkout-index-index .opc-block-summary{
+        padding: 0px 50px !important;
+}
+.opc-progress-bar-item>span:after, .opc-progress-bar-item>span:before{
+        line-height: 25px;
+}
+
+.checkout-index-index .opc-block-summary span.title {
+    background: #eee;
+        padding: 14px 10px;
+            font-size: 13px !important;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+}
+
+
+.checkout-index-index .opc-block-summary .items-in-cart>.title strong{
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+
+
+.checkout-index-index .opc-block-summary .items-in-cart>.title{
+  font-size: 12px;
+}
+
+
+.checkout-index-index .form-login label span, .checkout-index-index .form-shipping-address fieldset legend span, .wordpress-search-view .btnClose i, .wordpress-term-view .btnClose i{
+      font-weight: 400 !important;
+}
+.checkout-index-index .opc-wrapper{
+              width: 60%;
+              padding-right: 50px;
+}
+
+.checkout-index-index .opc-sidebar{ 
+  width: 40%;
+  margin-top: 0px;
+  border-left: none  !important;
+}
+
+
+.checkout-index-index .opc-wrapper{
+
+  border-right: 1px solid #969695;
+}
+
+.checkout-index-index .form-shipping-address .fieldset > .field,
+ .checkout-index-index .form-shipping-address .fieldset > .fields > .field, 
+ .checkout-index-index .form-login .fieldset > .field,
+  .checkout-index-index .form-login .fieldset > .fields > .field{
+position: relative;
+}
+
+
+.checkout-index-index .opc-wrapper .form-login .fieldset .field .label, 
+.checkout-index-index .opc-wrapper .form-shipping-address .fieldset .field .label{
+        font-weight: 400 !important;
+    position: absolute;
+    top: 4px;
+    left: 10px;
+    font-size: 13px;
+    z-index: 1;
+}
+.checkout-index-index .opc-progress-bar-item>span{
+        font-size: 14px !important;
+    text-transform: uppercase;
+}
+
+
+.checkout-index-index .opc-progress-bar-item>span:after,.checkout-index-index  .opc-progress-bar-item>span:before{
+        height: 30px;
+    margin-left: -17px;
+    width: 30px;
+    border-radius: 50%;
+    left: 50%;
+    position: absolute;
+    top: 2px;
+} 
+
+ 
+.checkout-index-index .opc-progress-bar-item>span:before,.checkout-index-index  .opc-progress-bar-item._active>span:before {
+    background: transparent !important;
+}
+.checkout-index-index .checkout-agreements-items .checkout-agreements-item-title,
+.checkout-index-index .opc-block-shipping-information .shipping-information-title,
+ .checkout-index-index .opc-block-summary>.title, .opc-wrapper .step-title{
+      font-size: 13px !important;
+        padding: 14px 10px !important;
+    font-weight: 500 !important;
+    letter-spacing: 1px !important;
+    background: #eee !important;
+        text-transform: uppercase;
+    border: none!important; 
+    
+}
+
+.opc-progress-bar-item:before{
+  height: 2px !important;
+}
+
+.shippingaddress_gk, .opc-wrapper .form-login .fieldset .note, .opc-wrapper .form-shipping-address .fieldset .note {
+    font-size: 12px;
+}
+.checkout-index-index .form-login label.label[for="customer-email"] {
+     position: static !important;
+}
+
+/* .checkout-shipping-address .step-title{
+  display: none;
+} */
+.shippingaddress_gk a {
+    text-decoration: underline;
+}
+div#shipping-method-buttons-container button.button.action.continue.primary{
+  font-family: 'Work Sans';
+}
+.opc-wrapper .form-login, .opc-wrapper .form-shipping-address{
+  max-width: 100% !important;
+}  
+div#shipping-method-buttons-container button.button.action.continue.primary{
+  width: 100% !important;
+}
+.form-login input#customer-email {
+    padding-top: 4px;
+}
+.checkout-index-index  .opc-block-shipping-information {
+    padding: 0px 50px !important;
+}
+.checkout-index-index #checkout-payment-method-load .payment-methods [type=radio]+label:before{
+  width: 12px;
+    height: 12px;
+}
+
+.checkout-index-index #checkout-payment-method-load [type=radio]+label{
+    padding-left: 30px;
+}
+
+.checkout-index-index .payment-method-billing-address [type=checkbox]:checked+label:before,
+ .checkout-index-index .payment-method-billing-address [type=checkbox]:not(:checked)+label:before { 
+    width: 10px !important;
+    height: 10px !important;
+}
+
+.checkout-index-index .payment-method-billing-address .payment-method-title [type=radio]:checked+label:after{
+      left: 2px !important;
+    top: 4px !important;
+    width: 9px !important;
+    height: 9px !important;
+}
+
+.form#co-payment-form legend.legend{
+      display: none;
+}
+.checkout-index-index .checkout-payment-method .payment-method-title{
+      padding: 12px 0px 12px 0px;
+}
+
+.checkout-index-index .payment-method.payment-method-gkjha+.payment-method .payment-method-title {
+    padding-bottom: 12px;
+} 
+
+.field-col-full {
+    clear: both;
+}
+.field-col-third{
+    width:33.3%;
+    float:left;
+}
+
+.field-col-half{
+    width:50%;
+    float:left;
+}
+
+
+
+.checkout-index-index .field.field-col.field-col-half[name="shippingAddress.firstname"] {
+    padding-right: 5px;
+}
+.checkout-index-index .field.field-col.field-col-half[name="shippingAddress.lastname"] {
+  padding-left: 5px;
+}
+
+.checkout-index-index .field.field-col.field-col-third[name="shippingAddress.city"]{
+padding-right: 5px;
+}
+ 
+
+.checkout-index-index .field.field-col.field-col-third[name="shippingAddress.region_id"]{
+padding-left: 5px;
+padding-right: 5px;
+}
+
+.checkout-index-index .field.field-col.field-col-third[name="shippingAddress.postcode"]{
+padding-left: 5px; 
+} 
+  
+

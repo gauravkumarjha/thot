@@ -1,0 +1,342 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\App\Action\Action;
+
+//$_product = $this->getProduct();
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+$counter=0; 
+/** @var \Magento\Framework\UrlInterface $urlInterface */
+$urlInterface = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+$current_url =  $urlInterface->getCurrentUrl();
+?>
+<?php if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())): ?>
+<?php
+    $type = 'widget-product-grid';
+
+    $mode = 'grid';
+
+    $image = 'product_page_related_images';
+    $items = $block->getProductCollection()->getItems();
+
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    $description = false;
+    ?>
+<div class="block widget block-products-list <?= /* @noEscape */ $mode ?>">
+    <?php if ($block->getTitle()): ?>
+    <div class="block-title">
+        <strong><?= $block->escapeHtml(__($block->getTitle())) ?></strong>
+    </div>
+    <?php endif ?>
+    <div class="block-content">
+        <?= /* @noEscape */ '<!-- ' . $image . '-->' ?>
+        <div class="products-<?= /* @noEscape */ $mode ?> <?= /* @noEscape */ $mode ?>">
+
+
+
+            <?php // category design for new products
+                if (strpos($current_url,'/new-products') !== false) { ?>
+
+            <div class="products wrapper grid products-grid">
+                <?php $iterator = 1; ?>
+                <?php foreach ($items as $_item): 
+                        $productImage = $block->getImage($_item, $image);   
+                        ?>
+                <?php // Product Image ?>
+                <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter">
+                    <div class="thumbnail">
+                        <?php 
+                                    if($_item->getAttributeText('exclusive')=='Yes'){
+                                ?>
+                        <div class="thumb-logo">
+                            <img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('Magento_Theme::images/hot-exclusive.png') ?>"
+                                alt="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+                                title="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+                                <?php //echo $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
+                                <?php //echo $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?> />
+                        </div>
+                        <?php } ?>
+                        <div class="whishlist">
+                            <h4 class="pull-right">
+                                <a href="javascript:void(0);"
+                                    data-post='<?php  echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($_item) ?>'
+                                    class="action towishlist" data-action="add-to-wishlist"><i
+                                        class="fa fa-heart-o"></i></a>
+                            </h4>
+                        </div>
+                        <div class="image-view">
+                            <a href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>">
+                                <img src="<?php /* @escapeNotVerified */ echo $productImage->getImageUrl(); ?>"
+                                    alt="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>"
+                                    title="<?php /* @escapeNotVerified */ echo $productImage->stripTags($productImage->getLabel(), null, true); ?>" />
+                            </a>
+                        </div>
+                        <?php 
+                                    $productName=$_helper->productAttribute($_item, $_item->getName(), 'name');
+                                        $your_desired_width = 30;
+                                        if (strlen($productName) > $your_desired_width) {
+                                                $productName = wordwrap($productName, $your_desired_width);
+                                                $productName = substr($productName, 0, strpos($productName, "\n")) . "...";
+                                            }
+                                    ?>
+                        <div class="caption">
+                            <div class="row">
+                                <div class="col-md-7 col-xs-7">
+                                    <div class="custom-row">
+                                        <h3 class="productName">
+                                            <a href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>"
+                                                title="<?php /* @escapeNotVerified */ echo $_helper->productAttribute($_item, $_item->getName(), 'name'); ?>">
+                                                <?php /* @escapeNotVerified */ echo $productName; ?>
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <div class="custom-row">
+                                        <p class="productDetail">
+                                            <?php
+                                                    $productData = $_item->getData();	
+                                                    $product_id = $productData['entity_id'];
+                                                    
+                                                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                                                    $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+                                                    $connection = $resource->getConnection();
+                                                    $tableName = $resource->getTableName('ves_brand_product');
+                                                    $sql = "SELECT brand_id FROM " . $tableName . " WHERE product_id=".$product_id;
+                                                    $results = $connection->fetchAll($sql); 
+                                                    
+                                                    if(!empty($results)) {
+                                                        $brand_ids = array();
+                                                        foreach ($results as $result) {
+                                                            array_push($brand_ids,$result['brand_id']);
+                                                        }
+                                                        $tableName = $resource->getTableName('ves_brand');
+                                                        $sql = "SELECT * FROM " . $tableName . " WHERE brand_id IN (".implode(",",$brand_ids).")";
+                                                        $brands = $connection->fetchAll($sql); 
+                                                        
+                                                        $tableName = $resource->getTableName('core_config_data');
+                                                        $sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_prefix'";
+                                                        $url_prefix = $connection->fetchAll($sql);
+                                                        $sql = "SELECT value FROM " . $tableName . " WHERE path='vesbrand/general_settings/url_suffix'";
+                                                        $url_suffix = $connection->fetchAll($sql); 
+                                                        echo 'By ';
+                                                        foreach($brands as $i=>$brand){
+                                                            echo '<a href='.$block->getBaseUrl().$url_prefix['0']['value'].'\\'.$brand['url_key'].$url_suffix[0]['value'].' title="'.$brand['name'].'">'.$brand['name'].'</a>';
+                                                            if(count($brands)>1 && $i<count($brands) && $i<count($brands)-1)echo ', ';
+                                                        }
+                                                    }
+                                                    ?>
+
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+                                    <?php 
+                                            if($_item->getAttributeText('price_on_request')=='Yes'){
+                                                ?>
+                                    <h3 class="price_request">
+                                        <?php /* @escapeNotVerified */ echo __('Price on request') ?></h3>
+                                    <?php
+                                            }else{
+                                                ?>
+                                    <?php //if ($_product->isSaleable()): ?>
+                                    <?php echo $block->getProductPrice($_item) ?>
+                                    <?php //endif;?>
+                                    <?php } ?>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-xs-7">
+
+                                </div>
+                                <div class="col-md-5 col-xs-5 price">
+                                    <div class="custom-row">
+                                        <?php if ( ! $_item->isSaleable()): ?>
+                                        <p class="sold-out red"><?php /* @escapeNotVerified */ echo __('Sold Out') ?>
+                                        </p>
+                                        <?php endif;?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="custom-row">
+                                <?php 
+                                        // if ($_product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                                        // echo '<span class="btnGrey">'.__('Options Available').'</span> ';
+                                        // } 
+                                        if($_item->getAttributeText('options_available')=='Yes'){
+                                            echo '<span class="btnGrey">'.__('Options Available').'</span>';
+                                        }
+                                        
+                                        if($_item->getAttributeText('is_customizable')=='Yes'){
+                                            echo '<span class="btnBlack">'.__('Customizable').'</span>';
+                                        }
+                                     ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php 
+                            $counter++;
+                             if($counter==3){
+                                 $counter=0;
+                            ?>
+                <div class="clearfix"></div>
+                <?php
+                             }   
+                         endforeach ?>
+            </div>
+
+            <?php } else { ?>
+
+            <ol class="product-items <?= /* @noEscape */ $type ?>">
+                <?php $iterator = 1; ?>
+                <?php foreach ($items as $_item):  ?>
+                <?= /* @noEscape */ ($iterator++ == 1) ? '<li class="product-item">' : '</li><li class="product-item">' ?>
+
+                <div class="product-item-info">
+                    <?php  //$cattrValue = $_item->getProduct()->getCustomAttribute('product_brand'); 
+                                        // echo $cattrValue. " tests";
+                                        
+                                        ?>
+                    <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="product-item-photo">
+                        <?= $block->getImage($_item, $image)->toHtml() ?>
+                    </a>
+                    <div class="product-item-details">
+                        <?php if($_item->getAttributeText('exclusive') == 'Yes') { ?>
+                        <div class="brandLogo"><img
+                                src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('images/hot-exclusive.png') ?>"
+                                alt="" /></div>
+                        <?php }?>
+                        <div class="brandName">
+                            <?php
+                                                $brands = $_item->getData("product_brand");
+                                                if( $brands ){
+                                                    $sql = "SELECT name FROM ves_brand WHERE brand_id IN (".$brands.")";
+                                                    $results = $connection->fetchAll($sql);
+                                                    if( !empty($results) ){
+                                                        echo $results[0]['name'];
+                                                    }
+                                                }
+                                                ?>
+                        </div>
+
+                        <strong class="product-item-name">
+                            <a title="<?= $block->escapeHtml($_item->getName()) ?>"
+                                href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"
+                                class="product-item-link">
+                                <?= $block->escapeHtml($_item->getName()) ?>
+                            </a>
+                        </strong>
+                        <?php if ($templateType): ?>
+                        <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
+                        <?php endif; ?>
+
+                        <?= $block->getProductPriceHtml($_item, $type) ?>
+
+
+
+                        <?php if ($showWishlist || $showCompare || $showCart): ?>
+                        <div class="product-item-inner">
+                            <div class="product-item-actions">
+                                <?php if ($showCart): ?>
+                                <div class="actions-primary">
+                                    <?php if ($_item->isSaleable()): ?>
+                                    <?php $postParams = $block->getAddToCartPostParams($_item); ?>
+                                    <form data-role="tocart-form"
+                                        data-product-sku="<?= $block->escapeHtml($_item->getSku()) ?>"
+                                        action="<?= $block->escapeUrl($postParams['action']) ?>" method="post">
+                                        <input type="hidden" name="product"
+                                            value="<?= $block->escapeHtmlAttr($postParams['data']['product']) ?>">
+                                        <input type="hidden"
+                                            name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>"
+                                            value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
+                                        <?= $block->getBlockHtml('formkey') ?>
+                                        <button type="submit" title="<?= $block->escapeHtml(__('Add to Cart')) ?>"
+                                            class="action tocart primary">
+                                            <span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                                        </button>
+                                    </form>
+                                    <?php else: ?>
+                                    <?php if ($_item->isAvailable()): ?>
+                                    <div class="stock available"><span><?= $block->escapeHtml(__('In stock')) ?></span>
+                                    </div>
+                                    <?php else: ?>
+                                    <div class="stock unavailable">
+                                        <span><?= $block->escapeHtml(__('Out of stock')) ?></span></div>
+                                    <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+                                <?php endif; ?>
+                                <?php if ($showWishlist || $showCompare): ?>
+                                <div class="actions-secondary" data-role="add-to-links">
+                                    <?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow() && $showWishlist): ?>
+                                    <a href="#"
+                                        data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_item) ?>'
+                                        class="action towishlist" data-action="add-to-wishlist"
+                                        title="<?= $block->escapeHtmlAttr(__('Add to Wish List')) ?>">
+                                        <span><?= $block->escapeHtml(__('Add to Wish List')) ?></span>
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php if ($block->getAddToCompareUrl() && $showCompare): ?>
+                                    <?php $compareHelper = $this->helper(\Magento\Catalog\Helper\Product\Compare::class);?>
+                                    <a href="#" class="action tocompare"
+                                        data-post='<?= /* @noEscape */ $compareHelper->getPostDataParams($_item) ?>'
+                                        title="<?= $block->escapeHtmlAttr(__('Add to Compare')) ?>">
+                                        <span><?= $block->escapeHtml(__('Add to Compare')) ?></span>
+                                    </a>
+                                    <?php endif; ?>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?= ($iterator == count($items) + 1) ? '</li>' : '' ?>
+                <?php endforeach ?>
+            </ol>
+
+            <?php } ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+        <?= $block->getPagerHtml() ?>
+    </div>
+</div>
+<?php if($block->getBlockHtml('formkey')): ?>
+<script type="text/x-magento-init">
+    {
+        ".block.widget [data-role=tocart-form]": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+    </script>
+<?php endif;?>
+<?php endif;?>

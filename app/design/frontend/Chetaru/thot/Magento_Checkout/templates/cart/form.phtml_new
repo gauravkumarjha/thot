@@ -1,0 +1,99 @@
+<?php $mergedCells = ($this->helper('Magento\Tax\Helper\Data')->displayCartBothPrices() ? 2 : 1); ?>
+<?php echo $block->getChildHtml('form_before') ?>
+<form action="<?php /* @escapeNotVerified */ echo $block->getUrl('checkout/cart/updatePost') ?>"
+    method="post"
+    id="form-validate"
+    data-mage-init='{"validation":{}}'
+    class="form form-cart">
+    <?php echo $block->getBlockHtml('formkey'); ?>
+    <div class="row<?php echo $mergedCells == 2 ? ' detailed' : ''; ?>">
+        <div id="shopping-cart-table"
+            data-mage-init='{"shoppingCart":{"emptyCartButton": "action.clear",
+               "updateCartActionContainer": "#update_cart_action_container"}}'>
+               <div class="summary_icons_wrap sum_mobile">
+                <div class="summary_inner">
+                    <img src="https://stage.thehouseofthings.com/pub/media/securepayment.png" alt="">
+                </div>
+                <div class="summary_inner">
+                    <img src="https://stage.thehouseofthings.com/pub/media/worldwide.png" alt="">
+                </div>
+                <div class="summary_inner">
+                    <img src="https://stage.thehouseofthings.com/pub/media/personal-assistance.png" alt="">
+                </div>
+            </div>
+            <div class="heading_shoping_main">
+                <div class="heading_title_new">
+                    <h4>Shopping Bag</h4>
+                </div>
+                <div class="remove_list">
+                    <a href="#" class="v4u-remove-all" onclick="removeAllItems(event)">Remove all</a>
+                </div>
+            </div>
+            <?php foreach ($block->getItems() as $_item): ?>
+                <?php echo $block->getItemHtml($_item) ?>
+            <?php endforeach ?>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="cart main actions">
+        <?php if ($block->getContinueShoppingUrl()): ?>
+            <a class="action continue"
+                href="<?php echo $block->escapeUrl($block->getContinueShoppingUrl()) ?>"
+                title="<?php echo $block->escapeHtml(__('Continue Shopping')); ?>">
+                <span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span>
+            </a>
+        <?php endif; ?>
+        <button type="submit"
+            name="update_cart_action"
+            data-cart-empty=""
+            value="empty_cart"
+            title="<?php echo $block->escapeHtml(__('Clear Shopping Cart')); ?>"
+            class="action clear" id="empty_cart_button">
+            <span><?php /* @escapeNotVerified */ echo __('Clear Shopping Cart'); ?></span>
+        </button>
+        <button type="submit"
+            name="update_cart_action"
+            data-cart-item-update=""
+            value="update_qty"
+            title="<?php echo $block->escapeHtml(__('Update Shopping Cart')); ?>"
+            class="action update">
+            <span><?php /* @escapeNotVerified */ echo __('Update Shopping Cart'); ?></span>
+        </button>
+        <input type="hidden" value="" id="update_cart_action_container" data-cart-item-update="" />
+    </div>
+</form>
+<?php echo $block->getChildHtml('checkout.cart.order.actions') ?>
+<?php echo $block->getChildHtml('shopping.cart.table.after'); ?>
+
+<form id="remove-all-form" action="<?= $block->getUrl('checkout/cart/updatePost') ?>" method="post" style="display:none;">
+    <input type="hidden" name="update_cart_action" value="empty_cart" />
+    <?= $block->getBlockHtml('formkey'); ?>
+</form>
+
+<script>
+    function removeAllItems(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to remove all items from the cart?')) {
+            document.getElementById('remove-all-form').submit();
+        }
+    }
+</script>
+
+<style>
+    .summary_icons_wrap {
+        display: flex;
+        align-items: center !important;
+        column-gap: 20px;
+    }
+    .summary_icons_wrap.sum_mobile {
+        background-color: #f5f5f5;
+        padding: 0 20px 15px 20px;
+    }
+
+    @media screen and (min-width: 767px) {
+        div#shopping-cart-table .summary_icons_wrap.sum_mobile {
+            display: none;
+        }
+    }
+</style>

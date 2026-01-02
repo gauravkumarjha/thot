@@ -1,0 +1,32 @@
+Legend
+
++ Features
+- Bugs
+
+-------------------------------- Version 4.0.0 --------------------------------------
+	+ Compatible with Magento version 2.4.x
+
+-------------------------------- Version 3.0.0 --------------------------------------
+	+ Module version upgraded for 2.3.x
+	+ Minor Big Fixes
+-------------------------------- Version 2.1.1 --------------------------------------
+	+ Admin can create payment methods mapping according to shipping methods.
+
+-------------------------------- Version 2.0.1 --------------------------------------
+	+ Admin can create payment methods mapping according to shipping methods.
+
+-------------------------------- Version 2.1.0 --------------------------------------
+	+ Compatible with Magento version 2.3.x
+	+ Admin can assign specific shipping methods to a product
+	+ Admin can assign specific shipping methods to product categories
+	+ Admin can assign specific payment methods to a product
+	+ Admin can assign specific payment methods to a product categories
+	+ the shipping/payment method available on checkout will be restricted by products in cart
+
+-------------------------------- Version 2.0.0 --------------------------------------
+	+ Compatible with Magento version 2.2.x
+	+ Admin can assign specific shipping methods to a product
+	+ Admin can assign specific shipping methods to product categories
+	+ Admin can assign specific payment methods to a product
+	+ Admin can assign specific payment methods to a product categories
+	+ the shipping/payment method available on checkout will be restricted by products in cart

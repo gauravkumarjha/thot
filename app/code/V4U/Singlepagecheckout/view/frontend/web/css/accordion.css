@@ -1,0 +1,77 @@
+/* Hide only the default checkout steps, keep root and engine intact */
+/* #checkout-step-shipping,
+#checkout-step-billing {
+    display: none !important;
+} */
+
+/* Accordion container */
+.v4u-accordion-checkout {
+    margin: 20px 0;
+}
+
+.v4u-accordion {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Section header */
+.v4u-accordion-section+.v4u-accordion-section {
+    border-top: 1px solid #eee;
+}
+
+.v4u-accordion-header {
+    background: #f8f8f8;
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.v4u-accordion-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.v4u-accordion-state {
+    font-weight: 600;
+    color: #999;
+}
+
+/* Pane content */
+.v4u-accordion-pane {
+    display: none;
+    /* slideDown/slideUp toggles visibility */
+    background: #fff;
+}
+
+.v4u-accordion-pane.open {
+    display: block;
+}
+
+.v4u-pane-inner {
+    padding: 16px;
+}
+
+/* Blocks inside accordion */
+.v4u-shipping-block,
+.v4u-shipmethods-block,
+.v4u-payment-block {
+    margin-bottom: 16px;
+}
+
+/* Validation message */
+.v4u-validation .message.warning {
+    background: #fff7e6;
+    border: 1px solid #ffd591;
+    color: #8c6d1f;
+    padding: 10px 12px;
+    border-radius: 3px;
+}
+
+/* Minor adjustments for Magento checkout components rendered inside */
+.v4u-shipping-block .form,
+.v4u-payment-block .payment-methods {
+    margin-top: 8px;
+}

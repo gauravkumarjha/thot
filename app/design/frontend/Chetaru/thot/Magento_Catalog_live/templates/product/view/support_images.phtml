@@ -1,0 +1,433 @@
+<?php 
+$_product = $block->getProduct();
+$product_supporting_image = $_product->getAttributeText('product_supporting_image');;
+
+$images = $_product->getMediaGalleryImages();
+$image_count = $images->count();
+?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+$_helper  = $this->helper(Magento\Catalog\Helper\Output::class);
+$new_layout = array(137);
+$categories = $_product->getCategoryIds();
+$result = array_intersect($new_layout, $categories);
+if( empty($result) ){ ?>
+<div class="container">
+<div class="row shareImgColumn">
+<div class="col-md-12">
+<div class="row">
+	<?php if($product_supporting_image=='one_supporting_image'):?>
+		<?php if($image_count>0) :
+			$i=0;
+			foreach ($images as $j=>$image) {
+				if(strpos((string)$image['label'], 'support:')!==false){
+				$i++;if($i>1)break;
+				?>
+				<div class="col-md-12">
+					<div class="row">	
+							<img src="<?php echo $image['url'];?>" class="img-responsive" alt="<?php echo str_replace("support:", "", $image['label']);?>" title="<?php echo str_replace("support:", "", $image['label']);?>"/>
+					</div>	
+				</div>
+				<?php }
+				}
+			endif;?>
+	<?php endif;?>
+	<?php if($product_supporting_image=='two_supporting_image'):?>
+		<?php if($image_count>1) :
+			$i=0;
+			?><div class="row">	<?php
+			foreach ($images as $j=>$image) {
+				if(strpos((string)$image['label'], 'support:')!==false){
+				$i++;if($i>2)break;
+				?>
+			
+				<div class="col-md-6">
+					<a href="#" class="popup_supporting_image" data-toggle="modal" data-target="#support<?php echo $j?>">
+						<img src="<?php echo $image['url'];?>" class="img-responsive" alt="<?php echo str_replace("support:", "", $image['label']);?>" title="<?php echo str_replace("support:", "", $image['label']);?>"/>
+					</a>
+				</div>
+				<!--modal popup -->
+				<div id="support<?php echo $j?>" class="modal fade" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<img src="<?php echo $image['url'];?>" class="support-modal-image " alt="<?php echo str_replace("support:", "", $image['label']);?>" title="<?php echo str_replace("support:", "", $image['label']);?>">
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php }}?></div>	<?php
+			endif;?>
+	<?php endif;?>
+	<?php if($product_supporting_image=='three_supporting_image'): ?>
+		
+		<div class="row">	
+			<?php if($image_count>2) :
+			$i=0;
+			foreach ($images as $j=>$image) {
+				if(strpos((string)$image['label'], 'support:')!==false){
+				$i++;if($i>3)break;
+			?>
+			<div class="col-md-4">
+				<a href="#" data-toggle="modal" data-target="#support<?php echo $j?>" class="popup_supporting_image">
+					<img src="<?php echo $image['url'];?>" class="img-responsive" alt="<?php echo str_replace("support:", "", $image['label']);?>" title="<?php echo str_replace("support:", "", $image['label']);?>"/>
+				</a>
+			</div>
+			<!--modal popup -->
+				<div id="support<?php echo $j?>" class="modal fade" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<img src="<?php echo $image['url'];?>" class="support-modal-image " alt="<?php echo str_replace("support:", "", $image['label']);?>" title="<?php echo str_replace("support:", "", $image['label']);?>">
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php }} endif;?>
+		</div>
+	<?php endif;?>
+	<div class="clearfix"></div>
+	<div class="row">
+	<div class="spImgTxt noImage"><?php echo nl2br((string)$_product->getDescription())?></div>
+	</div>
+	<div class="clearfix"></div>
+	<p class="spImgShare"><?php echo __("Share this product")?></p>
+	<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+		<a class="a2a_button_facebook"></a>
+		<a class="a2a_button_twitter"></a>
+		<a target="_blank" class="button_instagram" href="https://www.instagram.com/thehouseofthings/"></a>
+	</div>
+
+	<div class="clearfix"></div>
+</div>
+</div>
+ </div>
+<div class="clearfix"></div>
+</div>	
+
+<!--specification details-->
+<section class="bg-white product-info-detail">
+	<div class="container">
+		 <div class="row"> 
+			<div class="col-md-4">
+				<div class="row">
+					<div class="pi-heading">
+						<h5><?php echo __("Product Specifications")?></h5>
+						<hr>
+					</div>
+					<div class="clearfix"></div>
+					<?php if($_product->getData('length')!="" or $_product->getData('width')!="" or 
+							 $_product->getData('height')!="" or $_product->getData('dimensional_extra_info')!=""):?>
+					<div class="pi-detail">
+						<h5><?php echo __("Dimensions")?></h5> 
+						<p>
+							<?php if($_product->getData('length')!=""):?>
+							<span>Length <?php echo $_product->getData('length');?></span><br/>
+							<?php endif;?>
+							<?php if($_product->getData('width')!=""):?>
+							 <span>Width <?php echo $_product->getData('width');?> </span><br/>
+							<?php endif;?> 
+							<?php if($_product->getData('height')!=""):?>
+							<span>Height <?php echo $_product->getData('height');?></span> <br/>
+							<?php endif;?>
+							
+							
+						</p>
+							<div class="extrainfowrap">
+						<?php if(!empty($_product->getData('dimensional_extra_info'))){ ?>
+						<div class="extrainfo"><?php echo $_product->getData('dimensional_extra_info');?> </div>
+						<?php }?>
+						</div>
+					</div>
+					<?php endif;?>
+					<?php if(!empty($_product->getData('max_min_height_available'))):?>
+					<div class="pi-detail">
+						<h5>Max. / Min. Height Available</h5>
+						<p><?php echo $_product->getData('max_min_height_available')?></p>
+					</div>
+					<?php endif;?>
+					<?php if(!empty($_product->getData('material'))):?>
+					<div class="pi-detail">
+						<h5>Material</h5>
+						<p><?php echo $_product->getData('material')?></p>
+					</div>
+					<?php endif;?>
+					<?php if(!empty($_product->getData('lamping'))):?>
+					<div class="pi-detail">
+						<h5>Lamping</h5>
+						<p><?php echo $_product->getData('lamping')?></p>
+					</div>
+					<?php endif;?>
+					<?php if(!empty($_product->getData('voltage'))):?>
+					<div class="pi-detail">
+						<h5>Voltage</h5>
+						<p><?php echo $_product->getData('voltage')?></p>
+					</div>
+					<?php endif;?>
+					<?php if(!empty($_product->getData('product_material1'))):?>
+					<div class="pi-detail">
+						<h5>Product material</h5>
+						<p><?php echo $_product->getData('product_material1')?></p>
+					</div>
+					<?php endif;?>
+					<?php if(!empty($_product->getData('more_info'))):?>
+					<div class="pi-detail">
+						<h5>More info</h5>
+						<p><?php echo $_product->getData('more_info')?></p>
+					</div>
+					<?php endif;?>
+				</div>
+			</div>
+		
+			<div class="col-md-4">
+				<div class="row">
+					<div class="pi-heading">
+						<h5>Delivery Information</h5>
+						<hr>
+					</div>
+					<div class="clearfix"></div>
+					<?php if(!empty($_product->getData('shipping_time'))):?>
+					<div class="pi-detail">
+						<h5>Shipping Time</h5>
+						<p class="red"><?php echo $_product->getData('shipping_time')?></p>
+					</div>
+					<?php endif;?>
+					<div class="clearfix"></div>
+					<?php if(!empty($_product->getData('additional_costs'))):?>
+					<div class="pi-detail">
+						<h5>Additional Costs</h5>
+						<p>
+							<?php echo $_product->getData('additional_costs')?>
+						</p>
+					</div>
+					<?php endif;?>
+				</div>
+			</div>
+			
+			<div class="col-md-4">
+				<div class="row">
+				<?php if(!empty($_product->getData('shipping_policy'))):?>
+					<div class="pi-heading">
+						<h5>Shipping Policy</h5>
+						<hr>
+					</div>
+					<div class="clearfix"></div>
+					
+					<div class="pi-detail pi-detail-sp">
+						<p>
+							<?php echo $_product->getData('shipping_policy');?>
+						</p>
+					</div>
+					<?php endif;?>
+				</div>
+			</div>
+		 </div> 
+		 
+		<div class="clearfix"></div>
+		<div class="row">
+		   <div class="col-md-12">
+                <div class="row">
+                    <a class="btn btn-transparent-border btn100 popup_anchor"><?php /* @escapeNotVerified */ echo __('Request more info') ?></a>
+                </div>
+            </div>
+		</div>	
+	</div>
+</section>
+<?php } else { 
+  $art_des = $_product->getData('sub_description');
+  $art_related_project_ids = $_product->getData('art_related_project_ids');
+  ?>
+<div class="art_product_page">
+<div class="upper_section">
+	<div class="left">
+	    <div class="art_image">
+	       <?php
+	      // $p =1;
+	       foreach ($images as $j=>$image) { ?>
+				<div class="col-md-12">
+					<div class="row">	
+							<img src="<?php echo $image['url'];?>" class="img-responsive" alt="<?php echo str_replace("support:", "", $image['label'] ?? '');?>" title="<?php echo str_replace("support:", "", $image['label'] ?? '');?>"/>
+					</div>	
+				</div>
+				<?php break; } ?> 
+	    </div>
+	</div>
+	<div class="right">
+		<div class="right_inner">
+			<span class="alt_house"></span>
+			<div class="art_description">
+	         <?php echo $art_des; ?>
+	        </div>
+	     </div>
+	</div>
+</div>
+	<div class="container">
+		 <div class="art_gallery">
+		 	<?php /* @escapeNotVerified */ echo $this->helper('Magento\Catalog\Helper\Output')->productAttribute($_product, $_product->getDescription(), 'description') ?>
+		 </div>
+		 <div class="art_enquiry">	
+				<div class="col-md-12">
+					<div class="row">
+						<a class="btn btn-transparent-border btn100 popup_anchor"><?php /* @escapeNotVerified */ echo __('Enquire Now') ?></a>
+					</div>
+				</div>
+			</div>
+    </div>
+    <?php  $art_gallery = $_product->getData('art_gallery'); 
+          //echo $art_gallery;
+          $art_gallery = $_product->getData('art_gallery');
+          if (trim((string)$art_gallery)) {
+            $html = $_helper->productAttribute($_product, $art_gallery, 'art_gallery');
+            preg_match_all('/<img[^>]+>/i',$html, $result); 
+            if( !empty($result)){
+            	?><div class="art-page-slider owl-carousel owl-theme"><?php
+            	foreach ($result[0] as $key => $value) {
+            		?>
+            		<div class="item"><?php echo $value;?> </div><?php 
+            	}
+            	?></div>
+                <script type="text/javascript">
+                	require(['jquery','Ves_All/lib/owl.carousel/owl.carousel.min'],function($){
+
+ var $artpageslider = $('.art-page-slider');
+                	 $artpageslider.owlCarousel({
+                		items: 4,
+				        loop: true,
+				        dots: false,
+				        freeDrag: false,
+				        mouseDrag: false,
+				        touchDrag: false,
+				        lazyLoad: true,
+				        nav: true,
+				        autoplay: true,
+			            slideTransition: 'linear',
+			            //autoplayTimeout: 1000,
+			            autoplaySpeed: 1000,
+			            autoplayHoverPause: true,
+				       // navText: ["â€¹","â€º"],
+				        responsive: {
+				          0: {
+				            items: 1
+				          },
+				          768: {
+				            items: 3
+				          },
+				          1024: {
+				            items: 4
+				          }
+				        }
+                	});
+
+
+                });
+                
+                </script>
+            	<?php 
+            }
+         //print_r($result);
+        }
+    ?>
+	<div class="container">	
+		<?php if ( $art_related_project_ids != '' ) { 
+            $art_related_project_ids = str_replace(' ', '', $art_related_project_ids);
+            $art_related_arr = explode(',', $art_related_project_ids);
+            $mediaUrl =  $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA); 
+            if( !empty($art_related_arr) ){
+            	?>
+            	<section class="bg-white art_related_project">
+			         <div class="container">
+			            <div class="row">
+			               <div class="section-header text-center">
+			                  <h3>Related projets</h3>
+			               </div>
+				<?php 
+				foreach ($art_related_arr as $key => $product_id) {
+					$_item = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+			        $link = $_item->getProductUrl();
+			        $art_related_project_image=$_item->getResource()->getAttribute('art_related_project_image')->getFrontend()->getValue($_item);
+                     $resizedImageUrl = $mediaUrl."catalog/product".$art_related_project_image;
+
+                     
+			      ?>
+			           <div class="col-md-4 col-sm-4 col-xs-12">
+			                  <div class="thumbnail" >
+									<?php 
+										if($_item->getAttributeText('exclusive')=='Yes'){
+									?>
+										<div class="thumb-logo">
+										<img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('images/hot-exclusive.png') ?>"
+											 alt="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+											 <?php //echo $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
+											 <?php //echo $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?>
+										/>
+										</div>
+										<?php } ?>
+								  <a href="<?php /* @escapeNotVerified */ echo $link; ?>">
+			                            <img src="<?php echo $resizedImageUrl;?>" alt="<?php echo $block->escapeHtml($_item->getName());?>"/>
+			                      </a>
+			                     <div class="caption">
+			                        <div class="row">
+			                           <div class="col-md-7 col-xs-7">
+			                              <div class="custom-row">
+												<h3 class="productName"><a title="<?php echo $block->escapeHtml($_item->getName()) ?>"
+			                                       href="<?php /* @escapeNotVerified */ echo $link; ?>"
+			                                       class="">
+			                                        <?php echo $block->escapeHtml($_item->getName());?>
+													</a></h3>
+			                                    <a class="know_more" href="<?php /* @escapeNotVerified */ echo $link; ?>">Know more</a>
+			                              </div>
+			                           </div>
+			                        </div>
+			                     </div>
+			                  </div>
+			               </div>
+			         <?php
+				}
+				?>
+			            </div>
+			         </div>
+			</section>
+            	<?php
+            }
+		 ?>
+		<?php } ?>
+	</div>
+</div>
+<?php } ?>
+
+
+
+<script type="text/javascript">
+    require([
+        "jquery",
+        "Magento_Ui/js/modal/modal"
+    ],function($, modal) {
+
+        var options = {
+            type: 'popup',
+            responsive: true,
+            modalClass: 'supporting_image_box',
+            //title: 'Main title',
+            buttons: [{
+                text: $.mage.__('Cancel'),
+                class: '',
+                click: function () {
+                    this.closeModal();
+                }
+            }]
+        };
+
+        $(".popup_supporting_image").click(function() {
+            var datatarget = $(this).attr('data-target');
+            var popup = modal(options, $(datatarget));
+            $(datatarget).modal('openModal');
+            $(".modal-footer").remove();
+            $(".modal-header").remove();
+            return false;
+        });
+        
+    });
+</script>
+
+<script async src="https://static.addtoany.com/menu/page.js"></script>

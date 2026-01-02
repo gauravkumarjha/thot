@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Sales:etc/status_state.xsd">
+
+    <!-- Associate custom status with 'new' state -->
+    <status code="custom_pending_status" state="new" is_default="0"/>
+    
+    <!-- Associate custom status with 'processing' state -->
+    <status code="custom_processing_status" state="processing" is_default="0"/>
+
+    <!-- Example: Associate Magento default status with 'complete' state -->
+    <status code="complete" state="processing" is_default="0"/>
+
+    <!-- Example: Associate Magento default status with 'canceled' state -->
+    <status code="canceled" state="processing" is_default="0"/>
+    
+    <!-- Add more statuses and states as needed -->
+</config>

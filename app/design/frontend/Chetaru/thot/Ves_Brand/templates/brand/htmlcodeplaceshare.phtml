@@ -1,0 +1,24 @@
+<?php if ($_name = $block->getCurrentBrand()->getName()): ?>
+<?php 
+	if(!empty($block->getCurrentBrand()->getData('facebook_uri')) || 
+	!empty($block->getCurrentBrand()->getData('instagram_uri')) ||
+	!empty($block->getCurrentBrand()->getData('twitter_uri'))) {?>	
+<p class="spImgShare">
+	<?php /* @escapeNotVerified */ echo __('Follow '.$this->helper('Ves\Brand\Helper\Data')->filter($_name)); ?>
+</p>
+	<?php }?>
+<?php endif; ?>
+<p class="spImgShare">
+	<?php if($block->getCurrentBrand()->getData('facebook_uri')) {?>
+	<a class="social-icon" href="<?php echo $block->getCurrentBrand()->getData('facebook_uri')?>" target="_blank"><img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('images/facebook.png') ?>" alt="" /></a>
+	<?php 
+	}
+	if($block->getCurrentBrand()->getData('instagram_uri')){
+	?>
+	<a class="social-icon" href="<?php echo $block->getCurrentBrand()->getData('instagram_uri')?>" target="_blank"><img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('images/instagram.png') ?>" alt="" /></a>
+	<?php  }
+	if($block->getCurrentBrand()->getData('twitter_uri')){
+	?>
+	<a class="social-icon" href="<?php echo $block->getCurrentBrand()->getData('twitter_uri')?>" target="_blank"><img src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('images/twitter.png') ?>" alt="" /></a>
+	</p><?php } ?>
+<div class="clearfix"></div>

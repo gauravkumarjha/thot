@@ -1,0 +1,136 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$blockObj= $block->getLayout()->createBlock('Magento\Catalog\Block\Product\View');
+$_imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Helper\Image');
+$_helper  = $this->helper(Magento\Catalog\Helper\Output::class);
+$ids = $block->getData('ids');
+$ids_arr = explode(',', (string)$ids);
+if( !empty($ids_arr) ){
+	?>
+<section class="bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="the-arrival-heading section-header text-center">
+                <p class="sectionTitleSubHead"><?php /* @escapeNotVerified */ echo __('the') ?></p>
+                <p class="sectionTitle"><?php /* @escapeNotVerified */ echo __('Fine Prints') ?></p>
+                <hr class="hr--small">
+            </div>
+
+            <div class="row fine-items-slider">
+                <?php 
+					foreach ($ids_arr as $key => $product_id){
+						// $product_id = $objectManager->get('Magento\Catalog\Model\Product')->getIdBySku($product_sku);
+							$_item = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+							if (!empty($_item->getName()) && $_item->getStatus() == 1 ) {
+							$link = $_item->getProductUrl();
+							$additional_image = $_item->getData('additional_image');
+							if (trim((string)$additional_image)) {
+								$html = $_helper->productAttribute($_item, $additional_image, 'additional_image');
+								preg_match_all('/<img[^>]+src=([\'"])(?<src>.+?)\1[^>]*>/i', $html, $result1);
+							// preg_match_all('/<img[^>]+alt=([\'"])(?<alt>.+?)\1[^>]*>/i', $html, $result2);
+								$resizedImageUrl =  $result1['src'][0];
+							}else{
+								$resizedImageUrl = $_imageHelper->init($_item, 'hot_product_page_image_medium')->getUrl();
+							} ?>
+									<div class="col-md-4 col-sm-4 col-xs-12 fine-items">
+										<div class="thumbnail">
+											<?php 
+												if($_item->getAttributeText('exclusive')=='Yes'){
+											?>
+											<div class="thumb-logo">
+												<img class="lazy"
+													src="<?php /* @escapeNotVerified */ echo $this->getViewFileUrl('Magento_Theme::images/hot-exclusive.png') ?>"
+													alt="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
+													<?php //echo $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
+													<?php //echo $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?> />
+											</div>
+											<?php } ?>
+
+											<a href="<?php /* @escapeNotVerified */ echo $link; ?>">
+												<img class="lazy" src="<?php echo $resizedImageUrl;?>"
+													alt="<?php echo $block->escapeHtml($_item->getName());?>" />
+											</a>
+											<div class="caption">
+												<div class="row">
+													<div class="col-md-7 col-xs-7">
+														<div class="custom-row">
+															<a title="<?php echo $block->escapeHtml($_item->getName()) ?>"
+																href="<?php /* @escapeNotVerified */ echo $link; ?>" class="">
+																<h3 class="productName">
+																	<?php echo $block->escapeHtml($_item->getName());?>
+																</h3>
+															</a>
+														</div>
+													</div>
+													<div class="col-md-5 col-xs-5 price">
+														<div class="custom-row">
+															<?php 
+															if($_item->getAttributeText('price_on_request')=='Yes'){
+																?>
+															<h3 class="price_request">
+																<?php /* @escapeNotVerified */ echo __('Price on request') ?></h3>
+															<?php
+															}else{
+																?>
+															<h3 class="productPrice"><?php echo $blockObj->getProductPrice($_item) ?></h3>
+															<?php } ?>
+
+
+														</div>
+													</div>
+												</div>
+												<div class="custom-row">
+													<p class="productDetail">
+														<?php
+													$brands = $_item->getData("product_brand");
+													if( $brands ){
+														$sql = "SELECT name, url_key FROM ves_brand WHERE brand_id IN (".$brands.")";
+														$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+														$connection = $resource->getConnection();
+														$results = $connection->fetchAll($sql);
+															
+														if( !empty($results) ){?>
+														<?php echo 'By '; ?>
+														<a href="/makers/<?php echo $results[0]['url_key']; ?>"
+															title="<?php echo $results[0]['name']; ?>"><?php echo $results[0]['name']; ?></a><?php
+														} 
+												}?>
+													</p>
+												</div>
+												<div class="custom-row">
+													<?php 
+															if ($_item->getAttributeText('options_available')=='Yes') {
+															echo '<span class="btnGrey">Options Available</span> ';
+															} 
+															if($_item->getAttributeText('is_customizable')=='Yes'){
+															echo '<span class="btnBlack">Customizable</span>';
+															}
+														?>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<?php
+						}
+					}
+					?>
+					<div class="col-md-4 col-sm-4 col-xs-12 fine-items mobile-block">
+					   <a href="/fine-prints.html" class="btnStyle"><?php /* @escapeNotVerified */ echo __('View All') ?></a>
+					<div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="btnViewAll text-center view-all-desktop">
+                <a href="/fine-prints.html" class="btnStyle"><?php /* @escapeNotVerified */ echo __('View All') ?></a>
+            </div>
+
+            <div class="btnViewAll text-center view-all-mobile">
+                <a href="art.html" class="btnStyle"><?php /* @escapeNotVerified */ echo __('View All ART') ?></a>
+            </div>
+        </div>
+
+    </div>
+    <div class="clearfix"></div>
+</section>
+<?php
+}

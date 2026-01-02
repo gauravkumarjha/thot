@@ -1,0 +1,58 @@
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_PhonePe
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod" />
+            <label data-bind="attr: {'for': getCode()}" class="label phonepe">
+            <!-- <img data-bind="attr: { src: require.toUrl('Webkul_PhonePe/images/phonepe/phonepe.png') }"
+                class="phonepe-payment-icon"/> -->
+            <!-- <span data-bind="text: methodtitle()">Pay online with (UPI, Crds, Wallets, Net Banking)</span> -->
+            <!-- <span>Pay online with (UPI, Crds, Wallets, Net Banking)</span> -->
+            <span>Phonepay</span>
+            <img data-bind="attr: { src: require.toUrl('Webkul_PhonePe/images/phonepe/phonepe_1.png') }"
+                class="phonepe-payment-icon" />
+           
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <fieldset class="fieldset" data-bind='attr: {id: "payment_form_" + getCode()}'>
+            <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+            </div>
+            <form id="payment-form">
+                <div id="card-container"></div>
+              </form>
+        </fieldset>
+        <div class="actions-toolbar phonepe-place-order">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="button"
+                        data-bind="
+                        attr: {title: $t('Place Order'), id:'placeOrder'},
+                        enable: (getCode() == isChecked()),
+                        click: generateOrder
+                        " >
+                <span data-bind="i18n: 'Place Order'"></span>
+            </button>
+            </div>
+        </div>
+
+    </div>
+</div>

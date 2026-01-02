@@ -1,0 +1,28 @@
+<?php
+
+use Chetaru\Edit\Model\Post;
+use Chetaru\Edit\ViewModel\PostViewModel;
+use Magento\Framework\View\Element\Template;
+
+/** @var Post $post */
+/** @var PostViewModel $postViewModel */
+/** @var Template $block */
+
+$postViewModel = $block->getData('post_view_model');
+$post = $block->getData('post');
+?>
+<div class="gallery_product col-lg-6 col-md-6 col-sm-6 col-xs-12 filter mod">
+    <div class="thumbnail">
+        <div class="col-md-12">
+            <div class="row">
+                <a href="<?php echo $postViewModel->getPostUrl($post); ?>">
+                    <h4><?php echo $post->getData('name'); ?></h4>
+                </a>
+                <a href="<?php echo $postViewModel->getPostUrl($post); ?>">
+                    <img src="<?php echo $post->getData('featured_image'); ?>" alt="<?php echo $post->getData('name'); ?>"></img>
+                </a>
+                <a href="<?php echo $postViewModel->getPostUrl($post); ?>" class="btnStyle"><?php echo $post->getData('shop_for'); ?></a>
+            </div>
+        </div>
+    </div>
+</div>

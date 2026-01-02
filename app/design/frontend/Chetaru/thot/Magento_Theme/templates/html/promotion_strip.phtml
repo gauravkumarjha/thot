@@ -1,0 +1,263 @@
+<div class="promotion-bar">
+    <!-- <p class="newlaunch"><em>CHROMA CASA</em></p> -->
+    <p class="comingsoontext">EXCLUSIVE COLLECTION COMING SOON</p>
+    <!-- <p class="notifyme-text"><span id="open-popup-btn" style="cursor:pointer">Notify me</span></p> -->
+</div>
+<style>
+    .promotion-bar {
+        text-align: center;
+        background: #000;
+    }
+
+    .promotion-bar p.comingsoontext {
+        margin: 0px;
+        color: #fff;
+        padding: 11px;
+    }
+</style>
+<!-- <div class="promotion-strip">
+    <p class="newlaunch"><em>CHROMA CASA</em></p>
+    <p class="comingsoontext">EXCLUSIVE COLLECTION COMING SOON</p>
+    <p class="notifyme-text"><span id="open-popup-btn" style="cursor:pointer">Notify me</span></p>
+</div> -->
+<style>
+    .sections.nav-sections {
+        top: 124px;
+    }
+
+    .promotion-strip {
+        display: flex;
+        justify-content: space-between;
+        padding: 0px 30px;
+        align-items: center;
+        background-image: url('https://magento-878717-4602051.cloudwaysapps.com/pub/media/notification-bar-without-text.jpg');
+        height: 40px;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .promotion-strip p {
+        margin-bottom: 0px;
+        color: #fff;
+    }
+
+    span#open-popup-btn {
+        border: 2px solid #000;
+        padding: 2px 10px;
+        display: inline-block;
+        line-height: 15px;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+        font-weight: 500;
+        color: #000;
+    }
+
+    .popup-content {
+        max-width: 400px;
+    }
+
+    #popup-form button {
+        cursor: pointer;
+        background-color: #2d2d2d !important;
+        color: #fff !important;
+        border: 0;
+        padding: 12px 25px !important;
+        text-transform: uppercase;
+        font-family: "Work Sans", sans-serif !important;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1.62px;
+        line-height: 19px;
+    }
+
+    #popup-form label {
+        display: block;
+        text-align: left;
+    }
+
+    #popup-form .close {
+        font-weight: 100;
+        top: 0px;
+        right: 10px;
+    }
+
+    button.action-primary.action-accept {
+        cursor: pointer;
+        background-color: #2d2d2d !important;
+        color: #fff !important;
+        border: 0;
+        padding: 9px 25px !important;
+        text-transform: uppercase;
+        font-family: "Work Sans", sans-serif !important;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1.62px;
+        line-height: 19px;
+    }
+
+    .modal-popup .modal-header h1 {
+        text-transform: uppercase;
+        font-family: "Work Sans", sans-serif !important;
+        color: #2d2d2d;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1.62px;
+        line-height: 19px;
+    }
+
+    .modal-popup>.modal-inner-wrap>.modal-content {
+        padding: 10px 30px;
+    }
+
+    .modal-popup .modal-footer {
+        padding-top: 20px;
+    }
+
+    .promotion-strip p em {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 500;
+        font-size: 16px;
+        width: 200px;
+        display: block;
+    }
+
+    .promotion-strip p {
+        letter-spacing: 1px;
+    }
+
+    .promotion-strip p:last-child {
+        letter-spacing: 1px;
+        text-align: right;
+    }
+
+    p.newlaunch {
+        width: 200px;
+    }
+
+    p.notifyme-text {
+        width: 200px;
+    }
+
+    .breadcrumbs {
+        margin-top: 20px;
+    }
+
+    @media screen and (max-width:767px) {
+        .promotion-strip p {
+            font-size: 12px;
+            line-height: 18px;
+            letter-spacing: 0px;
+        }
+
+        span#open-popup-btn {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 12px;
+        }
+
+        .promotion-strip {
+            flex-wrap: wrap;
+            padding: 0px 15px;
+            height: 45px;
+            align-content: center;
+        }
+
+        .promotion-strip p em {
+            font-size: 17px;
+        }
+
+        .page-header .header.content.custom {
+            padding-bottom: 20px;
+        }
+
+        span#open-popup-btn {
+            border: 2px solid #fff;
+            color: #fff;
+        }
+
+        #popup-form .popup-content {
+            width: 80%;
+        }
+    }
+</style>
+
+<script>
+    require(['jquery', 'mage/mage', 'Magento_Ui/js/modal/alert'], function($, mage, alert) {
+        $(document).ready(function() {
+            function setCookie(name, value, hours) {
+                var date = new Date();
+                date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+                var expires = "expires=" + date.toUTCString();
+                document.cookie = name + "=" + value + ";" + expires + ";path=/";
+            }
+
+            function getCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            $('#open-popup-btn').on('click', function() {
+                $('#popup-form').show();
+            });
+
+            $('#close-popup').on('click', function() {
+                $('#popup-form').hide();
+            });
+            // AJAX form submission
+            $('#notify_form').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '<?= $block->getUrl('notifyform/index/submit') ?>',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    showLoader: true, // Show loader during the request
+                    success: function(response) {
+                        if (response.success == false) {
+                            var error = response.errors != undefined ? response.errors : "Error";
+                            if (error == "OHH HO!") {
+                                setCookie('formSubmitted', 'true', 2);
+                                $(document).find("#notify_submit").attr("disabled", true);
+                            }
+                            alert({
+                                title: error,
+                                content: response.message,
+                                actions: {
+                                    always: function() {}
+                                }
+                            });
+                        } else {
+                            setCookie('formSubmitted', 'true', 2);
+                            $(document).find("#notify_submit").attr("disabled", true);
+                            $('#notify_form')[0].reset();
+                            alert({
+                                title: 'Success',
+                                content: "Thank you for subscribing! You' ll be notified when our exclusive collection goes live.",
+                                actions: {
+                                    always: function() {}
+                                }
+                            });
+                            $('#popup-form').hide();
+                        }
+                    },
+                    error: function() {
+                        alert({
+                            title: 'Error',
+                            content: 'Unable to submit your data. Please try again later.',
+                            actions: {
+                                always: function() {}
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>

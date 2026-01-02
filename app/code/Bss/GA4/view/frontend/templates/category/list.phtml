@@ -1,0 +1,47 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * @category   BSS
+ * @package    Bss_GA4
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022-2023 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+
+/**
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ * @var $viewModel \Bss\GA4\Block\Product\ListProduct
+ */
+?>
+
+<?php
+$viewModel = $block->getViewModel();
+$escaper = $viewModel->escaper();
+if ($viewModel->isEnableModule()) {
+    $categoryId = $viewModel->getCurrentCategory($block->getLayer()->getCurrentCategory())->getId();
+    $itemListName = $viewModel->getItemListName($block->getRequest()->getFullActionName(), $block->getLayout());
+    $dataItemsList= $viewModel->getViewItemList($block->getLoadedProductCollection());
+    if ($viewModel->getCatalogSession() && $viewModel->getCatalogSession()->getIsAjaxLayer()) {
+        $gtag = $viewModel->getGtagAjaxLayer($dataItemsList, $categoryId, $itemListName);
+        $viewModel->getCatalogSession()->setGtag($gtag);
+        $viewModel->getCatalogSession()->unsIsAjaxLayer();
+    }
+}
+?>
+
+<?php if (isset($dataItemsList) && isset($categoryId) && isset($itemListName)): ?>
+    <?php foreach ($dataItemsList as $listItem): ?>
+        <script>
+            window.addEventListener("load", (event) => {
+                gtag("event", "view_item_list", {
+                    item_list_id: "<?= $escaper->escapeHtml($categoryId) ?>",
+                    item_list_name: "<?= $escaper->escapeHtml($itemListName)?>",
+                    items: <?= /* @noEscape */ $viewModel->serializeItem($listItem)?>
+                });
+            }, false);
+        </script>
+    <?php endforeach; ?>
+<?php endif; ?>

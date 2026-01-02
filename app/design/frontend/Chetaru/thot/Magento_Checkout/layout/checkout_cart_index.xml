@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magento_Checkout::css/checkout.css"/>
+    </head>
+    <update handle="checkout_cart_item_renderers"/>
+    <body>
+		<referenceContainer name="main">
+			<container name="checkout.main.page.container" label="Main Content container" htmlClass="page-content bg-white" htmlTag="div">
+			<container name="checkout.page.container" label="Main Content Top" htmlClass="bg-white product-listing" htmlTag="section">
+				<container name="checkout.container" label="Main Content Top" htmlClass="container bg-white" htmlTag="div">
+					<container name="checkout.fix.container" htmlClass="cart-page-fixed2-desktop" htmlTag="div">
+					</container>
+						<container name="cart.item.container" htmlClass="cart-items-container" htmlTag="div">
+						<container name="content.top" label="Main Content Top"/>
+						<container name="content" label="Main Content Area"/>
+						<container name="content.aside" label="Main Content Aside"/>
+						<container name="content.bottom" label="Main Content Bottom"/>
+						</container>
+					
+				</container>
+			</container>
+			</container>
+	</referenceContainer>
+	  <referenceContainer name="cart.summary">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.cart.summary.after.title"
+                   template="Magento_Checkout::cart/custom-summary-after-title.phtml"
+                   after="checkout.cart.summary.title"/>
+        </referenceContainer>
+  <referenceContainer name="cart.summary">
+            <block class="Magento\Framework\View\Element\Template" 
+                   name="custom.cart.summary.html" 
+                   template="Magento_Checkout::cart/custom-cart-summary.phtml" 
+                   after="-"/>
+        </referenceContainer>
+
+
+		<referenceBlock name="navoverlay" remove="true"/>
+		<move element="page.main.title" destination="checkout.fix.container"  before="cart.item.container" />
+		<move element="checkout.fix.container" destination="checkout.page.container"  before="-" />
+		<move element="page.messages" destination="checkout.fix.container"  after="page.main.title" />
+		<!-- <move element="header.links" destination="header-right-wrapper" before="minicart"/>
+        <move element="minicart" destination="header-right-wrapper" before="top.search"/>
+        <move element="top.search" destination="header-right-wrapper" after="-"/>
+        <move element="currency" destination="header-right-wrapper" before="header.links"/>	 -->
+		<move element="checkout.cart.coupon" destination="cart.summary" before="checkout.cart.methods.bottom"/>
+    </body>
+</page>

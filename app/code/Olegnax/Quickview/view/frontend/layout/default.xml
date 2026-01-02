@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">    
+    <body>
+        <referenceContainer name="before.body.end">
+            <block ifconfig="olegnax_quickview/general/enable" class="Olegnax\Quickview\Block\Template" name="ox_quickview_initialize" template="Olegnax_Quickview::initialize.phtml" />
+            <block ifconfig="olegnax_quickview/general/enable" class="Olegnax\Quickview\Block\Template" name="ox_quickview_styles" template="Olegnax_Quickview::styles.phtml" />
+        </referenceContainer>
+        <container name="ox_before_body_end" after="-">
+                <block class="Magento\Framework\View\Element\Template" name="ox_modals_holder" template="Olegnax_Quickview::html/modals_holder.phtml" />
+        </container>
+    </body>
+</page>

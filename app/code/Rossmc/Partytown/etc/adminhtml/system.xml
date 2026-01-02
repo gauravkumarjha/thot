@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="rossmc" translate="label" sortOrder="100">
+            <label>Rossmc </label>
+        </tab>
+        <section id="rossmc_partytown" translate="label" type="text" sortOrder="1800" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Partytown</label>
+            <tab>rossmc</tab>
+            <resource>Rossmc_Partytown::settings</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="debug_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Debug Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="forwarding" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Forwarding Events And Triggers</label>
+                    <comment><![CDATA[A Javscript array with the configuration of the <a target="_blank" href="https://partytown.builder.io/forwarding-events">Forwarding Events And Triggers</a>. e.g. ["dataLayer.push", "fbq"]]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="main_thread_scripts" translate="label comment" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Load Scripts on Main Thread</label>
+                    <comment><![CDATA[An array of strings or regular expressions (RegExp) used to filter out which script are executed via Partytown and the main thread. An example is as follows:<br /><span style="background-color: #f5f5f5">["https://consent.cookiebot.com/uc.js", "inline-script-id", /regex-matched-script\.js/]</span>]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="unregister_sw" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Unregister Partytown Service Worker</label>
+                    <comment>Enable to remove service worker after module is disabled</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">0</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

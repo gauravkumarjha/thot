@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+	<widget class="Chetaru\Team\Block\Widget\Members" id="chetaru_team_members">
+		<label>Team Widget</label>
+		<description>Shows all active team members</description>
+		<parameters>
+			<parameter name="device" xsi:type="select" source_model="Advaiya\Team\Model\Config\Source\Device" visible="true" sort_order="10" >
+				<label translate="true">Device</label>
+			</parameter>
+			<parameter name="number" sort_order="0" visible="true" xsi:type="text">
+				<label>Number</label>
+			</parameter>
+		</parameters>
+	</widget>
+</widgets>

@@ -1,0 +1,93 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<?php
+/**
+ * @var $block \Magento\Sales\Block\Adminhtml\Items\Column\Name
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+
+<?php
+/** @var \Magento\Catalog\Helper\Data $catalogHelper */
+$catalogHelper = $block->getData('catalogHelper');
+
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+?>
+<?php if ($_item = $block->getItem()): 
+    $product_order = $objectManager->create('Magento\Catalog\Model\Product')->load($_item->getProductId());
+    $helperImport = $objectManager->get('\Magento\Catalog\Helper\Image');
+    $imageUrl = $helperImport->init($product_order, 'product_page_image_small')
+                    ->setImageFile($product_order->getSmallImage()) // image,small_image,thumbnail
+                    ->resize(100)
+                    ->getUrl();
+    $hsnCode=$product_order->getHsncode();
+    if( ! ( $hsnCode )){
+        $hsnCode =  'N/A';
+    } 
+    
+    ?>
+   
+    <div id="order_item_<?= (int) $_item->getId() ?>_title"
+         class="product-title">
+         <?php if(  $imageUrl ){ 
+                            echo '<p><a href="'.$product_order->getProductUrl().'"><img src="'.$imageUrl.'" alt="" /></a></p>'; 
+                        } ?>
+         <p><a  href="<?php echo  $product_order->getProductUrl();?>"> <?= $block->escapeHtml($_item->getName()) ?></a></p>
+         <p class="hsn" ><?php echo "HSN CODE nameback: ".$hsnCode; ?></p> 
+    </div>
+    <div class="product-sku-block">
+        <span><?= $block->escapeHtml(__('SKU'))?>:</span>
+        <?= /* @noEscape */ implode('<br />', $catalogHelper->splitSku($block->escapeHtml($block->getSku()))) ?>
+    </div>
+
+    <?php if ($block->getOrderOptions()): ?>
+        <dl class="item-options">
+            <?php foreach ($block->getOrderOptions() as $_option): ?>
+                <dt><?= $block->escapeHtml($_option['label']) ?>:</dt>
+                <dd>
+                    <?php if (isset($_option['custom_view']) && $_option['custom_view']): ?>
+                        <?= /* @noEscape */ $block->getCustomizedOptionValue($_option) ?>
+                    <?php else: ?>
+                        <?php $_option = $block->getFormattedOption($_option['value']); ?>
+                        <?php $dots = 'dots' . uniqid(); ?>
+                        <?php $id = 'id' . uniqid(); ?>
+                        <?= $block->escapeHtml($_option['value'], ['a', 'br']) ?>
+                        <?php if (isset($_option['remainder']) && $_option['remainder']): ?>
+                            <span id="<?= /* @noEscape */ $dots; ?>"> ...</span>
+                            <span id="<?= /* @noEscape */ $id; ?>">
+                                <?= $block->escapeHtml($_option['remainder'], ['a']) ?>
+                            </span>
+                            <?php $scriptString = <<<script
+                                require(['prototype'], function() {
+
+script;
+                            $scriptString .= "$('" . /* @noEscape */ $id . "').hide();" . PHP_EOL;
+                            $scriptString .= "$('" . /* @noEscape */ $id .
+                             "').up().observe('mouseover', function(){ $('" . /* @noEscape */ $id . "').show();});" .
+                              PHP_EOL;
+                            $scriptString .= "$('" . /* @noEscape */ $id .
+                                "').up().observe('mouseover', function(){ $('" . /* @noEscape */ $dots .
+                                 "').hide();});" . PHP_EOL;
+                            $scriptString .= "$('" . /* @noEscape */ $id .
+                                "').up().observe('mouseout',  function(){ $('" . /* @noEscape */ $id .
+                                 "').hide();});" . PHP_EOL;
+                            $scriptString .= "$('" . /* @noEscape */ $id .
+                                "').up().observe('mouseout',  function(){ $('" . /* @noEscape */ $dots .
+                                 "').show();});" . PHP_EOL . "});" . PHP_EOL;
+                            ?>
+                            <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </dd>
+            <?php endforeach; ?>
+        </dl>
+    <?php endif; ?>
+    <?= $block->escapeHtml($_item->getDescription()) ?>
+<?php endif; ?>

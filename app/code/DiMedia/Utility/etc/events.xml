@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/Event/etc/events.xsd">
+  <event name="payment_method_is_active">
+      <observer name="restrict_cod_payment" instance="DiMedia\Utility\Observer\RestrictCod" />
+       <!-- <observer name="custom_payment_method_restriction" instance="DiMedia\Utility\Observer\PaymentMethodIsActive" /> -->
+    </event>  
+    <!-- <event name="sales_quote_save_after">
+      <observer name="save_guest_email_to_quote" instance="DiMedia\Utility\Observer\SaveGuestEmailToQuote" />
+    </event> -->
+    
+      <!-- <event name="payment_method_is_active">
+        <observer name="custom_payment_method_restriction" instance="DiMedia\Utility\Observer\PaymentMethodIsActive" />
+    </event> -->
+
+    <!-- <event name="sales_order_place_after">
+    <observer name="cancel_phonepe_order" instance="DiMedia\Utility\Observer\CancelPhonePeOrder" />
+</event> -->
+
+    <!-- <event name="sales_order_save_before">
+    <observer name="restrict_status_transitions" instance="DiMedia\Utility\Observer\RestrictStatusTransitions" />
+</event> -->
+
+
+</config>
