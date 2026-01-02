@@ -1,0 +1,49 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!-- <li id="payment" role="presentation" class="checkout-payment-method checkout-payment-method-themes" data-bind="fadeVisible: isVisible"> -->
+<li id="payment" role="presentation" class="checkout-payment-method checkout-payment-method-vendor"
+    data-bind="css: { active: isPaymentOpen() }">
+    <div class="step-header" data-bind="click: togglePayment">
+        <h3>Payment</h3>
+        <span class="arrow" data-bind="css: { open: isPaymentOpen() }"></span>
+    </div>
+    <div id="checkout-step-payment step-content accordion-content" class="step-content" data-role="content"
+        role="tabpanel" aria-hidden="false" data-bind="visible: isPaymentOpen()">
+        <!-- ko if: (quoteIsVirtual) -->
+        <!-- ko foreach: getRegion('customer-email') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <!--/ko-->
+        <form id="co-payment-form" class="form payments" novalidate="novalidate">
+            <input data-bind='attr: {value: getFormKey()}' type="hidden" name="form_key" />
+            <fieldset class="fieldset">
+                <legend class="legend">
+                    <span data-bind="i18n: 'Payment Information'"></span>
+                </legend><br />
+                <!-- ko foreach: getRegion('place-order-captcha') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- /ko -->
+                <br />
+                <!-- ko foreach: getRegion('beforeMethods') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- /ko -->
+                <div id="checkout-payment-method-load" class="opc-payment opc-payment-themes"
+                    data-bind="visible: isPaymentMethodsAvailable">
+                    <!-- ko foreach: getRegion('payment-methods-list') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+                <div class="no-quotes-block" data-bind="visible: isPaymentMethodsAvailable() == false">
+                    <!-- ko i18n: 'No Payment method available.'--><!-- /ko -->
+                </div>
+                <!-- ko foreach: getRegion('afterMethods') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- /ko -->
+            </fieldset>
+        </form>
+    </div>
+</li>

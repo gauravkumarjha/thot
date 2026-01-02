@@ -1,0 +1,25 @@
+{
+    "name": "meta/module-promotions",
+    "description": "Meta Business Extension Promotions module",
+    "type": "magento2-module",
+    "license": "Apache-2.0",
+    "version": "1.2.0",
+    "require": {
+        "php": "~8.1.0||~8.2.0",
+        "magento/framework": ">=103.0.4 <=103.0.6-p2",
+        "magento/module-backend": ">=102.0.4 <=102.0.6",
+        "magento/module-config": ">=101.2.4 <=101.2.6",
+        "magento/module-sales-rule": ">=101.2.4 <=101.2.6-p2",
+        "magento/module-offline-shipping": ">=100.4.3 <=100.4.5",
+        "meta/module-business-extension": "1.2.*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Meta\\Promotions\\": ""
+        }
+    }
+}
+

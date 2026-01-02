@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ NOTICE OF LICENSE
+  ~
+  ~ This source file is subject to the NekloEULA that is bundled with this package in the file LICENSE.txt.
+  ~
+  ~ It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
+  ~
+  ~ Copyright (c)  Neklo (http://store.neklo.com/)
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\ImportExport\Model\Import">
+        <plugin name="invalidateStockIndexerOnImport"
+                type="Magento\CatalogImportExport\Model\Indexer\Stock\Plugin\Import"
+                disabled="true" />
+    </type>
+    <type name="Magento\ImportExport\Model\Import">
+        <plugin name="nekloInvalidateStockIndexerOnImport"
+                type="Neklo\ProductPosition\Plugin\CatalogImportExport\Model\Indexer\Stock\ImportPlugin"/>
+    </type>
+    <type name="Magento\Catalog\Controller\Adminhtml\Category\Save">
+        <plugin name="nekloCheckAttachedPosition"
+                type="\Neklo\ProductPosition\Plugin\Catalog\Controller\Adminhtml\Category\SavePlugin"/>
+    </type>
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Save">
+        <plugin name="nekloCheckPositionProduct"
+                type="\Neklo\ProductPosition\Plugin\Catalog\Controller\Adminhtml\Product\SavePlugin"/>
+    </type>
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\MassStatus">
+        <plugin name="nekloCheckPositionProductMass"
+                type="\Neklo\ProductPosition\Plugin\Catalog\Controller\Adminhtml\Product\MassStatusPlugin"/>
+    </type>
+    <type name="Magento\ImportExport\Model\Import">
+        <plugin name="nekloUpdateImportedProductPosition"
+                type="\Neklo\ProductPosition\Plugin\ImportExport\Model\ImportPlugin"/>
+    </type>
+    <type name="Neklo\ProductPosition\Model\Stock\StockSourcePool">
+        <arguments>
+            <argument name="sources" xsi:type="array">
+                <item name="single" xsi:type="object">Neklo\ProductPosition\Model\Stock\Source\Single</item>
+                <item name="multi" xsi:type="object">Neklo\ProductPosition\Model\Stock\Source\Multi\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

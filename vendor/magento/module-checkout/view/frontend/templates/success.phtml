@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<?php /** @var $block \Magento\Checkout\Block\Onepage\Success */ ?>
+
+<?php
+$orderId = $block->getOrderId();
+
+if ($orderId):
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $order = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($orderId);
+
+    $customerEmail = $order->getCustomerEmail();
+    $grandTotal = $order->getGrandTotal();
+    $items = $order->getAllVisibleItems();
+    $itemsDetail = [];
+
+    foreach ($items as $item) {
+        $itemsDetail[] = [
+            'product_id' => $item->getProductId(),
+            'name' => $item->getName(),
+            'sku' => $item->getSku(),
+            'price' => $item->getPrice(),
+            'qty' => (int)$item->getQtyOrdered()
+        ];
+    }
+
+    $itemsJson = json_encode($itemsDetail);
+    $itemCount = count($itemsDetail);
+?>
+    <script>
+        var email = <?= json_encode($customerEmail) ?>;
+        var cartTotal = <?= json_encode($grandTotal) ?>;
+        var itemCount = <?= json_encode($itemCount) ?>;
+        var itemsDetail = <?= $itemsJson ?>;
+        var itemsDetailString = JSON.stringify(itemsDetail);
+        setTimeout(function() {
+            FM.associateVisitor(email);
+            FM.trackCustomEvent("orderSuccess", {
+                email: email,
+                price: cartTotal,
+                cart_items_count: itemCount,
+                items: itemsDetailString
+            });
+        }, 1000); // Delay by 1 seconds
+    </script>
+<?php endif; ?>
+
+<div class="checkout-success checkout-success-/home/thotpocthel7tfestage/public_html/vendor/magento/module-checkout/view/frontend/templates">
+    <?php if ($block->getOrderId()) : ?>
+        <?php if ($block->getCanViewOrder()) : ?>
+            <p><?= $block->escapeHtml(__('Your order number is: %1.', sprintf('<a href="%s" class="order-number"><strong>%s</strong></a>', $block->escapeUrl($block->getViewOrderUrl()), $block->getOrderId())), ['a', 'strong']) ?></p>
+        <?php else : ?>
+            <p><?= $block->escapeHtml(__('Your order # is: <span>%1</span>.', $block->getOrderId()), ['span']) ?></p>
+        <?php endif; ?>
+        <p><?= $block->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?></p>
+    <?php endif; ?>
+
+    <?= $block->getAdditionalInfoHtml() ?>
+
+    <div class="actions-toolbar">
+        <div class="primary">
+            <a class="action primary continue" href="<?= $block->escapeUrl($block->getContinueUrl()) ?>"><span><?= $block->escapeHtml(__('Continue Shopping')) ?></span></a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+<?php
+/*
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the NekloEULA that is bundled with this package in the file LICENSE.txt.
+ *
+ * It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
+ *
+ * Copyright (c)  Neklo (http://store.neklo.com/)
+ */
+
+declare(strict_types=1);
+
+/**
+ * @var $block \Magento\Framework\View\Element\Template
+ * @var $escaper \Magento\Framework\Escaper
+ * @var $configurationViewModel \Neklo\ProductPosition\ViewModel\Configuration
+ * @var $productViewModel \Neklo\ProductPosition\ViewModel\Product
+ * @var $urlViewModel \Neklo\ProductPosition\ViewModel\Url
+ */
+?>
+
+<?php
+$configurationViewModel = $block->getData('configuration');
+$productViewModel = $block->getData('product');
+$urlViewModel = $block->getData('url');
+
+$separatorTemplate = $configurationViewModel->isPaginationEnabled() ? 'template-paging' : 'template-separator';
+$modeClass = $configurationViewModel->getModeClass();
+?>
+
+<div id="neklo-sorter" style="direction: ltr"></div>
+<input id="attached_category_products"
+       type="hidden"
+       name="attached_category_products"
+       data-form-part="category_form"
+       value=""/>
+
+<script>
+    require([
+            'jquery',
+            'prototype',
+            'Neklo_ProductPosition/js/module-min'
+        ],
+        function(jQuery) {
+            window.categoryProductPosition =
+                $H(<?= /* @noEscape */ $productViewModel->getSortedProductsPositionJson(); ?>);
+            window.categoryProductAttached =
+                $H(<?= /* @noEscape */ $productViewModel->getAttachedProductsJson(); ?>);
+
+            var sorterOnItemsChangedCallback = window.sorterOnItemsChangedCallback = function (data) {
+                data.each(
+                    function (productPosition) {
+                        categoryProductPosition.set(productPosition.entity_id * 1, productPosition.position * 1);
+                        categoryProductAttached.set(
+                            productPosition.entity_id * 1, productPosition.attached === 'true' ? 1 : 0
+                        );
+                    }
+                );
+
+                updateProductPosition(categoryProductPosition);
+                updateProductAttached(categoryProductAttached);
+            };
+            setTimeout(
+                function () {
+                    updateProductPosition(categoryProductPosition);
+                    updateProductAttached(categoryProductAttached);
+                },
+                26
+            );
+
+            var httpOptions = {
+                url: '<?= $escaper->escapeUrl($urlViewModel->getNextPageUrl()) ?>',
+                form_key: jQuery('[name="form_key"]').val()
+            };
+
+            var options = window.options = {
+                connector: new NEKLO.Connectors.Magento2Connector(httpOptions),
+                targetDOM: document.querySelector('#neklo-sorter'),
+                grid: {
+                    cols: <?= $escaper->escapeHtml($configurationViewModel->getColumnCount()) ?>,
+                    rows: <?= $escaper->escapeHtml($configurationViewModel->getRowCount()) ?>
+                },
+                uploadButton: {
+                    label: '<?= $escaper->escapeHtml(__('Load More')) ?>'
+                },
+                error: {
+                    message: '<?= $escaper->escapeHtml(__('Empty data. It is possible that the module is' .
+                        ' disabled in the system configuration.')) ?>'
+                },
+                item: {
+                    template: document.getElementById('template-item').innerHTML
+                },
+                separator: {
+                    template: document.getElementById('<?= $escaper->escapeHtml($separatorTemplate) ?>').innerHTML
+                },
+                totalItems: <?= $escaper->escapeHtml($productViewModel->getCollectionSize()) ?>,
+                categoryData : {
+                    position : categoryProductPosition,
+                    attached : categoryProductAttached
+                }
+            };
+            jQuery('[data-index="assign_products"] .fieldset-wrapper-title').click().click()
+                var sorter = new NEKLO.Product<?= $escaper->escapeHtml($modeClass) ?>(options);
+                sorter.on(sorter.EVENTS.ON_ITEMS_CHANGED, sorterOnItemsChangedCallback);
+        });
+</script>
